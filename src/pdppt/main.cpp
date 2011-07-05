@@ -97,6 +97,9 @@ int main(int argc, char **argv)
 #ifdef Q_OS_LINUX
 		make.start("/usr/bin/make");
 #else
+                QStringList env = QProcess::systemEnvironment();
+                env << "PATH=" + path + "/gcc/bin" ;
+                make.setEnvironment(env);
 		make.start("../bin/gcc/bin/make.exe");
 #endif
 		make.waitForFinished(-1);

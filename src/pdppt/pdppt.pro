@@ -8,7 +8,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-CONFIG += qt debug
+CONFIG += qt 
 HEADERS += codegenerator.h \
            modelatomic.h \
            modelchild.h \
