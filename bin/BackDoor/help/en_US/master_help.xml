@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book [
+<!--Begin Entities-->
+<!ENTITY ac58362b0219e863d3f194f1c997016ed SYSTEM "/home/fmb/projects/powerdevs/bin/BackDoor/help/en_US/c_sub.xml">
+<!ENTITY ac909550bb7af1ec1ebeeb6a397ee3a59 SYSTEM "/home/fmb/projects/powerdevs/bin/BackDoor/help/en_US/c_sum.xml">
+<!ENTITY a237a2b5a345f71bebd00b56d191ae14c SYSTEM "/home/fmb/projects/powerdevs/bin/BackDoor/help/en_US/fortran_sum.xml">
+<!ENTITY a1e7e3132674adba5f62ab8fe1131cb27 SYSTEM "/home/fmb/projects/powerdevs/bin/BackDoor/help/en_US/scilab_sum.xml">
+<!--End Entities-->
+]>
+<book version="5.0-subset Scilab" xml:lang="en_US"
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:mml="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+  <info xml:id='tcp_udp_backdoor_manual'>
+    <title>TCP/UDP Backdoor</title>
+  </info>
+
+<part xml:id='section_8f8e44049d4dea7ea87668be07040ea2'>
+<title>TCP/UDP Backdoor</title>
+&ac58362b0219e863d3f194f1c997016ed;
+&ac909550bb7af1ec1ebeeb6a397ee3a59;
+&a237a2b5a345f71bebd00b56d191ae14c;
+&a1e7e3132674adba5f62ab8fe1131cb27;
+</part>
+</book>

@@ -1,0 +1,77 @@
+Coupled
+    {
+    Type = Root
+    Name = RealTime
+    Ports = 0; 0
+    Description = Real Time Blocks
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 555; 555
+        Direction = Right
+        Color = 15
+        Icon = None
+        Window = 2685; 1920; 6615; 5145
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = RT Ev Synchro
+            Ports = 1 ; 1
+            Path = realtime\clock_wait.h
+            Description = Shyncronizes the events with the PC clock.
+            Graphic
+                {
+                Position = 570 ; 435
+                Dimension = 680 ; 680
+                Direction = Right
+                Color = 15
+                Icon = %realtime%event_sync.gif
+                }
+            Parameters
+                {
+                Wait Mode = Lst; 2%Normal%Precise% ; 
+                }
+            }
+        Atomic
+            {
+            Name = IRQ 7 Detector
+            Ports = 0 ; 1
+            Path = realtime\rtdetect.h
+            Description = Sends an event when an Interrupt has ocurred on the parallel port.
+            Graphic
+                {
+                Position = 1530 ; 420
+                Dimension = 680 ; 680
+                Direction = Right
+                Color = 15
+                Icon = %realtime%parallel_irq.gif
+                }
+            Parameters
+                {
+                }
+            }
+        Atomic
+            {
+            Name = Real Time Clock
+            Ports = 1 ; 1
+            Path = realtime\realtimeclock.h
+            Description = Outputs the real time clock when recieves an input event
+            Graphic
+                {
+                Position = 3015 ; 435
+                Dimension = 680 ; 680
+                Direction = Right
+                Color = 15
+                Icon = %realtime%digital_clock.gif
+                }
+            Parameters
+                {
+                }
+            }
+        }
+    }
