@@ -8,7 +8,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-CONFIG += qt debug
+CONFIG += qt 
 HEADERS += pdif.h
 SOURCES += main.cpp pdif.cpp
 RESOURCES += pdif.qrc

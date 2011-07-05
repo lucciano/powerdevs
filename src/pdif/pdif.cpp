@@ -187,6 +187,11 @@ void PDIF::startModel()
 #endif
 	QObject::connect(qProc, SIGNAL(readyRead()), this, SLOT(modelWrote()));
 #ifdef Q_OS_WIN32
+        QString path = QCoreApplication::applicationDirPath();
+        QStringList env = QProcess::systemEnvironment();
+        env << "PATH=" + path + "/gcc/bin" ;
+        qProc->setEnvironment(env);
+
 	qProc->start("./model.exe", QStringList() << "-i");
 #else
 	qProc->start("./model", QStringList() << "-i");
@@ -467,7 +472,7 @@ void PDIF::runMode()
 	timedButton->setDisabled(true);
 	exitButton->setDisabled(true);
 	stopButton->setDisabled(false);
-	viewLogButton->setDisabled(true);
+        viewLogButton->setDisabled(true);
 	stepButton->setDisabled(true);
 	runTimesEdit->setDisabled(true);
 	tf->setDisabled(true);
@@ -531,7 +536,7 @@ void PDIF::viewLog()
 #ifndef Q_OS_WIN32
   QProcess::startDetached("/usr/bin/xdg-open", QStringList() << "../output/pdevs.log");
 #else
-
+    QProcess::startDetached("notepad", QStringList() << "../output/pdevs.log");
 #endif
 
 }

@@ -34,4 +34,4 @@ int main(int argc, char *argv[])
 	}
 	pdif.show();
 	return app.exec();
-}
+    }
