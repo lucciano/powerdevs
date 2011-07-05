@@ -1,4 +1,4 @@
-//CPP:sink/toscilab_offline.cpp
+//CPP:sinks/toscilab_offline.cpp
 #if !defined toscilab_offline_h
 #define toscilab_offline_h
 
@@ -9,11 +9,9 @@
 #include "string.h"
 #include "unistd.h"
 #include "fcntl.h"
-#ifdef __WINDOWS__
-#include <direct.h>
-#endif
-#include <stdlib.h>
-#include <stdio.h>
+#include "direct.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 
 class toscilab_offline: public Simulator { 
@@ -22,6 +20,7 @@ int FOutput;
 char *time_var;
 char *signal_var;
 unsigned count;
+
 
 
 

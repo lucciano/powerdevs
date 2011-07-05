@@ -32,11 +32,8 @@ strcpy(buff,gformat);
 char *p=strstr(buff,"%tf");
 if (p!=NULL)
 {
-	printLog("%s\n",p);
 	p[1]='g';
-	printLog("%s\n",buff);
 	p[2]=' ';
-	printLog("%s\n",buff);
 }
 sprintf(buff,buff,getFinalTime());
 for (int i=0;i<strlen(buff);i++) 

@@ -29,6 +29,7 @@ char FName[128];
 
 
 
+
 public:
 	gnuplot(const char *n): Simulator(n) {};
 	void init(double, ...);

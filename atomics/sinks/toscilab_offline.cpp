@@ -60,7 +60,7 @@ result=write(FOutput,&count,sizeof(int));
 close(FOutput);
 
 #ifdef __WINDOWS__
-sprintf(buf,"load %s/%d.dat",getcwd(),this);
+sprintf(buf,"load %s/%d.dat",getcwd(NULL,0),this);
 #else
 sprintf(buf,"load %s/../output/%d.dat",getenv("PWD"),this);
 #endif
