@@ -11,6 +11,20 @@ OS getOs()
 {
 	return WINDOWS;
 }
+
+
+void initLib()
+{
+  //struct timeval tv;
+  //gettimeofday(&tv,NULL);
+  //realTiSimulation = tv.tv_sec;
+}
+
+double getRealSimulationTime()
+{
+	return 1.0*clock()/CLOCKS_PER_SEC;
+}
+
 double getTime()
 {
 	return 1.0*clock()/CLOCKS_PER_SEC;
@@ -83,6 +97,9 @@ void putScilabVar(char *varname, double var) {
    executeScilabJob(buf,false);
 }
 
+double executeVoidScilabJob(char *cmd,bool blocking) {
+  executeScilabJob(cmd,blocking);
+}
 double executeScilabJob(char *cmd,bool blocking) {
    initScilab();
    double ans=0;
@@ -109,12 +126,14 @@ void initScilab() {
   char cmd[1024];
   scilabActive=true;
   if (init++ == 0) {
+	  unsigned long bio = 1;
 	  WSADATA wsaData;
 	  int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	  SendSocket = socket(AF_INET, SOCK_DGRAM,IPPROTO_UDP);
 	  service.sin_family = AF_INET;
 	  service.sin_addr.s_addr = inet_addr("127.0.0.1");
 	  service.sin_port = htons(27015);
+	  //ioctlsocket(SendSocket,FIONBIO,&bio);
   }
 }
 void cleanScilab() {
@@ -159,3 +178,4 @@ void RTFileRead(long int file ,char* buf ,int size){
 void RTFileClose(long int file){
 	fclose((FILE*)file);
 }
+
