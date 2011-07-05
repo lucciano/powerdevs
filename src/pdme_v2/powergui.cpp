@@ -89,7 +89,10 @@ PowerGui::PowerGui(): PowerGui_class()
     QProcess q; 
     QString outputPath = getSetting("Path/outputPath").toString(); 
     qDebug() << "Starting Scilab from " << scilabPath << " in directory " << outputPath << " with arg " << getSetting("scilabArg").toString();
-    q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
+    if (getSetting("scilabArg").toString().trimmed().size())
+      q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
+    else
+      q.startDetached(scilabPath, QStringList(), outputPath); 
     q.waitForStarted();
   }
 }

@@ -1,13 +1,14 @@
 TEMPLATES = app
 QT += svg 
 
-CONFIG += debug
+CONFIG += qt
 
 GRAPHICS_DIR=graphics
 DATA_DIR=../common/data
 DIALOGS_DIR=./dialogs
 UI_DIR=./ui
 COMMON_DIR=../common
+INCLUDEPATH += ./
 
 SOURCES += 	globals.cpp \
 			powergui.cpp \
