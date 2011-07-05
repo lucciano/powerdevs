@@ -2,7 +2,7 @@
 TEMPLATE = app
 TARGET = ../../bin/pdae
 DEPENDPATH += .
-CONFIG += debug
+CONFIG += qt
 INCLUDEPATH += .
 
 # Input

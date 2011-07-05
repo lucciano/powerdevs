@@ -262,7 +262,7 @@ void PDAE::saveFile()
 		destFile = destFile.mid(destFile.lastIndexOf("/") + 1);
 		destFile.replace(".cpp", ".o");
 		destFile = path + "/../build/objs/" + destFile;
-		args << "-c" << "-I" + path + "/../engine/" << "-I" + path + "/../atomics/" <<name << "-o" << destFile;
+                args << "-c" << "-g" << "-I" + path + "/../engine/" << "-I" + path + "/../atomics/" <<name << "-o" << destFile;
 		QStringList::iterator i;
 		
     qDebug() << args;
@@ -270,6 +270,10 @@ void PDAE::saveFile()
 		    q.start("/usr/bin/g++", args);
 		
 #else	/*  */
+                    QStringList env = QProcess::systemEnvironment();
+                    env << "PATH=" + path + "/gcc/bin" ;
+                    q.setEnvironment(env);
+
 		    q.start("gcc/bin/gcc.exe", args);
 #endif	/*  */
 		    q.waitForFinished();
