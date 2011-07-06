@@ -1,5 +1,5 @@
 OPTFLAGS = 
-CXXFLAGS = -g -Wall $(OPTFLAGS) -D__WINDOWS__ -D_OMC_QSS
+CXXFLAGS = -g -Wall $(OPTFLAGS) -D__WINDOWS__ -D_OMC_QSS -D_OMC_OMPD
 ATOMICS = ../atomics
 SRCENGINE = ../engine
 BUILD = ../build
