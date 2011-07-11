@@ -104,7 +104,8 @@ FORMS += 	$$UI_DIR/main_window.ui \
 		 	$$UI_DIR/dlg_menu_setup.ui \
 		 	$$UI_DIR/dlg_menu_edit.ui
 
-RESOURCES = pdme.qrc
+RESOURCES += pdme.qrc
+RC_FILE += pdme.rc
 
 INCLUDEPATH += $$GRAPHICS_DIR $$DATA_DIR $$COMMON_DIR
 OBJECTS_DIR = obj
