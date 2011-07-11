@@ -28,14 +28,15 @@ for (int i=0;i<n;i++)
 fflush(fd);
 fclose(fd);
 hasOutput=0;
-strcpy(buff,gformat);
-char *p=strstr(buff,"%tf");
+char buff2[1096];
+strcpy(buff2,gformat);
+char *p=strstr(buff2,"%tf");
 if (p!=NULL)
 {
 	p[1]='g';
 	p[2]=' ';
 }
-sprintf(buff,buff,getFinalTime());
+sprintf(buff,buff2,getFinalTime());
 for (int i=0;i<strlen(buff);i++) 
    if (buff[i]=='@') buff[i]=';'; // Escaping characters
 strcat(buff,"\nset datafile separator \",\"\nplot ");
