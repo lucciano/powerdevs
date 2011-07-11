@@ -1,16 +1,22 @@
-OPTFLAGS = -march=native 
-CXXFLAGS = -g -Wall $(OPTFLAGS)
-ATOMICS = ../atomics
-SRCENGINE = ../engine
-BUILD = ../build
-BUILDOBJ = ../build/objs
-OUTPUT = ../output
+UNAME = $(shell uname)
+OPTFLAGS = 
+ifeq ($(UNAME), Windows)
+CXXFLAGS = -g -Wall $(OPTFLAGS) -D__WINDOWS__
+ATOMICS = ..\atomics
+SRCENGINE = ..\engine
+BUILD = ..\build
+BUILDOBJ = ..\build\objs
+OUTPUT = ..\output
+MODEL = $(BUILD)\model.exe
+RM = del
+MV = copy 
+LIBS = -lsimpd -lws2_32
+endif
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDOBJ)
-LIBS = -lsimpd
-all : $(BUILDOBJ)/libsimpd.a $(BUILD)/model 
-	mv -f $(BUILD)/model $(OUTPUT)/model
+all : $(BUILDOBJ)/libsimpd.a $(MODEL)
+	$(MV) $(MODEL) $(OUTPUT)
 clean:
-	rm -f $(BUILDOBJ)/*.o $(BUILD)/model
+	$(RM)  $(BUILDOBJ)\*.o $(MODEL)
 $(BUILDOBJ)/connection.o: $(SRCENGINE)/connection.cpp $(SRCENGINE)/connection.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $(SRCENGINE)/connection.cpp -o $(BUILDOBJ)/connection.o
 $(BUILDOBJ)/coupling.o: $(SRCENGINE)/coupling.cpp $(SRCENGINE)/coupling.h
