@@ -17,12 +17,12 @@ void initLib()
 {
   //struct timeval tv;
   //gettimeofday(&tv,NULL);
-  //realTiSimulation = tv.tv_sec;
+  realTiSimulation = GetTickCount()*1e-3;
 }
 
 double getRealSimulationTime()
 {
-	return 1.0*clock()/CLOCKS_PER_SEC;
+	return GetTickCount()*1e-3 - realTiSimulation;
 }
 
 double getTime()
@@ -32,10 +32,10 @@ double getTime()
 
 int waitFor(Time t, RealTimeMode m) 
 {
-	if (t<=0) return -1;
-	double ti=getTime();
-	while ((getTime()-ti)<t) ;
-
+	if (t<=0) return 0;
+	double ti=getRealSimulationTime();
+	while ((getRealSimulationTime()-ti)<t) ;
+	return 0;
 }
 
 void printLog(const char *fmt,...) {
@@ -70,19 +70,31 @@ bool scilabActive;
 
 
 double getScilabVar(char *varname) {
- initScilab();
+  // Try to solve it locally
+  char *s;
+  double d=strtod(varname,&s);
+  if (varname+strlen(varname)==s)
+    return d;
+  initScilab();
   char buf[1024];
   double f;
+  if (!scilabActive) {
+     printLog("There is not a Scilab instance running. Returning atof(%s)\n",varname); 
+     exitStatus = -1;
+     return atof(varname); 
+  }	  
   sprintf(buf,"anss=%s",varname);
   executeScilabJob(buf,false);
   executeScilabJob("exists anss",false);
   getAns(&f,1,1);
   if (!scilabActive) {
      printLog("There is not a Scilab instance running. Returning atof(%s)\n",varname); 
+     exitStatus = -1;
      return atof(varname); 
   }	  
   if (f==0) {
      printLog("Variable %s does not exists!\n",varname); 
+     exitStatus = -1;
      return 0.0; 
   }
   executeScilabJob("ans=anss",false);
@@ -101,26 +113,48 @@ double executeVoidScilabJob(char *cmd,bool blocking) {
   executeScilabJob(cmd,blocking);
 }
 double executeScilabJob(char *cmd,bool blocking) {
-   initScilab();
-   double ans=0;
-   int timeout = 2000;
-   char buff[1024];
-   int SenderAddrSize = sizeof(sockaddr_in);
-   int result = -1;
-   strcpy(buff,"");
-   if (blocking) 
-	   strcpy(buff,"!");
-   strcat(buff,cmd);
-   sendto(SendSocket,buff,strlen(buff),0,(SOCKADDR *) & service,sizeof(struct sockaddr_in));
-   if (blocking) {
-	   result = recvfrom(SendSocket, buff , 1024, 0,(SOCKADDR *) & service ,&SenderAddrSize);
-	   if (result<1) {
-		printLog("Socket Error %d\n",WSAGetLastError());
-	   }
-   }
-   return ans;
+  initScilab();
+  double ans=0;
+  int timeout = 2000;
+  char buff[1024];
+  int SenderAddrSize = sizeof(sockaddr_in);
+  int result = -1;
 
+  if (!scilabActive) {
+    exitStatus = -1;
+    return 0.0; 
+  }
+  strcpy(buff,"");
+  if (blocking) 
+    strcpy(buff,"!");
+  strcat(buff,cmd);
+  sendto(SendSocket,buff,strlen(buff),0,(SOCKADDR *) & service,sizeof(struct sockaddr_in));
+  if (blocking) {
+    fd_set read_set;
+    timeval tv;
+    tv.tv_sec=2;
+    tv.tv_usec=0;
+    read_set.fd_count=1;
+    read_set.fd_array[0] = SendSocket;
+  
+    if (select(0,&read_set,NULL,NULL,&tv)!=0) {
+      result = recvfrom(SendSocket, (char*)buff, sizeof(double), 0,(SOCKADDR *) & service ,& SenderAddrSize);
+      if (result < 0) {
+        scilabActive = false;
+        printLog("There is not a Scilab instance running.1\n"); 
+    	exitStatus = -1;
+        return 0.0; 
+      }
+    } else {
+      scilabActive = false;
+      printLog("There is not a Scilab instance running.2\n"); 
+      exitStatus = -1;
+      return 0.0; 
+    }
+  }
+  return ans;
 }
+
 void initScilab() {
   static int init=0;
   char cmd[1024];
@@ -145,15 +179,34 @@ void cleanScilab() {
 }
 
 void getAns(double *ans, int rows, int cols) {
-   char cmd[124] = "@";
-   int timeout = 2000;
-   int iResult;
-   int SenderAddrSize = sizeof(sockaddr_in);
-   sendto(SendSocket,cmd,strlen(cmd),0,(SOCKADDR *) & service,sizeof(struct sockaddr_in));
-   ans[0]=0;
-   iResult = recvfrom(SendSocket, (char*)ans, sizeof(double)*rows*cols, 0,(SOCKADDR *) & service ,& SenderAddrSize);
-   if (iResult < 0)
-	   scilabActive = false;
+  char cmd[124] = "@";
+  int timeout = 2000;
+  int iResult;
+  int SenderAddrSize = sizeof(sockaddr_in);
+  sendto(SendSocket,cmd,strlen(cmd),0,(SOCKADDR *) & service,sizeof(struct sockaddr_in));
+  ans[0]=0;
+
+  fd_set read_set;
+  timeval tv;
+  tv.tv_sec=2;
+  tv.tv_usec=0;
+  read_set.fd_count=1;
+  read_set.fd_array[0] = SendSocket;
+  
+  if (select(0,&read_set,NULL,NULL,&tv)!=0) {
+    iResult = recvfrom(SendSocket, (char*)ans, sizeof(double)*rows*cols, 0,(SOCKADDR *) & service ,& SenderAddrSize);
+    if (iResult < 0) {
+      scilabActive = false;
+      printLog("There is not a Scilab instance running.3\n"); 
+      exitStatus = -1;
+      return; 
+    }
+  } else {
+      printLog("There is not a Scilab instance running.4\n"); 
+      exitStatus = -1;
+      scilabActive = false;
+      return; 
+  }
 }
 
 extern double tf;
@@ -183,6 +236,10 @@ void RTFileClose(long int file){
 void getScilabVector(char* varname, int *length, double *data) {
   int rows,cols;
   char buf[1024];
+  if (!scilabActive) {
+    exitStatus = -1;
+    return; 
+  }
   sprintf(buf,"tempvar=%s",varname);
   executeVoidScilabJob(buf,true);
   sprintf(buf,"save(char([116 101 109 112 46 100 97 116]),tempvar)");
@@ -207,6 +264,10 @@ void getScilabVector(char* varname, int *length, double *data) {
 
 void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
   char buf[1024];
+  if (!scilabActive) {
+    exitStatus = -1;
+    return;
+  }
   sprintf(buf,"tempvar=%s",varname);
   executeVoidScilabJob(buf,true);
   sprintf(buf,"save(char([116 101 109 112 46 100 97 116]),tempvar)");
