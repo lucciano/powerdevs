@@ -179,3 +179,56 @@ void RTFileClose(long int file){
 	fclose((FILE*)file);
 }
 
+
+void getScilabVector(char* varname, int *length, double *data) {
+  int rows,cols;
+  char buf[1024];
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save(char([116 101 109 112 46 100 97 116]),tempvar)");
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen;
+  FOpen=fopen("temp.dat","rb");
+  char name[24];
+  fread(&name,24,1,FOpen);
+  int varint;
+  fread(&varint,sizeof(int),1,FOpen);
+  fread(&rows,sizeof(int),1,FOpen);
+  fread(&cols,sizeof(int),1,FOpen);
+  fread(&varint,sizeof(int),1,FOpen);
+  if (rows>cols) *length=rows; else *length=cols;
+  double lastdata;
+  for (int i=0;i<*length;i++) {
+     fread(&lastdata,sizeof(double),1,FOpen);
+     data[i]=lastdata;
+  }
+  fclose(FOpen);  
+}
+
+void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
+  char buf[1024];
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save(char([116 101 109 112 46 100 97 116]),tempvar)");
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen=fopen("temp.dat","rb");
+  char name[24];
+  fread(&name,24,1,FOpen);
+  int varint;
+  fread(&varint,sizeof(int),1,FOpen);
+  fread(rows,sizeof(int),1,FOpen);
+  fread(cols,sizeof(int),1,FOpen);
+  fread(&varint,sizeof(int),1,FOpen);
+  int nrows=*rows;
+  int ncols=*cols;
+  int msize=nrows*ncols;
+  double lastdata;
+  for (int i=0;i<nrows;i++) {
+    for (int j=0;j<ncols;j++) {
+       fread(&lastdata,sizeof(double),1,FOpen);
+       data[i][j]=lastdata;
+    }
+  }
+  fclose(FOpen); 
+}
+
