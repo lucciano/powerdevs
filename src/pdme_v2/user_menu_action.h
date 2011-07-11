@@ -38,6 +38,8 @@ public:
 		_icon = data.at(3);
 		_must_have_a_model = data.at(4) == "1";
 		_must_save_before_running = data.at(5) == "1";
+                if (data.size()>6)
+                  _runInFolder = data.at(6);
 	}
 	UserMenuAction(const UserMenuAction &ua): QObject()
 	{
@@ -48,6 +50,8 @@ public:
 		_icon = data.at(3);
 		_must_have_a_model = data.at(4) == "1";
 		_must_save_before_running = data.at(5) == "1";
+                if (data.size()>6)
+                  _runInFolder = data.at(6);
 	}
 	UserMenuAction operator=(UserMenuAction ua)
 	{
@@ -56,15 +60,18 @@ public:
 	}
 	
 	bool hasShortcut() { return ! _shortcut.isEmpty(); }
-	bool hasIcon() { 
-      QFileInfo qf(_icon);
-      return ! _icon.isEmpty() && qf.exists(); }
+        bool hasIcon()
+        {
+            QFileInfo qf(_icon);
+            return ! _icon.isEmpty() && qf.exists();
+        }
 	QString icon() { return _icon; }
 	QKeySequence shortcut() { return _shortcut; }
   	QString command() { return _command; }
   	bool requiresModel() { return _must_have_a_model; };
   	bool requiresSave() { return _must_save_before_running; };
   	QString args() { return _args; };
+        QString runInFolder() { return _runInFolder; };
 	QStringList getData() const
 	{
 		QStringList _ret;
@@ -80,6 +87,7 @@ public:
 			_ret << "1";
 		else
 			_ret << "0";
+                _ret << _runInFolder;
 		return _ret;
 	};
 	void setCommand(QString cmd) { _command = cmd; };
@@ -88,6 +96,7 @@ public:
 	void setIcon(QString icon) { _icon = icon; };
 	void setRequiresModel(bool rm) { _must_have_a_model = rm; };
 	void setRequiresSave(bool rs) { _must_save_before_running = rs; };
+        void setRunInFolder(QString folder) { _runInFolder = folder; };
 private:
 	QString _command;
 	QString _args;
@@ -95,6 +104,7 @@ private:
 	QString _icon;
 	bool _must_have_a_model;
 	bool _must_save_before_running;
+        QString _runInFolder;
 };
 
 #endif

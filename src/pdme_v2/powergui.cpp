@@ -164,8 +164,11 @@ void PowerGui::runAction(QObject *objectAction)
         return;
       arg = arg.replace("\%P",fileName);
     }
-    qDebug() << "Pressed on " << userAction->command() << " " << arg;
-    QProcess::startDetached(userAction->command(),arg.split(" "));
+    qDebug() << "Pressed on " << userAction->command() << " " << arg << "Running it on " << userAction->runInFolder();
+    if (userAction->runInFolder().isEmpty())
+      QProcess::startDetached(userAction->command(),arg.split(" "));
+    else
+      QProcess::startDetached(userAction->command(),arg.split(" "),userAction->runInFolder());
 }
 
 void PowerGui::updateMenus()
