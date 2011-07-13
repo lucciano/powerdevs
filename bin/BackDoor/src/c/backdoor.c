@@ -80,10 +80,10 @@ void takeRequests(void* arg)
 				if (eol[-1]=='\r') 
 					eol[-1]='\0'; // Remove \r too
 				strcat(cmd,c);
-				printf("Run command '%s'\n",cmd);
+				//printf("Run command '%s'\n",cmd);
 				if (cmd[0]=='@') { // If the first char is the '@' we need to send the result (ans var)
 				  ReadMatrix(RESULT_VAR,&m,&n,(double*)result);
-					printf("Sending to client '%g'\n",((double*)result)[0]);
+					//printf("Sending to client '%g'\n",((double*)result)[0]);
 					send(socket,result,sizeof(double),0);
 				} else if (cmd[0]=='!') { // The '!' denotes that the client needs a confirmation that the job is ready
 					if (cmd[1]=='\\')
@@ -109,8 +109,7 @@ void takeRequests(void* arg)
 
 void *waitTCPRequests()
 {
-  printf("1");
-	sleep(10); // Wait a little bit to scilab to be ready 
+	sleep(1); // Wait a little bit to scilab to be ready 
 	char buff[BUFF_SIZE];
 	char result[BUFF_SIZE];
 	char cmd[BUFF_SIZE];
@@ -130,12 +129,10 @@ void *waitTCPRequests()
 		pthread_exit(NULL);
 		return;
 	}
-  printf("2");
 	
 	if (listen(listenTCP,5)==0) {
 		sprintf(cmd,"mprintf(\"\tBackDoor: listening to connections on TCP port %d\");",TCP_PORT);
 		SendScilabJobBD(cmd);
-    printf("3");
     do {
 		  int socket=accept(listenTCP,(struct sockaddr *)&client, &socksize);
       pthread_t t;
