@@ -1,10 +1,11 @@
 #!/bin/bash
 ARCH=`uname -m`
-echo "Retreiving latest from SVN";
+echo "Retrieving latest from SVN";
 svn up
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
-make -f Makefile.linux
+make -f Makefile clean
+make -f Makefile MODE=release
 rm -rf tmp_deb
 svn export deb tmp_deb
 mkdir ./tmp_deb/opt/powerdevs
