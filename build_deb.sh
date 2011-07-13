@@ -1,5 +1,7 @@
 #!/bin/bash
 ARCH=`uname -m`
+echo "Retreiving latest from SVN";
+svn up
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
 make -f Makefile.linux
