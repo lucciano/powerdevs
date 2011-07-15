@@ -75,12 +75,15 @@ PowerGui::PowerGui(): PowerGui_class()
   
   createRecentFiles();
   updateRecentFiles();
-
-  createUndoActions();
+  #ifdef UNDO
+  	createUndoActions();
+  #endif
   updateMenus();
 
   connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(updateMenus()));
+  #ifdef UNDO
   connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(setActiveUndoStack()));
+  #endif
   connect(windowMapper, SIGNAL(mapped(QWidget*)), this, SLOT(setActiveSubWindow(QWidget*)));
   QString scilabPath = getSetting("scilabPath").toString(); 
   bool startScilab = getSetting("startScilab").toBool(); 
@@ -196,8 +199,10 @@ void PowerGui::updateMenus()
   actionEdit->setEnabled(model_selected);
   actionOpen_2->setEnabled(has_coupled);
   actionModel->setEnabled(active);
-  actionUndo->setEnabled(active);
-  actionRedo->setEnabled(active);
+  #ifdef UNDO
+  	actionUndo->setEnabled(active);
+  	actionRedo->setEnabled(active);
+  #endif
 
   // View menu
   actionParameters->setEnabled(model_selected);
@@ -225,7 +230,11 @@ void PowerGui::updateMenus()
 
 void PowerGui::on_actionNew_triggered()
 {
-  GpxEditionWindow *newModel = new GpxEditionWindow(this,_undoGroup);  
+  #ifdef UNDO
+  	GpxEditionWindow *newModel = new GpxEditionWindow(this,_undoGroup);  
+  #else
+  	GpxEditionWindow *newModel = new GpxEditionWindow(this);  
+  #endif
   mdiArea->addSubWindow(newModel);
   newModel->show();
   newModel->setWindowState(Qt::WindowMaximized);
@@ -322,28 +331,30 @@ bool PowerGui::updateRecentFiles()
    return true;
 }
 
-bool PowerGui::createUndoActions()
-{
-  _undoGroup = new QUndoGroup(this);
-  actionUndo = _undoGroup->createUndoAction(this);
-  actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
-  QIcon undoIcon;
-  undoIcon.addFile(QString::fromUtf8(":/images/undo.png"), QSize(), QIcon::Normal, QIcon::On);
-  actionUndo->setIcon(undoIcon);
-  actionRedo = _undoGroup->createRedoAction(this);
-  actionNew->setObjectName(QString::fromUtf8("actionRedo"));
-  QIcon redoIcon;
-  redoIcon.addFile(QString::fromUtf8(":/images/redo.png"), QSize(), QIcon::Normal, QIcon::On);
-  actionRedo->setIcon(redoIcon);
-  toolBar->addAction(actionUndo);
-  toolBar->addAction(actionRedo);
-  menuEdit->addSeparator();
-  menuEdit->addAction(actionUndo);
-  menuEdit->addAction(actionRedo);
-  connect(actionUndo,SIGNAL(triggered()), _undoGroup, SLOT(undo()));
-  connect(actionRedo,SIGNAL(triggered()), _undoGroup, SLOT(redo()));
-  return true;
-}
+#ifdef UNDO
+	bool PowerGui::createUndoActions()
+	{
+	  _undoGroup = new QUndoGroup(this);
+	  actionUndo = _undoGroup->createUndoAction(this);
+	  actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
+	  QIcon undoIcon;
+	  undoIcon.addFile(QString::fromUtf8(":/images/undo.png"), QSize(), QIcon::Normal, QIcon::On);
+	  actionUndo->setIcon(undoIcon);
+	  actionRedo = _undoGroup->createRedoAction(this);
+	  actionNew->setObjectName(QString::fromUtf8("actionRedo"));
+	  QIcon redoIcon;
+	  redoIcon.addFile(QString::fromUtf8(":/images/redo.png"), QSize(), QIcon::Normal, QIcon::On);
+	  actionRedo->setIcon(redoIcon);
+	  toolBar->addAction(actionUndo);
+	  toolBar->addAction(actionRedo);
+	  menuEdit->addSeparator();
+	  menuEdit->addAction(actionUndo);
+	  menuEdit->addAction(actionRedo);
+	  connect(actionUndo,SIGNAL(triggered()), _undoGroup, SLOT(undo()));
+	  connect(actionRedo,SIGNAL(triggered()), _undoGroup, SLOT(redo()));
+	  return true;
+	}
+#endif
 
 bool PowerGui::createRecentFiles()
 {
@@ -391,7 +402,11 @@ bool PowerGui::openFile(QString fileName)
       QMessageBox::critical(this,"PowerDEVS","File does not exists or is corrupted");
       return false;
   } 
-  GpxEditionWindow *newModel= new GpxEditionWindow(this,c,_undoGroup);  
+  #ifdef UNDO
+  	GpxEditionWindow *newModel= new GpxEditionWindow(this,c,_undoGroup);  
+  #else
+  	GpxEditionWindow *newModel= new GpxEditionWindow(this,c);  
+  #endif
   newModel->setFileName(fileName);
   newModel->clearDirty();
   mdiArea->addSubWindow(newModel);
@@ -532,14 +547,15 @@ void PowerGui::setActiveSubWindow(QWidget *window)
   mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
 }
 
-void PowerGui::setActiveUndoStack()
-{
-  if(mdiArea->activeSubWindow()){
-  	GpxEditionWindow *gew = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
-  	gew->setActiveUndoStack();
-  }
-}
-
+#ifdef UNDO
+	void PowerGui::setActiveUndoStack()
+	{
+	  if(mdiArea->activeSubWindow()){
+	  	GpxEditionWindow *gew = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
+	  	gew->setActiveUndoStack();
+	  }
+	}
+#endif
 void PowerGui::dirtyModelClose(GpxEditionWindow *model, QCloseEvent *event)
 {
 	QMessageBox msgBox;

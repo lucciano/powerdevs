@@ -28,8 +28,9 @@
 #include <QMap>
 #include <QDebug>
 #include <QGraphicsView>
-#include <QUndoGroup>
-
+#ifdef UNDO
+	#include <QUndoGroup>
+#endif
 #include <graphics/gpx_block.h>
 #include <graphics/gpx_edition_scene.h>
 #include <data/coupled.h>
@@ -39,9 +40,11 @@ class GpxEditionWindow:public QTabWidget
   Q_OBJECT
 public:
 	GpxEditionWindow(QWidget *parent,Coupled *c);
-	GpxEditionWindow(QWidget *parent,Coupled *c, QUndoGroup *ug);
 	GpxEditionWindow(QWidget *parent);
-	GpxEditionWindow(QWidget *parent, QUndoGroup *ug);
+	#ifdef UNDO
+		GpxEditionWindow(QWidget *parent,Coupled *c, QUndoGroup *ug);
+		GpxEditionWindow(QWidget *parent, QUndoGroup *ug);
+	#endif	
 	~GpxEditionWindow();
 	bool isDirty() { return isWindowModified(); }
   	void setDirty() { setWindowModified(true); }
@@ -62,7 +65,9 @@ public:
   	void deleteSelection();
   	void selectAll();
   	void openCoupled();
-  	void setActiveUndoStack();
+#ifdef UNDO
+	void setActiveUndoStack();
+#endif
 signals:
 	void saveModel(GpxEditionWindow *,QCloseEvent *);
   	void selectionChanged();
@@ -83,7 +88,9 @@ private slots:
   	void on_modified();
   	void on_parameter(Coupled *c);
   	void on_setBlockName(GpxBlock*);
-  	void on_currentChanged(int);
+  	#ifdef UNDO
+		void on_currentChanged(int);
+	#endif
 private:
   	void openCoupled(Coupled *c);
   	QString completePathName(Coupled *c);
@@ -92,6 +99,8 @@ private:
   	Coupled *_coupledData;
   	QTabWidget _tabs;
   	QMap<Coupled*, unsigned int> _openIn;
-  	QUndoGroup *_undoGroup;
+	#ifdef UNDO
+  		QUndoGroup *_undoGroup;
+	#endif
 };
 #endif

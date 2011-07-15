@@ -86,7 +86,9 @@ private slots:
   void on_actionPriority_triggered();
   void setActiveSubWindow(QWidget *window);
   void on_actionParameters_triggered();
+#ifdef UNDO
   void setActiveUndoStack();
+#endif
 
   void contextMenu(GpxBlock *,QPoint);
   void parameterDialog(GpxBlock *);
@@ -121,8 +123,10 @@ private:
   QAction *exitAct;
   QAction *separator;
   QList<Coupled*> _loadedLibs;
-  QUndoGroup *_undoGroup;
-  QAction *actionUndo;
-  QAction *actionRedo;
+  #ifdef UNDO
+	  QUndoGroup *_undoGroup;
+	  QAction *actionUndo;
+	  QAction *actionRedo;
+  #endif
 };
 #endif

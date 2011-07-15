@@ -61,35 +61,37 @@ GpxEditionWindow::GpxEditionWindow(QWidget *parent):QTabWidget(parent)
   connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_currentChanged(int)));
 }
 
-GpxEditionWindow::GpxEditionWindow(QWidget *parent, Coupled *c, QUndoGroup *ug):QTabWidget(parent), _coupledData(c)
-{
-  setTabsClosable(true);
-  setTabPosition(QTabWidget::South);
-  setWindowTitle(QString("%1 [*]").arg(c->name().c_str()));
-  clearDirty();
-  _undoGroup = ug;
-  openCoupled(c);
+#ifdef UNDO
+	GpxEditionWindow::GpxEditionWindow(QWidget *parent, Coupled *c, QUndoGroup *ug):QTabWidget(parent), _coupledData(c)
+	{
+  		setTabsClosable(true);
+  		setTabPosition(QTabWidget::South);
+		setWindowTitle(QString("%1 [*]").arg(c->name().c_str()));
+  		clearDirty();
+  		_undoGroup = ug;
+  		openCoupled(c);
 
-  connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequested(int)));
-  connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_currentChanged(int)));
-}
+  		connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequested(int)));
+  		connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_currentChanged(int)));
+	}
 
-GpxEditionWindow::GpxEditionWindow(QWidget *parent, QUndoGroup *ug):QTabWidget(parent)
-{
-  static unsigned int modelNumber = 0;
+	GpxEditionWindow::GpxEditionWindow(QWidget *parent, QUndoGroup *ug):QTabWidget(parent)
+	{
+  		static unsigned int modelNumber = 0;
 
-  setTabsClosable(true);
-  setTabPosition(QTabWidget::South);
-  setWindowTitle(QString("Model %1 [*]").arg(modelNumber++));
-  setDirty();
-  _coupledData = new Coupled();
-  _coupledData->setName( qPrintable(QString("Model %1").arg(modelNumber-1)));
-  _undoGroup = ug;
-  openCoupled(_coupledData);
+  		setTabsClosable(true);
+  		setTabPosition(QTabWidget::South);
+  		setWindowTitle(QString("Model %1 [*]").arg(modelNumber++));
+  		setDirty();
+  		_coupledData = new Coupled();
+  		_coupledData->setName( qPrintable(QString("Model %1").arg(modelNumber-1)));
+  		_undoGroup = ug;
+  		openCoupled(_coupledData);
 
-  connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequested(int)));
-  connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_currentChanged(int)));
-}
+  		connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequested(int)));
+  		connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_currentChanged(int)));
+	}
+#endif
 
 GpxEditionWindow::~GpxEditionWindow()
 {
@@ -128,7 +130,9 @@ void GpxEditionWindow::openCoupled(Coupled *c)
     return;
   }
   ges = new GpxEditionScene(this, c);
-  //_undoGroup->addStack(ges->undoStack());
+  #ifdef UNDO
+  	_undoGroup->addStack(ges->undoStack());
+  #endif
   QGraphicsView *gv = new QGraphicsView(ges);
   gv->setRenderHint(QPainter::Antialiasing);
   //gv->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -154,7 +158,9 @@ void GpxEditionWindow::openCoupled(Coupled *c)
   addTab(gv, tabName);
   _openIn.insert(c,count()-1);
   setCurrentIndex(count()-1);    
-  on_currentChanged(count()-1);    
+  #ifdef UNDO
+  	on_currentChanged(count()-1);    
+  #endif
   qDebug() << _openIn;
 }
 
@@ -193,19 +199,16 @@ void GpxEditionWindow::on_tabCloseRequested(int index)
   }
 }
 
-void GpxEditionWindow::on_currentChanged(int index)
-{
-	
-/*
-
-	QGraphicsView *gv = qobject_cast<QGraphicsView*>(widget(index));
-    if (gv !=NULL)
-    {
-      GpxEditionScene *ges = qobject_cast<GpxEditionScene*>(gv->scene());
-      _undoGroup->setActiveStack(ges->undoStack());
-    }
-  */
-}
+#ifdef UNDO
+	void GpxEditionWindow::on_currentChanged(int index)
+	{
+		QGraphicsView *gv = qobject_cast<QGraphicsView*>(widget(index));
+    	if (gv !=NULL) {
+      		GpxEditionScene *ges = qobject_cast<GpxEditionScene*>(gv->scene());
+      		_undoGroup->setActiveStack(ges->undoStack());
+    	}
+	}
+#endif
 
 void GpxEditionWindow::on_sceneSelectionChanged()
 {
@@ -505,11 +508,13 @@ void GpxEditionWindow::on_parameter(Coupled *c) {
 		emit parameterDialogCoupled(c);
 }
 
-void GpxEditionWindow::setActiveUndoStack()
-{
-	if(count())
-		on_currentChanged(currentIndex());
-}
+#ifdef UNDO
+	void GpxEditionWindow::setActiveUndoStack()
+	{
+		if(count())
+			on_currentChanged(currentIndex());
+	}
+#endif
 
 QString GpxEditionWindow::getSelection()
 {

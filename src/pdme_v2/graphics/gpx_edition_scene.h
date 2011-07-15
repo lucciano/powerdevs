@@ -26,9 +26,10 @@
 
 #include <QGraphicsScene>
 #include <QRubberBand>
-#include <QUndoStack>
-#include <QUndoGroup>
-
+#ifdef UNDO
+	#include <QUndoStack>
+	#include <QUndoGroup>
+#endif
 #include <graphics/gpx_block.h>
 #include <graphics/gpx_temp_connection.h>
 #include <data/coupled.h>
@@ -64,7 +65,9 @@ public:
   void removeLines(QList<GpxEdge*>);
   void changeBlockName(GpxBlock*);
   void changeRubberBand(); 
-  //QUndoStack *undoStack() { return _undoStack; };
+#ifdef UNDO
+  QUndoStack *undoStack() { return _undoStack; };
+#endif
   GpxBlock *resizingBlock() { return _resizingBlock; };
   QPointF mousePos() { return _mousePos; };
   Qt::Corner resizingCorner() { return _resizingCorner; };
@@ -138,8 +141,10 @@ private:
   	QMap<Point*,GpxConnectionNode*> _points;
   	QMap<Port*,GpxBlock*> _ports;
 	bool changeDirection;
-  	QUndoStack *_undoStack;
-  	QPointF _mousePos,_lastClick;
+#ifdef UNDO
+	QUndoStack *_undoStack;
+#endif
+	QPointF _mousePos,_lastClick;
   	bool override;
 };
 #endif

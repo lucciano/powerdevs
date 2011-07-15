@@ -57,7 +57,9 @@ GpxEditionScene::GpxEditionScene(QObject * parent, Coupled *c) : QGraphicsScene(
    _mayBeDragging = false;
    putStructure(c);
 	setItemIndexMethod(NoIndex);
+	#ifdef UNDO
 	_undoStack = new QUndoStack(this);
+	#endif
   override=false;
 }
 
@@ -68,8 +70,10 @@ GpxEditionScene::GpxEditionScene(QObject * parent) : QGraphicsScene(parent), _co
    _tempConnection = NULL;
    _rubberBand = NULL;
 	setItemIndexMethod(NoIndex);
+	#ifdef UNDO
 	_undoStack = new QUndoStack(this);
-  override=false;
+	#endif
+  	override=false;
 }
 
 
@@ -293,8 +297,10 @@ void GpxEditionScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
           _mode = ResizeItem;
           _resizingBlock = block;
           _resizingCorner =c;
-	  	  //_undoStack->push(new ResizeCmd(this));
-        }
+	  	  #ifdef UNDO
+		  	_undoStack->push(new ResizeCmd(this));
+          #endif
+		}
       }
       if (mouseEvent->button() == Qt::RightButton && !it.size()) {
         _lastClick = pos;
@@ -335,9 +341,10 @@ void GpxEditionScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
           }
         }
     }
-    //if (mouseEvent->button() == Qt::LeftButton && selectedItems().size()) {
-	 	//_undoStack->push(new MoveCmd(this));
-	//}
+	#ifdef UNDO
+    	if (mouseEvent->button() == Qt::LeftButton && selectedItems().size()) 
+	 		_undoStack->push(new MoveCmd(this));
+	#endif
     break;
     default: // shoudl not happen
       Q_ASSERT(false);
@@ -380,8 +387,10 @@ void GpxEditionScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
           }
         }
         qDebug() << "Release";
-	  	//_undoStack->push(new MoveCmd(this));
-      }
+	  	#ifdef UNDO
+			_undoStack->push(new MoveCmd(this));
+      	#endif
+	  }
       break;
     case InsertLine:
       Q_ASSERT(_tempConnection!=NULL);  
@@ -421,12 +430,16 @@ void GpxEditionScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
       delete _rubberBand; 
       _rubberBand = NULL;
       _mode=None;
-	 setSelectedItems(); 
-	  //if(selectedItems().count())
-	  	//_undoStack->push(new SelectCmd(this,_rubberStart));
-      break;
+	  setSelectedItems(); 
+	  #ifdef UNDO
+	  	if(selectedItems().count())
+	  		_undoStack->push(new SelectCmd(this,_rubberStart));
+      #endif
+	  break;
     case ResizeItem:
-	  //_undoStack->push(new ResizeCmd(this));
+	  #ifdef UNDO
+	  	_undoStack->push(new ResizeCmd(this));
+      #endif
       _resizingBlock = NULL;
       _mode = None;
       break;
@@ -434,7 +447,9 @@ void GpxEditionScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 			_movingLine->stopMoving();
       _movingLine = NULL;
       _mode = None;
-	  	//_undoStack->push(new MoveCmd(this));
+	  #ifdef UNDO
+	  	_undoStack->push(new MoveCmd(this));
+      #endif
       break;
 		case MoveNode:
       _movingNode = NULL;
