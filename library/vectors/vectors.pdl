@@ -231,5 +231,24 @@ Coupled
                 Size = Str; 10 ; Vector Size
                 }
             }
+        Atomic
+            {
+            Name = Matrix Gain
+            Ports = 1 ; 1
+            Path = vector/matrix_gain.h
+            Description = y = A * u, where u and y are vectors and parameter A is a Scilab matrix.
+            Graphic
+                {
+                Position = 945 ; 1920
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%matrixgain.svg
+                }
+            Parameters
+                {
+                A = Str; [0 1\;-1 -1] ; Matrix Gain
+                }
+            }
         }
     }
