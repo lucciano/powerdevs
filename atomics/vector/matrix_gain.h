@@ -47,6 +47,7 @@ vector yvec;
 
 
 
+
 public:
 	matrix_gain(const char *n): Simulator(n) {};
 	void init(double, ...);

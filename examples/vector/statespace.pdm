@@ -141,7 +141,7 @@ Coupled
                 }
             Parameters
                 {
-                Index = Str; -1 ; Signal Index
+                Index = Str; 0 ; Signal Index
                 }
             }
         Atomic
