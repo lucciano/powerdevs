@@ -1,7 +1,7 @@
 UNAME = $(shell uname)
-OPTFLAGS = 
 ifeq ($(UNAME), Windows)
-CXXFLAGS = -g -Wall $(OPTFLAGS) -D__WINDOWS__
+OPTFLAGS = -O3
+CXXFLAGS = -Wall $(OPTFLAGS) -D__WINDOWS__
 ATOMICS = ..\atomics
 SRCENGINE = ..\engine
 BUILD = ..\build
@@ -14,8 +14,8 @@ OBJS = $(BUILDOBJ)\*.o
 LIBS = -lsimpd -lws2_32
 endif
 ifeq ($(UNAME), Linux)
-OPTFLAGS = -march=native 
-CXXFLAGS = -g -Wall $(OPTFLAGS)
+OPTFLAGS = -march=native -O3
+CXXFLAGS =  -Wall $(OPTFLAGS)
 ATOMICS = ../atomics
 SRCENGINE = ../engine
 BUILD = ../build
