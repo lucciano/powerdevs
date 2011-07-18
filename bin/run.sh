@@ -17,12 +17,15 @@ else
     ./pdme
   else
     # Previous instalation and different version
-    OW=`zenity --question --text "There is a different version of PowerDEVS on your home folder. Do you wish to overwrite it?"; echo $?`
+    OW=`zenity --question --text "There is a different version of PowerDEVS on your home folder (ver. $VERHOME). Do you wish to overwrite it with ver. $VEROPT?\nNOTE: you will not loose your models."; echo $?`
     if [ $OW == 0 ];
     then 
     	rm -rf $HOME/powerdevs/
 	    cp -a -f /opt/powerdevs $HOME/powerdevs
     	rm $HOME/powerdevs/bin/run.sh
+      cd $HOME/powerdevs/bin
+      ./pdme
+    else
       cd $HOME/powerdevs/bin
       ./pdme
     fi
