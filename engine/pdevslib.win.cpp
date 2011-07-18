@@ -284,8 +284,8 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
   int ncols=*cols;
   int msize=nrows*ncols;
   double lastdata;
-  for (int i=0;i<nrows;i++) {
-    for (int j=0;j<ncols;j++) {
+  for (int j=0;j<ncols;j++) {
+    for (int i=0;i<nrows;i++) {
        fread(&lastdata,sizeof(double),1,FOpen);
        data[i][j]=lastdata;
     }

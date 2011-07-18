@@ -293,57 +293,56 @@ void printLog(const char *fmt,...) {
 }
 
 void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
-char buf[1024];
-sprintf(buf,"tempvar=%s",varname);
-executeVoidScilabJob(buf,true);
-sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
-executeVoidScilabJob(buf,true);
-FILE *FOpen;
-FOpen=fopen("temp.dat","rb");
-char name[24];
-fread(&name,24,1,FOpen);
-int varint;
-fread(&varint,sizeof(int),1,FOpen);
-fread(rows,sizeof(int),1,FOpen);
-fread(cols,sizeof(int),1,FOpen);
-fread(&varint,sizeof(int),1,FOpen);
-int nrows=*rows;
-int ncols=*cols;
-int msize=nrows*ncols;
-double lastdata;
-for (int i=0;i<nrows;i++) {
-    for (int j=0;j<ncols;j++) {
+  char buf[1024];
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen;
+  FOpen=fopen("temp.dat","rb");
+  char name[24];
+  fread(&name,24,1,FOpen);
+  int varint;
+  fread(&varint,sizeof(int),1,FOpen);
+  fread(rows,sizeof(int),1,FOpen);
+  fread(cols,sizeof(int),1,FOpen);
+  fread(&varint,sizeof(int),1,FOpen);
+  int nrows=*rows;
+  int ncols=*cols;
+  int msize=nrows*ncols;
+  double lastdata;
+  for (int j=0;j<ncols;j++) {
+    for (int i=0;i<nrows;i++) {
        fread(&lastdata,sizeof(double),1,FOpen);
        data[i][j]=lastdata;
     }
-}
-fclose(FOpen); 
+  }
+  fclose(FOpen); 
 }
 
 void getScilabVector(char* varname, int *length, double *data) {
-int rows,cols;
+  int rows,cols;
   char buf[1024];
-sprintf(buf,"tempvar=%s",varname);
-executeVoidScilabJob(buf,true);
-sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
-executeVoidScilabJob(buf,true);
-FILE *FOpen;
-FOpen=fopen("temp.dat","rb");
-char name[24];
-fread(&name,24,1,FOpen);
-int varint;
-fread(&varint,sizeof(int),1,FOpen);
-fread(&rows,sizeof(int),1,FOpen);
-fread(&cols,sizeof(int),1,FOpen);
-fread(&varint,sizeof(int),1,FOpen);
-if (rows>cols) *length=rows; else *length=cols;
-double lastdata;
-for (int i=0;i<*length;i++) {
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen;
+  FOpen=fopen("temp.dat","rb");
+  char name[24];
+  fread(&name,24,1,FOpen);
+  int varint;
+  fread(&varint,sizeof(int),1,FOpen);
+  fread(&rows,sizeof(int),1,FOpen);
+  fread(&cols,sizeof(int),1,FOpen);
+  fread(&varint,sizeof(int),1,FOpen);
+  if (rows>cols) *length=rows; else *length=cols;
+  double lastdata;
+  for (int i=0;i<*length;i++) {
      fread(&lastdata,sizeof(double),1,FOpen);
      data[i]=lastdata;
-}
-fclose(FOpen);  
-  
+  }
+  fclose(FOpen);  
 }
 
 void RequestIRQ(unsigned irq, void  *a){
