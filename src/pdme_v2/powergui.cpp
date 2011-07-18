@@ -773,8 +773,15 @@ void PowerGui::parameterDialogCoupled(Coupled *c)
 
 void PowerGui::on_actionAbout_triggered()
 {
-	QMessageBox::about(this, tr("About PowerDEVS"),
-			   tr("<h2>PowerDEVS 2.0</h2>"
+  QFile qf(QCoreApplication::applicationDirPath() + "/../version");
+  QString version("2.2");
+  if (qf.exists()) {
+    qf.open(QIODevice::ReadOnly);
+    version = qf.readAll();
+    qf.close();
+  }
+	QMessageBox::about(this, "About PowerDEVS",
+			   QString("<h2>PowerDEVS %1</h2>"
 			      "<p>Integrated Tool for Edition and Simulation "
 			      "of Discrete Event Systems.</p>"
 			      "<p>Developed by:</p> "
@@ -782,7 +789,7 @@ void PowerGui::on_actionAbout_triggered()
 			      "<p> Enrique Hansen  (enrique.hansen@gmail.com) </p>"
 			      "<p> Joaquin Fernandez (joaquin.f.fernandez@gmail.com) </p>"
 			      "<p>Directed by:</p> "
-			      "<p> Ernesto Kofman (kofman@fceia.unr.edu.ar) </p>"));
+			      "<p> Ernesto Kofman (kofman@fceia.unr.edu.ar) </p>").arg(version));
 }
 
 void PowerGui::updateWindowMenu()
