@@ -1023,7 +1023,7 @@ Coupled
                                 Dimension = 1815; 1320
                                 Direction = Right
                                 Color = 15
-                                Icon = /home/ernesto/powerdevs/examples/hybrid/dc_drive/motor.bmp
+                                Icon = ../examples/hybrid/dc_drive/motor.bmp
                                 Window = 5000; 5000; 5000; 5000
                                 }
                             Parameters
