@@ -2,6 +2,8 @@
 ARCH=`uname -m`
 echo "Retrieving latest from SVN";
 svn up
+svnversion >rev
+cat version.major rev > version
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
 make -f Makefile clean
@@ -19,6 +21,7 @@ fi
 cp ./bin/pd* ./tmp_deb/opt/powerdevs/bin # copy the binaries
 cp ./bin/original.ini ./tmp_deb/opt/powerdevs/bin/powerdevs.ini
 cp COPYING ./tmp_deb/opt/powerdevs
+cp version ./tmp_deb/opt/powerdevs
 cp bin/run.sh ./tmp_deb/opt/powerdevs/bin
 svn export build ./tmp_deb/opt/powerdevs/build
 svn export engine ./tmp_deb/opt/powerdevs/engine
