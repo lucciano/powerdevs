@@ -20,7 +20,7 @@ if [ "$ARCH" == "i686" ]; then
 fi
 if [ "$ARCH" == "x86_64" ]; then
   cat ./tmp_deb/DEBIAN/control.amd64 | awk -v VERSION="$VER" '{ if(index($0,"Version: ")>=1) print "Version: " VERSION ; else print $0;}' >  ./tmp_deb/DEBIAN/control
-  rm ./tmp_deb/DEBIAN/control.i386; 
+  rm ./tmp_deb/DEBIAN/control.amd64; 
   rm ./tmp_deb/DEBIAN/control.i386; 
 fi
 cp ./bin/pd* ./tmp_deb/opt/powerdevs/bin # copy the binaries
