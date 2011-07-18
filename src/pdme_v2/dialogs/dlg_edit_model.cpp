@@ -103,10 +103,10 @@ DlgEditModel::DlgEditModel(GpxBlock *b): prev(NULL), _b(b), _c(NULL)
     temp.addChild(copy);
     prev = new LibraryScene(this,&temp);
     temp.clearModel();
-	prev->setSceneRect(QRectF(0,0,20,20));
+	  prev->setSceneRect(QRectF(0,0,20,20));
     GpxAtomic *ga = qgraphicsitem_cast<GpxAtomic*>(prev->block());
-	ga->setWidth(45);
-	ga->setHeight(45);
+  	ga->setWidth(45);
+	  ga->setHeight(45);
     path->setText(ga->path());
     colorCombo->setCurrentIndex(ga->color());
     iconPath->setText(ga->icon());
@@ -121,10 +121,10 @@ DlgEditModel::DlgEditModel(GpxBlock *b): prev(NULL), _b(b), _c(NULL)
     temp.addChild(copy);
     prev = new LibraryScene(this,&temp);
     temp.clearModel();
-	prev->setSceneRect(QRectF(0,0,20,20));
+	  prev->setSceneRect(QRectF(0,0,20,20));
     GpxCoupled *gc = qgraphicsitem_cast<GpxCoupled*>(prev->block());
-	gc->setWidth(45);
-	gc->setHeight(45);
+  	gc->setWidth(45);
+	  gc->setHeight(45);
     colorCombo->setCurrentIndex(gc->color());
     iconPath->setText(gc->icon());
     prevView->setScene(prev);
@@ -298,6 +298,9 @@ void DlgEditModel::on_findIcon_clicked(bool b)
         icon = QString("\%") + icon.mid(icon.indexOf("/library/") + 9);
         icon = icon.replace(icon.indexOf("/"),1,'%');
         qDebug() << icon;
+    } else {
+      QDir dir(QCoreApplication::applicationDirPath());
+      icon = dir.relativeFilePath(icon);
     }
     iconPath->setText(icon);
   } else {
@@ -659,7 +662,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
 	      GpxAtomic *a = qgraphicsitem_cast<GpxAtomic*>(_b);
 		  if(_b->direction() != b->direction())
 	    	a->setDirection((Graphic::Direction)comboDirection->currentIndex());
-		  a->setIcon(iconPath->text());
+		    a->setIcon(iconPath->text());
 	      a->setWidth(width_block->value());
 	      a->setHeight(height_block->value());
 	      a->setColor(colorCombo->currentIndex()+1);
@@ -670,7 +673,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
 	      GpxCoupled *c = qgraphicsitem_cast<GpxCoupled*>(_b);
 		  if(_b->direction() != b->direction())
 	    	c->setDirection((Graphic::Direction)comboDirection->currentIndex());
-		  c->setIcon(iconPath->text());
+		    c->setIcon(iconPath->text());
 	      c->setWidth(width_block->value());
 	      c->setHeight(height_block->value());
 	      c->setColor(colorCombo->currentIndex()+1);

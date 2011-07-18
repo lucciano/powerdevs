@@ -31,7 +31,6 @@ class UserMenuAction: public QObject
 public:
 	UserMenuAction(QStringList data): QObject()
 	{
-		Q_ASSERT(data.size()==6);
 		_command = data.at(0);
 		_args = data.at(1);
 		_shortcut = QKeySequence(data.at(2));
