@@ -63,7 +63,7 @@ if (x.port!=Inputs-1) { //not a dummy event
   if (lastport>=0) // Still got some events to emit
     sigma=0;
 } else {  //dummy event--> discrete evolution
-  if(function_when_exec(Index,t,u,y)) {
+  if(functionQssWhen(Index,t,u,y)) {
     sigma=0;
     lastport=Outputs-1;
   }
