@@ -12,7 +12,7 @@
 
 int init_runtime();
 int function_staticBlocks(int,double,double*,double*);
-bool function_when_exec(int,double,double*,double*);
+bool functionQssWhen(int,double,double*,double*);
 int function_sample_setup(int, double* , double*); 
 int function_updateDepend(double t, int zerocrossing);
 double state_values (int);
