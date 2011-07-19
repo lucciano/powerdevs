@@ -3,7 +3,12 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = ../../bin/pdppt
+unix {
+  TARGET = ../../bin/pdppt
+}
+win32 {
+  TARGET = ../../../tmp_win_installer/powerdevs/bin/pdppt
+}
 DEPENDPATH += .
 INCLUDEPATH += .
 

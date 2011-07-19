@@ -3,7 +3,12 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = ../../bin/pdif
+win32 {
+  TARGET = ../../../tmp_win_installer/powerdevs/bin/pdif
+}
+unix {
+  TARGET = ../../bin/pdif
+}
 DEPENDPATH += .
 INCLUDEPATH += .
 

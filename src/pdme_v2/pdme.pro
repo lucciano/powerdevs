@@ -110,5 +110,10 @@ RC_FILE += pdme.rc
 INCLUDEPATH += $$GRAPHICS_DIR $$DATA_DIR $$COMMON_DIR
 OBJECTS_DIR = obj
 MOC_DIR = moc
-TARGET = ../../bin/pdme
+unix {
+  TARGET = ../../bin/pdme
+}
+win32 {
+  TARGET = ../../../tmp_win_installer/powerdevs/bin/pdme
+}
 

@@ -1,6 +1,11 @@
 
 TEMPLATE = app
-TARGET = ../../bin/pdae
+unix {
+  TARGET = ../../bin/pdae
+}
+win32 {
+  TARGET = ../../../tmp_win_installer/powerdevs/bin/pdae
+}
 DEPENDPATH += .
 CONFIG += qt 
 INCLUDEPATH += .
