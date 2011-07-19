@@ -20,7 +20,6 @@ svn export library tmp_win_installer\powerdevs\library
 svn export output tmp_win_installer\powerdevs\output
 copy version tmp_win_installer\powerdevs
 copy COPYING tmp_win_installer\powerdevs
-copy bin\original.ini tmp_win_installer\powerdevs\bin\powerdevs.ini
 echo "Building Binaries";
 
 cd src/pdae
@@ -43,4 +42,4 @@ cd ../../tmp_win_installer
 gibuild PowerDEVS.gpr
 cd ../
 copy tmp_win_installer\Output\* .
-rmdir /s /q tmp_win_installer 
+rem rmdir /s /q tmp_win_installer 
