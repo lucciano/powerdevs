@@ -250,5 +250,25 @@ Coupled
                 A = Str; [0 1\;-1 -1] ; Matrix Gain
                 }
             }
+        Atomic
+            {
+            Name = Vector Sample
+            Ports = 1 ; 1
+            Path = vector/vector_sample.h
+            Description = Vector Sample and Hold
+            Graphic
+                {
+                Position = -2355 ; 3870
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%samphold.svg
+                }
+            Parameters
+                {
+                T = Str; 0.5 ; Sampling Period (Scilab)
+                Size = Str; 10 ; Vector Size (Scilab)
+                }
+            }
         }
     }
