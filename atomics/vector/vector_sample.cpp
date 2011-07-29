@@ -8,16 +8,17 @@ va_start(parameters,t);
 //      %Name% is the parameter name
 //	%Type% is the parameter type
 
-char *fvars[1];
-double *parsd[1];
-double par[1];
+char *fvars[2];
+double *parsd[2];
+double par[2];
 char childi[24];
-int Ni[1];
-int Nargs=1;
+int Ni[2];
+int Nargs=2;
 for (int i=0;i<Nargs;i++)fvars[i]= va_arg(parameters,char*);
 char *fvar= va_arg(parameters,char*);
 N=getScilabVar(fvar);
-char pars[1][24];
+char pars[2][24];
+
 for (int i=0;i<Nargs;i++){
  parsd[i]=(double*)calloc(N,sizeof(double));
  getScilabVector(fvars[i],&Ni[i],parsd[i]);

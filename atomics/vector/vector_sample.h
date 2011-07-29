@@ -1,6 +1,7 @@
 //CPP:qss/qsstools.cpp
 
 //CPP:qss/samplehold.cpp
+
 //CPP:vector/vector_sample.cpp
 #if !defined vector_sample_h
 #define vector_sample_h
@@ -28,6 +29,7 @@ Connection **IC1[1];
 vector vec;
 Event y;
 int N,Ni;
+
 
 
 
