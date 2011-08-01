@@ -214,6 +214,7 @@ int main(int argc,char **argv)
 	} else {
 				mod=new Model(ti);
 				mod->setInitialTime(ti);
+         mod->setBreakCount(breakCount);
 				mod->init();
 				mod->setFinalTime(tf);
 				mod->run();
