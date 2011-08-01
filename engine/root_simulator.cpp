@@ -41,7 +41,6 @@ void RootSimulator::init(){
 	realTi = getTime();
 	lastTransition=0;
 	stepsCount=0;
-  maxSteps=100000;
   initLib();
 #ifdef RTAIOS
 	enterRealTime();

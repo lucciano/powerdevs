@@ -91,7 +91,7 @@ void msg(QString m)
   nmbsteps->setValidator(new QIntValidator(this));
 	runTimesEdit = new QLineEdit("1");
   runTimesEdit->setValidator(new QIntValidator(this));
-	ilegitimalCondition = new QLineEdit("100000");
+	ilegitimalCondition = new QLineEdit("1000000");
   ilegitimalCondition->setValidator(new QIntValidator(this));
 	hLayoutWidgetSteps = new QWidget();
 	hLayoutWidgetTimes = new QWidget();
