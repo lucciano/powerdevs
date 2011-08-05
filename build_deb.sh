@@ -37,3 +37,9 @@ svn export output ./tmp_deb/opt/powerdevs/output
 dpkg -b tmp_deb powerdevs.deb
 rm rev
 rm version
+if [ "$ARCH" == "i686" ]; then
+  mv powerdevs.deb powerdevs_i386.deb
+fi
+if [ "$ARCH" == "x86_64" ]; then
+  mv powerdevs.deb powerdevs_amd64.deb
+fi
