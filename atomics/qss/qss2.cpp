@@ -55,10 +55,11 @@ double diffxq[10];
 double dt1;
 
 derx=(double*)x.value;
-X[0]=evaluate_poly(X,e,2);
-X[1]=derx[0];
-X[2]=derx[1]/2;
-if (sigma>0){
+if (x.port==0) {
+ X[0]=evaluate_poly(X,e,2);
+ X[1]=derx[0];
+ X[2]=derx[1]/2;
+ if (sigma>0){
 	advance_time(q,e,1);
 	diffxq[1]=q[1]-X[1];
 	diffxq[2]=-X[2];
@@ -68,6 +69,11 @@ if (sigma>0){
 	dt1=minposroot(diffxq,2);
 	if (dt1<sigma) sigma=dt1;
 	if (fabs(X[0]-q[0])>dQ) sigma=0;
+ }	
+} else {
+	advance_time(X,e,2);
+	X[0]=derx[0];
+	sigma=0;
 }
 }
 

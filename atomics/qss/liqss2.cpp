@@ -55,63 +55,69 @@ double aold;
 
 derx=(double*)x.value;
  
-	//linear model estimation
-if(e>0||t==0){
-	band=false;
-	band3=false;
-}
-if(band&&fabs(q_old+dq_old-q[0]-dq)>1e-12){ //self feedback
-		aold=a;
-		a=(dx_old-derx[0])/(q_old+dq_old-q[0]-dq);
-      if(a<-1e30||a>0){
-		//printLog("With dx_old=%g, derx[0]=%g, q_old=%g, dq_old=%g, q[0]=%g and dq=%g we computed a=%g\n",dx_old,derx[0],q_old,dq_old,q[0],dq,a);
-
-		a=0;
+if (x.port==0) {
+		//linear model estimation
+	if(e>0||t==0){
+		band=false;
+		band3=false;
 	}
+	if(band&&fabs(q_old+dq_old-q[0]-dq)>1e-12){ //self feedback
+			aold=a;
+			a=(dx_old-derx[0])/(q_old+dq_old-q[0]-dq);
+	      if(a<-1e30||a>0){
+			//printLog("With dx_old=%g, derx[0]=%g, q_old=%g, dq_old=%g, q[0]=%g and dq=%g we computed a=%g\n",dx_old,derx[0],q_old,dq_old,q[0],dq,a);
 
-} else {
-	   advance_time(q,e,1);
-}; 
-//printLog("en t=%g estimamos a=%g\n",t,a);
-u[0]=derx[0]-a*(q[0]+dq);
-u[1]=derx[1]-a*q[1];
+			a=0;
+		}
 
-X[0]=X[0]+X[1]*e+X[2]*e*e;
-X[1]=derx[0];
-X[2]=derx[1]/2;
-if (band4) sigma=0;
-//printLog("Ext: t=%g: e=%g, X=[%g, %g, %g], q= [%g, %g], u=[%g ,%g], a=%g \n",t,e,X[0],X[1],X[2],q[0],q[1],u[0],u[1],a);
+	} else {
+		   advance_time(q,e,1);
+	}; 
+	//printLog("en t=%g estimamos a=%g\n",t,a);
+	u[0]=derx[0]-a*(q[0]+dq);
+	u[1]=derx[1]-a*q[1];
 
-if (sigma>0){
-   	diffxq[1]=q[1]-X[1];
-	diffxq[2]=-X[2];
-   	diffxq[0]=q[0]-X[0]-dQ;
-   	sigma=minposroot(diffxq,2);
-   	diffxq[0]=q[0]-X[0]+dQ;
-   	dt1=minposroot(diffxq,2);
-   	if (dt1<sigma) sigma=dt1;
-		if(dt1!=sigma){diffxq[0]=q[0]-X[0]-dQ;}
+	X[0]=X[0]+X[1]*e+X[2]*e*e;
+	X[1]=derx[0];
+	X[2]=derx[1]/2;
+	if (band4) sigma=0;
+	//printLog("Ext: t=%g: e=%g, X=[%g, %g, %g], q= [%g, %g], u=[%g ,%g], a=%g \n",t,e,X[0],X[1],X[2],q[0],q[1],u[0],u[1],a);
+
+	if (sigma>0){
+	   	diffxq[1]=q[1]-X[1];
+		diffxq[2]=-X[2];
+	   	diffxq[0]=q[0]-X[0]-dQ;
+	   	sigma=minposroot(diffxq,2);
+	   	diffxq[0]=q[0]-X[0]+dQ;
+	   	dt1=minposroot(diffxq,2);
+	   	if (dt1<sigma) sigma=dt1;
+			if(dt1!=sigma){diffxq[0]=q[0]-X[0]-dQ;}
 
 		
-		if (a!=0&&(fabs(X[2])>1e-10)&&!band3&&!band2){
-			double diff1[10];
-			diff1[0]=a*a*(q[0]+dq)+a*u[0]+u[1];
-			diff1[1]=a*a*q[1]+a*u[1];
-			dt1=minposroot(diff1,1);
-			if (dt1<sigma) {
-				//printLog("t=%g: Changing sigma from %g to %g\n",t,sigma,dt1);
-				band2=true;
-				sigma=dt1;
+			if (a!=0&&(fabs(X[2])>1e-10)&&!band3&&!band2){
+				double diff1[10];
+				diff1[0]=a*a*(q[0]+dq)+a*u[0]+u[1];
+				diff1[1]=a*a*q[1]+a*u[1];
+				dt1=minposroot(diff1,1);
+				if (dt1<sigma) {
+					//printLog("t=%g: Changing sigma from %g to %g\n",t,sigma,dt1);
+					band2=true;
+					sigma=dt1;
+				}
+			} else {
+				band2=false;
 			}
-		} else {
-			band2=false;
-		}
-		advance_time(diffxq,sigma/2,2);
-		if (fabs(diffxq[0])>3*(dQmin+dQrel*fabs(q[0]))) sigma=1e-12;
-   	//if (fabs(X[0]-q[0])>3*dQ) sigma=1e-12;
+			advance_time(diffxq,sigma/2,2);
+			if (fabs(diffxq[0])>3*(dQmin+dQrel*fabs(q[0]))) sigma=1e-12;
+	   	//if (fabs(X[0]-q[0])>3*dQ) sigma=1e-12;
 
+	}
+} else {
+	advance_time(X,e,2);
+	X[0]=derx[0];
+	sigma=0;
+	band2=false;
 }
-
 }
 Event liqss2::lambda(double t) {
 //This function return an event:

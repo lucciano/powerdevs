@@ -56,17 +56,21 @@ double dt1;
 derx=(double*)x.value;
  
 
-
-X[0]=X[0]+X[1]*e;
-X[1]=derx[0];
-if (sigma>0){
-   	diffxq[1]=-X[1];
-   	diffxq[0]=q[0]-X[0]-dQ;
-   	sigma=minposroot(diffxq,1);
-   	diffxq[0]=q[0]-X[0]+dQ;
-   	dt1=minposroot(diffxq,1);
-   	if (dt1<sigma) sigma=dt1;
-   	if (fabs(X[0]-q[0])>dQ) sigma=0;
+if (x.port==0) {
+	X[0]=X[0]+X[1]*e;
+	X[1]=derx[0];
+	if (sigma>0){
+	   	diffxq[1]=-X[1];
+   		diffxq[0]=q[0]-X[0]-dQ;
+   		sigma=minposroot(diffxq,1);
+   		diffxq[0]=q[0]-X[0]+dQ;
+   		dt1=minposroot(diffxq,1);
+   		if (dt1<sigma) sigma=dt1;
+   		if (fabs(X[0]-q[0])>dQ) sigma=0;
+	}
+} else {
+	X[0]=derx[0];
+	sigma=0;
 }
 }
 Event qss::lambda(double t) {

@@ -58,35 +58,39 @@ double dt1;
 
 derx=(double*)x.value;
  
-
-X[0]=evaluate_poly(X,e,4);
-X[1]=derx[0];
-X[2]=derx[1]/2;
-X[3]=derx[2]/3;
-X[4]=derx[3]/4;
-if (sigma>0){
-	advance_time(q,e,3);
-	diffxq[1]=q[1]-X[1];
-	diffxq[2]=q[2]-X[2];
-	diffxq[3]=q[3]-X[3];
-	diffxq[4]=-X[4];
-	diffxq[0]=q[0]-X[0]-dQ;
-	sigma=minposroot(diffxq,4);
-	diffxq[0]=q[0]-X[0]+dQ;
-	dt1=minposroot(diffxq,4);
-	if (dt1<sigma) sigma=dt1;
-	if ((sigma>1e19)&&(X[4]!=0)) {
-		//We suspect numerical error, and try with third order roots
-		sigma=minposroot(diffxq,3);
+if (x.port==0) { 
+	X[0]=evaluate_poly(X,e,4);
+	X[1]=derx[0];
+	X[2]=derx[1]/2;
+	X[3]=derx[2]/3;
+	X[4]=derx[3]/4;
+	if (sigma>0){
+		advance_time(q,e,3);
+		diffxq[1]=q[1]-X[1];
+		diffxq[2]=q[2]-X[2];
+		diffxq[3]=q[3]-X[3];
+		diffxq[4]=-X[4];
 		diffxq[0]=q[0]-X[0]-dQ;
-		dt1=minposroot(diffxq,3);
+		sigma=minposroot(diffxq,4);
+		diffxq[0]=q[0]-X[0]+dQ;
+		dt1=minposroot(diffxq,4);
 		if (dt1<sigma) sigma=dt1;
-	};      
-	if (fabs(X[0]-q[0])>dQ) {
-		sigma=1e-20;
-	};       
+		if ((sigma>1e19)&&(X[4]!=0)) {
+			//We suspect numerical error, and try with third order roots
+			sigma=minposroot(diffxq,3);
+			diffxq[0]=q[0]-X[0]-dQ;
+			dt1=minposroot(diffxq,3);
+			if (dt1<sigma) sigma=dt1;
+		};      
+		if (fabs(X[0]-q[0])>dQ) {
+			sigma=1e-20;
+		};       
+	}
+} else {
+	advance_time(X,e,4);
+	X[0]=derx[0];
+	sigma=0;
 }
-
 }
 Event qss4::lambda(double t) {
 //This function return an event:
