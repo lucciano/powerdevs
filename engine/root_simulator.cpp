@@ -82,6 +82,7 @@ void RootSimulator::exit()
 			leaveRealTime();
 #endif
 			mainCoupling->exit();
+      cleanLib();
 			printLog("Simulation Ended (%.3g sec)\n",getTime()-realTi);
 }
 
