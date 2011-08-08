@@ -53,28 +53,32 @@ double dt1;
 double aold;
 
 derx=(double*)x.value;
-if(e>0||t==0){band=false;}
-if (band&&fabs(q_old+dq_old-q[0]-dq)>1e-10){ 		//self feedback
-		aold=a;
-		a=(dx_old-derx[0])/(q_old+dq_old-q[0]-dq);
-		if ((a<-1e30)||(a>0)){a=0;}
-};
+if (x.port==0) {
+	if(e>0||t==0){band=false;}
+	if (band&&fabs(q_old+dq_old-q[0]-dq)>1e-10){ 		//self feedback
+			aold=a;
+			a=(dx_old-derx[0])/(q_old+dq_old-q[0]-dq);
+			if ((a<-1e30)||(a>0)){a=0;}
+	};
 
-u[0]=derx[0]-a*(q[0]+dq);
-X[0]=X[0]+X[1]*e;
-X[1]=derx[0];
-if (band3) sigma=0;
-//printLog("Ext: t=%g: a=%g, X=[%g, %g], u=[%g], e=%g\n",t,a,X[0],X[1],u[0],e);  
-if (sigma>0){
-   	diffxq[1]=-X[1];
-   	diffxq[0]=q[0]-X[0]-dQ;
-   	sigma=minposroot(diffxq,1);
-   	diffxq[0]=q[0]-X[0]+dQ;
-   	dt1=minposroot(diffxq,1);
-   	if (dt1<sigma) sigma=dt1;
-	  	if (fabs(X[0]-q[0])>dQ) sigma=1e-12;
-};
-
+	u[0]=derx[0]-a*(q[0]+dq);
+	X[0]=X[0]+X[1]*e;
+	X[1]=derx[0];
+	if (band3) sigma=0;
+	//printLog("Ext: t=%g: a=%g, X=[%g, %g], u=[%g], e=%g\n",t,a,X[0],X[1],u[0],e);  
+	if (sigma>0){
+	   	diffxq[1]=-X[1];
+	   	diffxq[0]=q[0]-X[0]-dQ;
+	   	sigma=minposroot(diffxq,1);
+	   	diffxq[0]=q[0]-X[0]+dQ;
+	   	dt1=minposroot(diffxq,1);
+	   	if (dt1<sigma) sigma=dt1;
+		  	if (fabs(X[0]-q[0])>dQ) sigma=1e-12;
+	};
+} else {
+	X[0]=derx[0];
+	sigma=0;
+}
 }
 Event liqss::lambda(double t) {
 double ddx_est;

@@ -252,13 +252,13 @@ Coupled
             }
         Atomic
             {
-            Name = Vector Sample0
+            Name = Vector Sample
             Ports = 1 ; 1
             Path = vector/vector_sample.h
             Description = Vector Sample and Hold
             Graphic
                 {
-                Position = -1455 ; 3495
+                Position = -2355 ; 3870
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
@@ -267,8 +267,47 @@ Coupled
             Parameters
                 {
                 T = Str; 1 ; Sampling Period (Scilab)
-                Phi = Str; 0 ; Delay (Scilab)
-                Size = Str; 10 ; Delay (Scilab)
+                Size = Str; 10 ; Vector Size (Scilab)
+                }
+            }
+        Atomic
+            {
+            Name = Vector CrossDet
+            Ports = 1 ; 1
+            Path = vector/vector_cross_det.h
+            Description = Produces events when u=level. (QSS1 to 4). (vector)
+            Graphic
+                {
+                Position = -330 ; 3645
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%crossdetector.svg
+                }
+            Parameters
+                {
+                level = Str; 0 ; Crossing level (Scilab expression)
+                output = Str; 1 ; Output event value (Scilab expression)
+                Size = Str; 10 ; Vector Size (Scilab)
+                }
+            }
+        Atomic
+            {
+            Name = Vector Triggered Sampler
+            Ports = 2 ; 1
+            Path = vector/vector_commsampler.h
+            Description = Samples and holds u0 when receives events in u1. Works with polynomials up to 5th order. (Vector)
+            Graphic
+                {
+                Position = 1470 ; 3570
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%triggeredsampler.svg
+                }
+            Parameters
+                {
+                Size = Str; 10 ; Vector Size (Scilab)
                 }
             }
         }
