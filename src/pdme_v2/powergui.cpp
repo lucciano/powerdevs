@@ -92,11 +92,20 @@ PowerGui::PowerGui(): PowerGui_class()
     QProcess q; 
     QString outputPath = getSetting("Path/outputPath").toString(); 
     qDebug() << "Starting Scilab from " << scilabPath << " in directory " << outputPath << " with arg " << getSetting("scilabArg").toString();
-    if (getSetting("scilabArg").toString().trimmed().size())
-      q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
-    else
-      q.startDetached(scilabPath, QStringList(), outputPath); 
-    q.waitForStarted();
+#ifndef Q_OS_WIN32
+    bool scilabRunning = system("ps -e | grep scilab") == 0;
+#else
+    bool scilabRunning = false;
+#endif
+    if (!scilabRunning) {
+      if (getSetting("scilabArg").toString().trimmed().size())
+        q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
+      else
+        q.startDetached(scilabPath, QStringList(), outputPath); 
+      q.waitForStarted();
+    } else {
+      qDebug() << "Scilab is already running";
+    }
   }
 }
 
