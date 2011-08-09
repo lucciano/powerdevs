@@ -161,26 +161,28 @@ void PowerGui::runAction(QObject *objectAction)
         return;
     }
     QString arg = userAction->args();
+    QStringList args = arg.split(" ");
     if (active && userAction->requiresModel()) 
     {
       QString fileName = model->fileName();
       if (fileName.isEmpty())
         return;
-      arg = arg.replace("\%F",fileName);
-      arg = arg.replace("\%D",fileName.replace(".pdm",".pdd"));
+       qDebug() << args;
+       args.replaceInStrings("\%F",fileName);
+       args.replaceInStrings("\%D",fileName.replace(".pdm",".pdd"));
     }
     if (arg.contains("\%P")) {
       QString examplePath = QCoreApplication::applicationDirPath() + "/" + getSetting("Path/examplePath").toString();
       QString fileName = QFileDialog::getOpenFileName(this, "Open structure", examplePath, "PowerDEVS Structure *.pds (*.pds)");
       if (fileName.isEmpty()) 
         return;
-      arg = arg.replace("\%P",fileName);
+      args.replaceInStrings("\%P",fileName);
     }
-    qDebug() << "Pressed on " << userAction->command() << " " << arg << "Running it on " << userAction->runInFolder();
+    qDebug() << "Pressed on " << userAction->command() << " " << args << "Running it on " << userAction->runInFolder();
     if (userAction->runInFolder().isEmpty())
-      QProcess::startDetached(userAction->command(),arg.split(" "));
+      QProcess::startDetached(userAction->command(),args);
     else
-      QProcess::startDetached(userAction->command(),arg.split(" "),userAction->runInFolder());
+      QProcess::startDetached(userAction->command(),args,userAction->runInFolder());
 }
 
 void PowerGui::updateMenus()
