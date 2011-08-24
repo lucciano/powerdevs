@@ -79,6 +79,7 @@ void writeToPort(short v,int port) {
 }
 
 short readFromPort(int port) {
+  return 0;
 }
 
 int SendSocket;
@@ -91,13 +92,13 @@ double executeVoidScilabJob(char *cmd,bool blocking) {
   char buff[1024];
   sprintf(buff,"\\%s",cmd); // If the command starts with a slash the command is not written to the out var
   executeScilabJob(buff,blocking);
+  return 0.0;
 }
 
 double executeScilabJob(char *cmd,bool blocking) {
 #ifdef TCP_BACKDOOR
   double ans=0;
   char buff[1024];
-  socklen_t  SenderAddrSize = sizeof(sockaddr_in);
   int result = -1;
 
   initScilab();
@@ -111,7 +112,8 @@ double executeScilabJob(char *cmd,bool blocking) {
     printLog("There's not an instance of Scilab running. Returing zero\n");
     return 0.0;
   }
-  int ret=write(SendSocket,buff,strlen(buff));
+  if (write(SendSocket,buff,strlen(buff))<(signed)strlen(buff))
+    printLog("Incomplete TCP message\n");
   if (blocking) {
 	  result = read(SendSocket, buff , 1024);
   }
@@ -193,7 +195,7 @@ double getScilabVar(char *varname) {
   double f;
   sprintf(buf,"anss=%s",varname);
   executeVoidScilabJob(buf,true);
-  executeScilabJob("exists('anss')",false);
+  executeScilabJob((char*)"exists('anss')",false);
   getAns(&f,1,1);
   if (!activeScilab) {
      exitStatus = -1;
@@ -205,9 +207,9 @@ double getScilabVar(char *varname) {
      printLog("Variable %s does not exists! Returning zero\n",varname); 
      return 0.0;
   }
-  executeScilabJob("anss",true);
+  executeScilabJob((char*)"anss",true);
   getAns(&f,1,1);
-  executeVoidScilabJob("clear anss",true);
+  executeVoidScilabJob((char*)"clear anss",true);
   return f;
 }
 
@@ -221,7 +223,6 @@ void getAns(double *ans, int rows, int cols) {
 	  ans[0]=0.0;
   }
   char cmd[124] = "@";
-  int timeout = 2000;
   int iResult;
   struct pollfd p;
   executeScilabJob(cmd,false);
@@ -230,7 +231,6 @@ void getAns(double *ans, int rows, int cols) {
     return;
   p.fd=SendSocket;
   p.events = POLLIN;
-  socklen_t  SenderAddrSize = sizeof(sockaddr_in);
   if (true /*poll(&p,1,1000)!=0*/) {
 	  iResult = read(SendSocket, (char*)ans, sizeof(double)*rows*cols);
     //printLog("Read returned %d\n",iResult);
@@ -272,7 +272,8 @@ void RTFileWrite(long int file ,char* buf,int size) {
   fflush((FILE*)file);
 };
 void RTFileRead(long int file ,char* buf ,int size){
-	fread(buf,size,1,(FILE*)file);
+	if (fread(buf,size,1,(FILE*)file)<1)
+    printLog("Incomplete read from file\n");
 }
 void RTFileClose(long int file){
 	fclose((FILE*)file);
@@ -301,22 +302,23 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
   FILE *FOpen;
   FOpen=fopen("temp.dat","rb");
   char name[24];
-  fread(&name,24,1,FOpen);
+  int res=fread(&name,24,1,FOpen);
   int varint;
-  fread(&varint,sizeof(int),1,FOpen);
-  fread(rows,sizeof(int),1,FOpen);
-  fread(cols,sizeof(int),1,FOpen);
-  fread(&varint,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
+  res=fread(rows,sizeof(int),1,FOpen);
+  res=fread(cols,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
   int nrows=*rows;
   int ncols=*cols;
-  int msize=nrows*ncols;
   double lastdata;
   for (int j=0;j<ncols;j++) {
     for (int i=0;i<nrows;i++) {
-       fread(&lastdata,sizeof(double),1,FOpen);
+       res=fread(&lastdata,sizeof(double),1,FOpen);
        data[i][j]=lastdata;
     }
   }
+  if (res<=0)
+    printLog("Incomplete read in getScilabMatrix\n");
   fclose(FOpen); 
 }
 
@@ -330,18 +332,20 @@ void getScilabVector(char* varname, int *length, double *data) {
   FILE *FOpen;
   FOpen=fopen("temp.dat","rb");
   char name[24];
-  fread(&name,24,1,FOpen);
+  int res=fread(&name,24,1,FOpen);
   int varint;
-  fread(&varint,sizeof(int),1,FOpen);
-  fread(&rows,sizeof(int),1,FOpen);
-  fread(&cols,sizeof(int),1,FOpen);
-  fread(&varint,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
+  res=fread(&rows,sizeof(int),1,FOpen);
+  res=fread(&cols,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
   if (rows>cols) *length=rows; else *length=cols;
   double lastdata;
   for (int i=0;i<*length;i++) {
-     fread(&lastdata,sizeof(double),1,FOpen);
+     res=fread(&lastdata,sizeof(double),1,FOpen);
      data[i]=lastdata;
   }
+  if (res<=0)
+    printLog("Incomplete read in getScilabMatrix\n");
   fclose(FOpen);  
 }
 

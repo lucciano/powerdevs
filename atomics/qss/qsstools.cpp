@@ -1,7 +1,7 @@
 #include "qsstools.h"
 
 double minposroot(double *coeff, int order) {
-  double mpr;
+  double mpr=INF;
   switch (order) {
   case 0:
 	  mpr=INF;

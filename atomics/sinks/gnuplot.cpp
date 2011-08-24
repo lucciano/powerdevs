@@ -11,8 +11,8 @@ format[1] = (char*) va_arg(parameters, char*);
 format[2] = (char*) va_arg(parameters, char*);
 format[3] = (char*) va_arg(parameters, char*);
 format[4] = (char*) va_arg(parameters, char*);
-sprintf(FName,"plots/%d.csv",this);
-sprintf(Script,"plots/%d.plt",this);
+sprintf(FName,"plots/%d.csv",(int)this);
+sprintf(Script,"plots/%d.plt",(int)this);
 FILE *fd=fopen(FName,"w");
 fwrite("0",1,1,fd);
 for (int i=0;i<n;i++)
@@ -37,7 +37,7 @@ if (p!=NULL)
 	p[2]=' ';
 }
 sprintf(buff,buff2,getFinalTime());
-for (int i=0;i<strlen(buff);i++) 
+for (unsigned int i=0;i<strlen(buff);i++) 
    if (buff[i]=='@') buff[i]=';'; // Escaping characters
 strcat(buff,"\nset datafile separator \",\"\nplot ");
 for (int i=0;i<n;i++) {
@@ -64,11 +64,13 @@ fclose(fd);
 sigma=1e20;
 if (getOs()!=WINDOWS) {
 	spawnProcess("/usr/bin/gnuplot",Script);
-   sprintf(buff,"find ./plots/%s.csv -ctime 1 -exec rm -rf {} \\\;","*");
+   sprintf(buff,"find ./plots/%s.csv -ctime 1 -exec rm -rf {} \\;","*");
    //printLog(buff);
-   system(buff);//delete old .csv files
-   sprintf(buff,"find ./plots/%s.plt -ctime 1 -exec rm -rf {} \\\;","*");
-   system(buff);//delete old .plt files
+   int res=system(buff);//delete old .csv files
+   sprintf(buff,"find ./plots/%s.plt -ctime 1 -exec rm -rf {} \\;","*");
+   res=system(buff);//delete old .plt files
+   if (res<=0)
+    printLog("Failed system in gnuplot\n");
 	}
 else {
 	char buff[1024];
@@ -119,7 +121,7 @@ void gnuplot::exit() {
 	RTFileClose(foutput);
 	char Script[128];
 	char buff[128];
-	sprintf(Script,"plots/%d.plt",this);
+	sprintf(Script,"plots/%d.plt",(int)this);
 	FILE *fd=fopen(Script,"w");
 	fwrite(printString,strlen(printString),1,fd);
 if (getOs()!=WINDOWS) 

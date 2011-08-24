@@ -75,8 +75,8 @@ void cqss::dext(Event x, double t) {
 //     'x.value' is the value
 //     'x.port' is the port number
 double *derx;
-double diffxq[10];
-double dt1;
+//double diffxq[10];
+//double dt1;
 
 derx=(double*)x.value;
 

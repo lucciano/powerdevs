@@ -110,7 +110,9 @@ int main(int argc,char **argv)
 		printf_flush("%s",msg);
 		while (buff[0]!='q') {
 			printf_flush("(pdevs)");
-			fgets(buff,1024,stdin);
+			char *res=fgets(buff,1024,stdin);
+      if (res==NULL)
+        break;
 			if (buff[0]=='x') {
 				if (!running) {
 					runs=atoi(buff+1);

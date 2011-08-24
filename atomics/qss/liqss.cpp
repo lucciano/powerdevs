@@ -81,7 +81,7 @@ if (x.port==0) {
 }
 }
 Event liqss::lambda(double t) {
-double ddx_est;
+//double ddx_est;
 //this should be at the internal transition
 //we put here to optimize code
 
