@@ -22,6 +22,7 @@
 ****************************************************************************/
 
 #include <QMessageBox>
+#include <QDebug>
 #include "codegenerator.h"
 #include "modelcoupled.h"
 
@@ -406,6 +407,39 @@ QString getParameterString(QList < modelParameter * >params, modelAtomic * a)
 	return ret;
 }
 
+QString getExtraDep(QString at)
+{
+	QString ret = "";
+	QString path = QCoreApplication::applicationDirPath();
+	QString file = getRelativePath(path + QString("/../atomics/") + at + ".h");
+  //qDebug() << "Getting extra deps for "<< file;
+  char buff[1024];
+
+	QFile fd(file);
+	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    while (fd.readLine(buff,1024)>0) {
+      QString line(buff);
+      if (line.startsWith("//cpp:",Qt::CaseInsensitive)) {
+        if (!line.contains(getClassName(at)))
+          ret +=  " $(ATOMICS)/" + getBaseFilename(line.mid(6)) + ".cpp";
+      }
+      if (line.startsWith("#include",Qt::CaseInsensitive)) {
+        QString header = line.mid(8).trimmed().mid(1);
+        header = header.left(header.length()-1);
+	      QFile hfile(getRelativePath(path + QString("/../atomics/") + header));
+        if (hfile.exists())
+        {
+          ret +=  " $(ATOMICS)/" + header;
+          //qDebug() << "Header->" << header;
+        }
+      }
+		}
+		fd.close();
+	}
+
+	return ret;
+
+}
 QSet < QString > getExtraObjs(QString at)
 {
 
@@ -420,8 +454,7 @@ QSet < QString > getExtraObjs(QString at)
 			line = getRelativePath(line);
 			if (line.startsWith("//cpp:")
 			    && !line.contains(getClassName(at))) {
-				objects.insert(getBaseFilename(line.mid(6)) +
-					       ".o");
+				objects.insert(getBaseFilename(line.mid(6)) + ".o");
 			}
 			line = QString(fd.readLine());
 		}
@@ -738,7 +771,7 @@ void generateModel(modelCoupled * c)
 		basefile = getBaseFilename((*j));
 		w = w.arg(basefile);
 		w = w.arg(basefile);
-		w = w.arg("");	// Extra cpp 
+		w = w.arg(getExtraDep(getBaseFilename((*j))));	// Extra cpp 
 		w = w.arg(basefile);
 		basefile = getClassName((*j));
 		w = w.arg(basefile);

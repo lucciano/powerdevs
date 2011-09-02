@@ -81,9 +81,7 @@ int main(int argc, char **argv)
 	modelCoupled *c = NULL;
 	if (filename.endsWith(".pdm", Qt::CaseInsensitive)) {
 		c = parseModel(filename);
-		qDebug("File parsed");
 		generateCode(c, filename.replace(".pdm", ".pds", Qt::CaseInsensitive), generateCCode, true);
-		qDebug("Code genarted");
 	} else if (filename.endsWith(".pds", Qt::CaseInsensitive)) {
 		c = parsePDS(filename);
 		generateCode(c, filename.replace(".pdm", ".pds", Qt::CaseInsensitive), generateCCode, false);
@@ -114,7 +112,7 @@ int main(int argc, char **argv)
 				  pdif.startDetached("../bin/pdif", QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
 			  else {
 				  QFile stm(filename.left(filename.lastIndexOf(".")) + ".stm");
-				  qDebug() << (filename.left(filename.lastIndexOf(".")) + ".stm");
+				  //qDebug() << (filename.left(filename.lastIndexOf(".")) + ".stm");
 				  double tf,ti;
 				  bool ok=false;
 				  if (stm.open(QIODevice::ReadOnly | QIODevice::Text)) {
