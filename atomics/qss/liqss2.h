@@ -10,7 +10,7 @@
 
 #include "math.h"
 #include "string.h"
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 
 class liqss2: public Simulator { 

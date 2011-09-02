@@ -11,7 +11,7 @@
 #include "stdarg.h"
 
 #include "mathexpr.h"
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 
 class qss_nlfunction_step: public Simulator { 

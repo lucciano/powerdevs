@@ -13,7 +13,7 @@
 #include "stdarg.h"
 
 #include "mathexpr.h"
-#include "qsstools.h"
+#include "qss/qsstools.h"
 #include "secant_solve.h"
 
 

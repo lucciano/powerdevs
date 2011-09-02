@@ -8,7 +8,7 @@
 #include "event.h"
 #include "stdarg.h"
 
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 
 class qss_saturation: public Simulator { 

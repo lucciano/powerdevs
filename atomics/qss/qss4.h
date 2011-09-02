@@ -8,7 +8,7 @@
 
 #include "math.h"
 #include "string.h"
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 
 class qss4: public Simulator { 

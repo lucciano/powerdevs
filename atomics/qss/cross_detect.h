@@ -7,7 +7,7 @@
 #include "event.h"
 #include "stdarg.h"
 
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 
 class cross_detect: public Simulator { 

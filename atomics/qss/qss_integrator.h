@@ -28,7 +28,7 @@
 
 #include "math.h"
 #include "string.h"
-#include "qsstools.h"
+#include "qss/qsstools.h"
 #include "qss/qss.h"
 #include "qss/qss2.h"
 #include "qss/qss3.h"

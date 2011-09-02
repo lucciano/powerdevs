@@ -1,4 +1,4 @@
-#include "qsstools.h"
+#include "qss/qsstools.h"
 
 double minposroot(double *coeff, int order) {
   double mpr=INF;
