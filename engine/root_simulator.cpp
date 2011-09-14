@@ -30,7 +30,7 @@
 Time realTi;
 bool overRun;
 int exitStatus=0;
-long int realTiSimulation;
+double realTiSimulation;
 
 void RootSimulator::init(){
 	t=ti;

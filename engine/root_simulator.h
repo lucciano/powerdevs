@@ -32,7 +32,7 @@
 extern Time realTi;
 extern bool overRun;
 extern int exitStatus;
-extern long int realTiSimulation;
+extern double realTiSimulation;
 
 /*! \brief The RootSimulator class is used to simulate a DEVS model */
 class RootSimulator

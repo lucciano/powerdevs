@@ -32,7 +32,7 @@ double getRealSimulationTime()
 {
   struct timeval tv;
   gettimeofday(&tv,NULL);
-  return (tv.tv_sec - realTiSimulation) + tv.tv_usec*1.0e-6;
+  return (tv.tv_sec + tv.tv_usec*1.0e-6)  - realTiSimulation;
 }
 
 int waitFor(Time t, RealTimeMode m) 
@@ -48,7 +48,7 @@ void initLib()
 {
   struct timeval tv;
   gettimeofday(&tv,NULL);
-  realTiSimulation = tv.tv_sec;
+  realTiSimulation = tv.tv_sec + tv.tv_usec*1.0e-6;
 }
 
 void cleanLib()
