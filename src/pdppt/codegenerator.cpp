@@ -351,6 +351,8 @@ modelParameter *getParameter(QString par, modelCoupled * c)
 			return (*j);
 		}
 	}
+  if (c->father!=NULL)
+    return getParameter(par, c->father);
 	printf("Parameter %s not found in model\n", QSTR(par));
 	exit(-1);
 }
@@ -806,9 +808,7 @@ int generateCode(modelCoupled * c, QString pdsName, bool generateCCode,
 {
 	if (genPDS) {
 		fdPds = new QFile(pdsName);
-		fdPds->
-		    open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::
-			 Truncate);
+		fdPds-> open(QIODevice::WriteOnly | QIODevice::Text | QIODevice:: Truncate);
 		generatePDS(c, 0);
 		fdPds->close();
 	}
