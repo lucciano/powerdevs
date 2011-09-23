@@ -81,8 +81,8 @@ class GpxBlock : public QGraphicsWidget
   int getBoundingHeight() { return _height+_name_item.boundingRect().height(); };
   void setName(QString);
   QString name() { return _name_item.toPlainText(); }
-  GpxConnectionInport  *inport(unsigned int i) { return _inPorts[i]; }
-  GpxConnectionOutport *outport(unsigned int i) { return _outPorts[i]; }
+  GpxConnectionInport  *inport(unsigned int i) { assert(i<_inPorts.size()); return _inPorts[i]; }
+  GpxConnectionOutport *outport(unsigned int i) { assert(i<_outPorts.size()); return _outPorts[i]; }
   unsigned int inportIndex(GpxConnectionPoint *p) { return _inPorts.indexOf((GpxConnectionInport*)p); }
   unsigned int outportIndex(GpxConnectionPoint *p) { return _outPorts.indexOf((GpxConnectionOutport*)p); }
   QList<GpxEdge*> connectedLines();

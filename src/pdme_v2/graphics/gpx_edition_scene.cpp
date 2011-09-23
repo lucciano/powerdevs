@@ -704,7 +704,7 @@ void GpxEditionScene::putInport(Port *p, bool paste, bool draggin)
         p->setName(findName(p->name().c_str()).toAscii().constData());
         //_coupledData->addInport(p);
         emit add_Port(_coupledData,p);
-		p->graphic().setX(p->graphic().x()+OFFSET_X);
+		    p->graphic().setX(p->graphic().x()+OFFSET_X);
         p->graphic().setY(p->graphic().y()+OFFSET_Y);
       }
       GpxInport *item = new GpxInport(this, p);
@@ -779,8 +779,11 @@ void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Mod
       {
         case Line::PORT:
           {
+            cout << *l;
             const int port = l->sourceAt(0)-1;
+            qDebug() << "Port " << port;
             const bool inport = l->sourceAt(2)==0;
+            qDebug() << "Inport " << inport;
             GpxBlock *b=_ports[_coupledData->port(port)];
 						if (inport) 
 							src=b->outport(0);
@@ -869,10 +872,10 @@ void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Mod
       GpxEdge *item = new GpxEdge(src,dst,l);
       if (paste || draggin)
       {
-	if (src->isCross())
-	  src->setSelected(true);
-	if (dst->isCross())
-	  dst->setSelected(true);
+	      if (src->isCross())
+      	  src->setSelected(true);
+      	if (dst->isCross())
+      	  dst->setSelected(true);
         item->setSelected(true);
       }
       addItem(item);
@@ -1048,6 +1051,7 @@ QString GpxEditionScene::getSelection()
   Coupled c;
 	QList<QGraphicsItem *> items = selectedItems();
   QMap<Point*,Point*> newNodes;
+  QMap<Port*,Port*> newPorts;
 	foreach (QGraphicsItem *i, items)
 	{
 		if (i->type()==GpxBlock::Type){
@@ -1064,10 +1068,12 @@ QString GpxEditionScene::getSelection()
 				// if this is the best way to fix this. Same fix applied 
 				// with the outports.
         Port *port = new Port(*p->portData());
+        newPorts.insert(p->portData(),port);
 				c.addInport(port);
 			} else {
 				GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
         Port *port = new Port(*p->portData());
+        newPorts.insert(p->portData(),port);
 				c.addOutport(port);
 			}
 		}
@@ -1117,10 +1123,10 @@ QString GpxEditionScene::getSelection()
         int port;
         if (b->isInport()) {
           GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
-          port = c.portIndex(p->portData())+1;
+          port = c.portIndex(newPorts[p->portData()])+1;
         } else {
           GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
-          port = c.portIndex(p->portData())+1;
+          port = c.portIndex(newPorts[p->portData()])+1;
         }
 				vector<int> li = l->sources();
         li[0] = port;
@@ -1134,10 +1140,10 @@ QString GpxEditionScene::getSelection()
         int port;
         if (b->isInport()) {
           GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
-          port = c.portIndex(p->portData())+1;
+          port = c.portIndex(newPorts[p->portData()])+1;
         } else {
           GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
-          port = c.portIndex(p->portData())+1;
+          port = c.portIndex(newPorts[p->portData()])+1;
         }
 				vector<int> li = l->sinks();
         li[0] = port;
@@ -1212,8 +1218,8 @@ void GpxEditionScene::paste(QString clip)
       OFFSET_X=_lastClick.x()-c->graphic().x();
       OFFSET_Y=_lastClick.y()-c->graphic().y();
     } 
-    putStructure(c,true);
     cout << c[0];
+    putStructure(c,true);
     qDebug() << "Last click " << _lastClick;
     qDebug() << "Coupled pos " << c->graphic().x() << " " << c->graphic().y();
     lclick = _lastClick;
