@@ -474,6 +474,9 @@ void Coupled::updatePoints(bool checkPoints)
         cout << *this;
         assert(false);
       }
+  for (unsigned int i=0; i<_childs.size();++i)
+    if (_childs[i]->isCoupled())
+      (dynamic_cast<Coupled*>(_childs[i]))->updatePoints();
 }
 
 bool sortPredicate(const Model *c1, const Model  *c2)

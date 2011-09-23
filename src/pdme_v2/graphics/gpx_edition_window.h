@@ -51,7 +51,7 @@ public:
   	void clearDirty() { setWindowModified(false); }
 	QString fileName() { return _fileName;}
   	void setFileName(QString fileName);
-  	Coupled *getCoupled() { return _coupledData; }
+  	Coupled *getCoupled() { _coupledData->updatePoints(); return _coupledData; }
   	GpxEditionScene *currentScene();
   	QString getSelection();
   	Coupled *getCurrentCoupledData();

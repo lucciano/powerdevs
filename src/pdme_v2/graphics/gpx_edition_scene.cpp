@@ -535,6 +535,7 @@ void GpxEditionScene::deleteSelection()
     qDebug() << i << " type " << i->type();
   }
 	views().first()->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  _coupledData->updatePoints();
 }
 
 void GpxEditionScene::selectAll()
