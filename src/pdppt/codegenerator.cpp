@@ -354,6 +354,9 @@ modelParameter *getParameter(QString par, modelCoupled * c)
   if (c->father!=NULL)
     return getParameter(par, c->father);
 	printf("Parameter %s not found in model\n", QSTR(par));
+  char buff[1024];
+  sprintf (buff,"Parameter %s not found in model\n", QSTR(par));
+  QMessageBox::critical(NULL,"PowerDEVS",buff);
 	exit(-1);
 }
 
