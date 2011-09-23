@@ -55,7 +55,7 @@ public:
 	void setName(string name) { _name = name; };
 	string description() const { return _description; };
 	void setDescription(string description) { _description = description; };
-	int priority() { return _priority; };
+	int priority() const { return _priority; };
 	void setPriority(int priority) { _priority = priority;};
 protected:
 	Coupled *_father;

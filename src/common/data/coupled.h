@@ -81,6 +81,7 @@ public:
   string getParameter(string par);
   void updatePoints(bool checkPoints=true);
   void clearModel();
+  void sortChilds();
 private:
 	vector<Model*> _childs;
   vector<Port*> _inPortsLst;

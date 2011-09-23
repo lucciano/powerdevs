@@ -1058,9 +1058,11 @@ QString GpxEditionScene::getSelection()
 			GpxBlock *b=qgraphicsitem_cast<GpxBlock*>(i);
 			if (b->isAtomic()) {
 				GpxAtomic *ga = qgraphicsitem_cast<GpxAtomic*>(b);
+        ga->atomicData()->setPriority(_coupledData->childIndex(ga->atomicData())); 
 				c.addChild(ga->atomicData());
 			} else if (b->isCoupled()) {
 				GpxCoupled *gc = qgraphicsitem_cast<GpxCoupled*>(b);
+        gc->coupledData()->setPriority(_coupledData->childIndex(gc->coupledData())); 
 				c.addChild(gc->coupledData());
 			} else if (b->isInport()) {
 				GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
@@ -1077,6 +1079,8 @@ QString GpxEditionScene::getSelection()
 				c.addOutport(port);
 			}
 		}
+    c.sortChilds();
+    
 		if (i->type()==GpxConnectionPoint::Type){
       GpxConnectionPoint *gp = qgraphicsitem_cast<GpxConnectionPoint*>(i);
       if (gp->isNode()) {

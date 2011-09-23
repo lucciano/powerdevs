@@ -23,12 +23,14 @@
 
 #include <list>
 #include <iostream>
+#include <algorithm>
 #include <map>
 #include <stdlib.h>
 #include <QDebug>
 
 #include "coupled.h"
 
+using namespace std;
 Coupled::~Coupled()
 {
   cerr << "Releasing coupled data of " << name().c_str() << endl;
@@ -72,6 +74,7 @@ void printDebugLines(Coupled &c)
 void Coupled::addChild(Model *child) 
 { 
   _childs.push_back(child); 
+  cout << "Adding child with priority " << child->priority() << endl;
 }
 
 void Coupled::removeChild(Model *child) 
@@ -199,12 +202,14 @@ int Coupled::portIndex(Port *p) const
 { 
   for (unsigned int i=0;i<_ports.size();i++) 
     if (_ports[i]==p) return i; 
+  return -1;
 } 
 
 int Coupled::lineIndex(Line *l) const 
 { 
   for (unsigned int i=0;i<_lines.size();i++) 
     if (_lines[i]==l) return i; 
+  return -1;
 } 
 
 
@@ -469,6 +474,16 @@ void Coupled::updatePoints(bool checkPoints)
         cout << *this;
         assert(false);
       }
+}
+
+bool sortPredicate(const Model *c1, const Model  *c2)
+{
+  return c1->priority()< c2->priority();
+}
+
+void Coupled::sortChilds()
+{
+  std::sort(_childs.begin(), _childs.end(),sortPredicate);
 }
 
 void Coupled::clearModel()
