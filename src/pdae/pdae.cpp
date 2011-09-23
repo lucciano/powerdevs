@@ -425,16 +425,16 @@ void PDAE::openFile(const QString & path)
 			}
 			if (s.contains("//CPP:")) {
 				if (!s.mid(6).contains(modelName))
-					cpps.append(s.mid(6));
+					cpps.append(s.mid(6).trimmed());
 			}
 			if (s.contains("//LIB:")) {
-				libs.append(s.mid(6));
+				libs.append(s.mid(6).trimmed());
 			}
 			if (s.contains("//FLAGS:")) {
-				flags.append(s.mid(8));
+				flags.append(s.mid(8).trimmed());
 			}
 			if (s.contains("//HeadersDir:")) {
-				headersDirs.append(s.mid(13));
+				headersDirs.append(s.mid(13).trimmed());
 			}
 		} while (!s.contains("class") && !s.isEmpty());
 		acc = "";
