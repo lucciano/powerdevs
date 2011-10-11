@@ -277,6 +277,7 @@ Coupled
                 mean = Str; 0 ; Mean Value
                 variance = Str; 1 ; Variance
                 T = Str; 1 ; Period
+                Random seed = Str;  ; an integer or empty string for a random seed
                 }
             }
         }
