@@ -13,12 +13,13 @@ fvar= va_arg(parameters,char*);
 std=getScilabVar(fvar );
 fvar= va_arg(parameters,char*);
 T=getScilabVar(fvar );
-
+fvar= va_arg(parameters,char*);
+int seed = (strlen(fvar)==0 ? (int)time(0)+rand() : getScilabVar(fvar));            // random seed
 sigma=0;
 for (int i=0;i<10;i++)y[i]=0;
-   int seed = (int)time(0)+rand();            // random seed
-   stor=new StochasticLib1(seed);
-	v = stor->Normal(m, std);
+
+stor=new StochasticLib1(seed);
+v = stor->Normal(m, std);
 }
 double normal_gen::ta(double t) {
 //This function returns a double.

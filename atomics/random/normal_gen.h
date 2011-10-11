@@ -1,7 +1,5 @@
 //CPP:/random/lib/stocc.cpp
-
 //CPP:/random/lib/randomc.cpp
-
 //CPP:random/normal_gen.cpp
 #if !defined normal_gen_h
 #define normal_gen_h
@@ -25,6 +23,7 @@ double m,std,T;
 
 double y[10];
 StochasticLib1 *stor;
+
 
 
 
