@@ -185,7 +185,8 @@ Coupled
                 mean = Str; 0 ; Mean Value
                 variance = Str; 1 ; Variance
                 T = Str; 1 ; Period
-                Size = Str; 10 ; Vector Dimension
+                seed = Str;  ; Integer vector or empty string for random seeds
+                Size = Str; 10 ; 
                 }
             }
         Atomic
