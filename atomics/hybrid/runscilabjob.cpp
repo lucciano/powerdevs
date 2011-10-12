@@ -37,6 +37,7 @@ Event runscilabjob::lambda(double t) {
 //where:
 //     %&Value% points to the variable which contains the value.
 //     %NroPort% is the port number (from 0 to n-1)
+return Event();
 }
 void runscilabjob::exit() {
 //Code executed at the end of the simulation.
