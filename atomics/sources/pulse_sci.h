@@ -15,7 +15,7 @@ double sigma;
 int k;
 double v[3];
 double y[10];
-double tim[3];
+double tim[4];
 double vbase;
 double ampl;
 double itim;

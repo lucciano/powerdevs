@@ -11,7 +11,7 @@ char *fvar1= va_arg(parameters,char*);
 
 char *fvars[3];
 double *parsd[3];
-double par[3];
+double par[3] = {0};
 char childi[24];
 int Ni[3];
 int Nargs=3;

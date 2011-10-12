@@ -1,23 +1,13 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/qss.cpp
-
 //CPP:qss/qss2.cpp
-
 //CPP:qss/qss3.cpp
-
 //CPP:qss/qss4.cpp
-
 //CPP:qss/bqss.cpp
-
 //CPP:qss/cqss.cpp
-
 //CPP:qss/liqss.cpp
-
 //CPP:qss/liqss2.cpp
-
 //CPP:qss/liqss3.cpp
-
 //CPP:qss/qss_integrator.cpp
 #if !defined qss_integrator_h
 #define qss_integrator_h
@@ -49,6 +39,8 @@ Simulator *solver;
 enum { QSS, QSS2, QSS3, QSS4, 
 	BQSS,CQSS,LIQSS,LIQSS2,
 	LIQSS3 } met;
+
+
 
 
 

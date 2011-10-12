@@ -10,7 +10,7 @@ va_start(parameters,t);
 
 char *fvars[4];
 double *parsd[4];
-double par[4];
+double par[4] = {0};
 char childi[24];
 int Ni[4];
 int Nargs=4;
