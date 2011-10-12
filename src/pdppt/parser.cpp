@@ -22,6 +22,9 @@
 ****************************************************************************/
 
 #include <QDebug>
+#include <QMessageBox>
+#include <QVector>
+#include <QList>
 #include "parser.h"
 
 int lineNumber;
@@ -314,6 +317,32 @@ modelPort *parseOutport()
 	return ret;
 }
 
+void checkLinesWithPoints(modelCoupled *c)
+{
+  QVector<QList<int> > pointsL(c->lines.length());
+  for( int i=0;i< c->lines.length();i++)
+  {
+    if (c->lines.at(i)->sourceType == TOKPNT)
+      pointsL[c->lines.at(i)->sources.first()-1].append(i+1);
+    if (c->lines.at(i)->sinkType == TOKPNT)
+      pointsL[c->lines.at(i)->sinks.first()-1].append(i+1);
+  } 
+  for( int i=0;i< c->points.length();i++)
+  {
+    QList<int> points = c->points.at(i)->lines;
+    qSort(points);
+    qSort(pointsL[i]);
+    if (points!=pointsL[i])
+    {
+      qDebug() << "Points " << i << " has lines connected " << pointsL[i];
+      qDebug() << "-->Points " << i << " has lines connected " << points;
+      QMessageBox::critical(NULL,"PowerDEVS", "The model is corrupt. Saving it may correct this.");
+      exit(-1);
+    }
+  }
+  
+}
+
 modelCoupled *parseCoupled()
 {
 	bool ok;
@@ -393,6 +422,7 @@ modelCoupled *parseCoupled()
 	ret->points = points;
 	ret->lines = lines;
 
+  checkLinesWithPoints(ret);
 	return ret;
 }
 
