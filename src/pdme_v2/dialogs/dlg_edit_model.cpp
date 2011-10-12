@@ -669,6 +669,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
 	      a->setPath(path->text());
 	      a->setInportsTo(inputs->value());
 	      a->setOutportsTo(outputs->value());
+        _b->itemChange(QGraphicsItem::ItemPositionHasChanged,QVariant());
 	      } else if (_b->isCoupled()) {
 	      GpxCoupled *c = qgraphicsitem_cast<GpxCoupled*>(_b);
 		  if(_b->direction() != b->direction())
@@ -679,6 +680,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
 	      c->setColor(colorCombo->currentIndex()+1);
 	      c->setInportsTo(inputs->value());
 	      c->setOutportsTo(outputs->value());
+        _b->itemChange(QGraphicsItem::ItemPositionHasChanged,QVariant());
 	      }
 	      m->setDescription(qPrintable(description->toPlainText()));
 	      m->setParameters(_parameters);

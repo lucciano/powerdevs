@@ -440,6 +440,7 @@ void GpxEditionScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 	  #ifdef UNDO
 	  	_undoStack->push(new ResizeCmd(this));
       #endif
+      _resizingBlock->itemChange(QGraphicsItem::ItemPositionHasChanged,QVariant());
       _resizingBlock = NULL;
       _mode = None;
       break;
