@@ -7,16 +7,16 @@ va_start(parameters,t);
 //where:
 //      %Name% is the parameter name
 //	%Type% is the parameter type
-char *fvars[3];
-double *parsd[3];
-double par[3];
+char *fvars[4];
+double *parsd[4];
+double par[4];
 char childi[24];
-int Ni[3];
-int Nargs=3;
+int Ni[4];
+int Nargs=4;
 for (int i=0;i<Nargs;i++)fvars[i]= va_arg(parameters,char*);
 char *fvar= va_arg(parameters,char*);
 N=getScilabVar(fvar);
-char pars[3][24];
+char pars[4][24];
 for (int i=0;i<Nargs;i++){
  parsd[i]=(double*)calloc(N,sizeof(double));
  getScilabVector(fvars[i],&Ni[i],parsd[i]);
@@ -31,9 +31,13 @@ for (int i=0;i<Nargs;i++){
         	D1[i] = new normal_gen(childi);
 				for (int j=0;j<Nargs;j++){
             if (i<Ni[j]) par[j]=parsd[j][i];
-					sprintf(pars[j],"%1.16g",par[j]);
+				  if (j==3 && strlen(fvars[j])==0)
+						sprintf(pars[j],"");
+					else
+						sprintf(pars[j],"%1.16g",par[j]);
 				}	
-         	D1[i]->init(t,pars[0],pars[1],pars[2]);
+				
+         	D1[i]->init(t,pars[0],pars[1],pars[2],pars[3]);
       	}	
       D0->setup(D1,N,IC1,0,EIC1,0,EOC1,0);
       D0->init(t);

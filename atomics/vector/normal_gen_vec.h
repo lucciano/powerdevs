@@ -1,7 +1,9 @@
-//CPP:random/normal_gen.cpp
+//CPP:/random/normal_gen.cpp
 
-//CPP:random/lib/stocc.cpp
-//CPP:random/lib/randomc.cpp
+//CPP:/random/lib/stocc.cpp
+
+//CPP:/random/lib/randomc.cpp
+
 //CPP:vector/normal_gen_vec.cpp
 #if !defined normal_gen_vec_h
 #define normal_gen_vec_h
@@ -30,6 +32,7 @@ Connection **IC1[1];
 int N;
 vector vec;
 Event y;
+
 
 
 
