@@ -19,7 +19,9 @@ void initLib()
   //gettimeofday(&tv,NULL);
   realTiSimulation = GetTickCount()*1e-3;
 }
-
+void cleanLib()
+{
+}
 double getRealSimulationTime()
 {
 	return GetTickCount()*1e-3 - realTiSimulation;
