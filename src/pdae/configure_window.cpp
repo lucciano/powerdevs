@@ -46,7 +46,7 @@ QDialog
 	tabWidget->addTab(lvLibs, "Libs");
 	tabWidget->addTab(lvInclude, "Include dirs");
 	tabWidget->addTab(lvCPP, "CPP Files");
-	tabWidget->addTab(lvFlags, "Comilation Flags");
+	tabWidget->addTab(lvFlags, "Compilation Flags");
 	qHBox->addWidget(bAdd);
 	qHBox->addWidget(bRemove);
 	qHBox->addWidget(bExit);
