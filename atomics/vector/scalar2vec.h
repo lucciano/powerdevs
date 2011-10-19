@@ -1,9 +1,3 @@
-//CPP:qss/qss_wsum.cpp
-
-//CPP:qss/qsstools.cpp
-
-//CPP:qss/qss_integrator.cpp
-
 //CPP:vector/scalar2vec.cpp
 #if !defined scalar2vec_h
 #define scalar2vec_h
@@ -12,10 +6,7 @@
 #include "event.h"
 #include "stdarg.h"
 
-#include "engine.h"
-#include "qss/qsstools.h"
 #include "vector.h"
-#include "qss/qss_integrator.h"
 
 
 class scalar2vec: public Simulator { 
@@ -28,6 +19,7 @@ int index;
 vector vec;
 
 #define INF 1e20
+
 
 
 

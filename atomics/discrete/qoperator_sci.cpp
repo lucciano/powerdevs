@@ -26,11 +26,11 @@ void qoperator_sci::dext(Event x, double t) {
 double *u=(double*)x.value;
 sigma=sigma-e;
 next=u[0]; 
-/*
-if (sigma==ts ) { sdfg sdg
+
+if (sigma==ts )
     state=next;
 
-*/
+
 }
 Event qoperator_sci::lambda(double t) {
 //This function returns an Event:

@@ -311,5 +311,26 @@ Coupled
                 Size = Str; 10 ; Vector Size (Scilab)
                 }
             }
+        Atomic
+            {
+            Name = Vector unit_delay0
+            Ports = 1 ; 1
+            Path = vector/vector_unitdelay.h
+            Description = Vector Unit Delay
+            Graphic
+                {
+                Position = 1095 ; 120
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%vqoperator.svg
+                }
+            Parameters
+                {
+                x0 = Str; 0 ; Initial State (Scilab)
+                Ts = Str; 1 ; Sampling Time (Scilab)
+                Size = Str; 10 ; Vector Size (Scilab)
+                }
+            }
         }
     }

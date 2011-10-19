@@ -28,6 +28,7 @@ double y[10];
 
 
 
+
 public:
 	qoperator_sci(const char *n): Simulator(n) {};
 	void init(double, ...);
