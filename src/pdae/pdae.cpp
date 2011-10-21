@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QtGlobal>
 #include <QSettings>
+#include <QDockWidget>
 
 #include "pdae.h"
 void msg(QString s)
@@ -103,14 +104,8 @@ void PDAE::saveFileToCpp(bool saveas)
 	name = name.replace("\\", "/");
 	if (!name.endsWith(".cpp"))
 		name = name + QString(".cpp");
-	QString modelName =
-	    name.mid(name.lastIndexOf("/") + 1,
-		     name.lastIndexOf(".") - name.lastIndexOf("/") - 1);
-	QString cppFileName =
-	    name.right(name.indexOf("atomics", 0, Qt::CaseInsensitive) >=
-		       0 ? name.length() - name.indexOf("atomics", 0,
-							 Qt::CaseInsensitive) -
-		       8 : name.length());
+	QString modelName = name.mid(name.lastIndexOf("/") + 1, name.lastIndexOf(".") - name.lastIndexOf("/") - 1);
+	QString cppFileName = name.right(name.indexOf("atomics", 0, Qt::CaseInsensitive) >= 0 ? name.length() - name.indexOf("atomics", 0, Qt::CaseInsensitive) - 8 : name.length());
 	QString hFile = name.left(name.lastIndexOf(".")) + ".h";
 	QFile hf(hFile);
 	QList < QString >::iterator i;
@@ -490,6 +485,7 @@ void PDAE::setupEditor()
 	tabWidget = new QTabWidget;
 
 	editorState = new QTextEdit;
+  connect(editorState,SIGNAL(cursorPositionChanged()),this,SLOT(onStateCursorChanged()));
 	editorInit = new QTextEdit;
 	editorTa = new QTextEdit;
 	editorDInt = new QTextEdit;
@@ -499,6 +495,7 @@ void PDAE::setupEditor()
 
 	qhboxWidget = new QWidget;
 	qvboxWidget = new QWidget;
+	qvboxDockWidget = new QDockWidget;
 	qlabel = new QLabel("State variables and parameters");
 	editorState->setFont(font);
 	editorInit->setFont(font);
@@ -537,8 +534,10 @@ void PDAE::setupEditor()
 	qvboxLay->addWidget(qlabel);
 	qvboxLay->addWidget(editorState);
 	qvboxWidget->setLayout(qvboxLay);
-	qvboxWidget->setMaximumWidth(200);
-	qhboxLay->addWidget(qvboxWidget);
+	//qvboxWidget->setMaximumWidth(200);
+	qvboxDockWidget->setWidget(qvboxWidget);
+	qvboxDockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
+  addDockWidget(Qt::LeftDockWidgetArea,qvboxDockWidget);
 	qhboxLay->addWidget(tabWidget);
 	qhboxWidget->setLayout(qhboxLay);
 	QObject::connect(editorState, SIGNAL(textChanged()), this,
@@ -604,7 +603,9 @@ void PDAE::setupFileMenu()
 	menuBar()->addMenu(helpMenu);
 	helpMenu->addAction(tr("&About"), this, SLOT(about()));
 	helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
-} void PDAE::keyReleaseEvent(QKeyEvent * event) 
+}
+
+void PDAE::keyReleaseEvent(QKeyEvent * event) 
 {
 	if (event->nativeScanCode() == 117 && event->nativeModifiers() & 4) {
 		tabWidget->setCurrentIndex((tabWidget->currentIndex() + 1) %
@@ -619,3 +620,13 @@ void PDAE::setupFileMenu()
 }
 
 
+void PDAE::onStateCursorChanged()
+{
+  int line = libs.size() + flags.size() + cpps.size() + headersDirs.size() + headers.size() + 12 + editorState->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString hFile = name.left(name.lastIndexOf(".")) + ".h";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(hFile).arg(line));
+  }
+}

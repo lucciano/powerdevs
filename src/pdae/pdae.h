@@ -38,6 +38,9 @@ public slots:
 		void closeComp(bool);
 
 	void keyReleaseEvent ( QKeyEvent * event );
+
+private slots:
+  void onStateCursorChanged();
 private:
     void setupEditor();
     void setupFileMenu();
@@ -58,6 +61,7 @@ private:
     QVBoxLayout *qvboxLay;
     QWidget	*qhboxWidget;
     QWidget	*qvboxWidget;
+    QDockWidget	*qvboxDockWidget;
     QLabel	*qlabel;
     bool 	dirty,firsttime;
     QString	name;
