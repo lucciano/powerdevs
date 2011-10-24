@@ -48,8 +48,8 @@ sigma=tv[k];
 k=(k+1)%4;
 if( (strcmp(Method,"QSS")==0)&&( (k==1)||(k==3) ) ){
 	k=k-1;
-y[5]=10;
-y[6]=20;
+//y[5]=10;
+//y[6]=20;
 	if( ( ((v[k]+dq)<Vu)&&(mv[k]>0) )|| ( ((v[k]-dq)>Vl) && (mv[k]<0) ) ){
 		if(mv[k]>0){
 			v[k]=v[k]+dq;
@@ -59,16 +59,18 @@ y[6]=20;
 			sigma=-dq/mv[k];
 		}
 	}else{
-y[5]=v[k];
-y[6]=mv[k];
+//y[5]=v[k];
+//y[6]=mv[k];
 		if(mv[k]>0){sigma=(Vu-v[k])/mv[k];}else{sigma=-(v[k]-Vl)/mv[k];};
 		v[0]=Vl;
 		v[2]=Vu;
-		y[4]=1000;
+	//	y[4]=1000;
 		k=(k+1)%4;
-y[7]=sigma;
+//y[7]=sigma;
 	};
-}else{y[4]=2000;};
+}else{//y[4]=2000;
+
+};
 }
 void trapezoidal_sci::dext(Event x, double t) {
 //The input event is in the 'x' variable.
@@ -85,7 +87,7 @@ Event trapezoidal_sci::lambda(double t) {
 y[0]=v[k];
 y[1]=mv[k];
 y[2]=0;
-y[3]=k;
+//y[3]=k;
 return Event(&y[0],0);
 }
 void trapezoidal_sci::exit() {

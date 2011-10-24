@@ -1,4 +1,4 @@
-//CPP:source/trapezoidal_sci.cpp
+//CPP:sources/trapezoidal_sci.cpp
 #if !defined trapezoidal_sci_h
 #define trapezoidal_sci_h
 
@@ -20,6 +20,7 @@ double tv[4];
 double Vu,Vl,Tu,Tl,Tr,Tf;
 double y[10];
 char* Method;
+
 
 
 public:
