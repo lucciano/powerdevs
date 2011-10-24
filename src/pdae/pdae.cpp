@@ -204,7 +204,7 @@ void PDAE::newFile()
 	editorTa->setPlainText("//This function returns a double.\n");
 	editorDInt->setPlainText("");
 	editorDExt-> setPlainText ("//The input event is in the 'x' variable.\n//where:\n//     'x.value' is the value (pointer to void)\n//     'x.port' is the port number\n//     'e' is the time elapsed since last transition\n");
-	editorLambda-> setPlainText ("//This function returns an Event:\n//     Event(%&Value%, %NroPort%)\n//where:\n//     %&Value% points to the variable which contains the value.\n//     %NroPort% is the port number (from 0 to n-1)\n");
+	editorLambda-> setPlainText ("//This function returns an Event:\n//     Event(%&Value%, %NroPort%)\n//where:\n//     %&Value% points to the variable which contains the value.\n//     %NroPort% is the port number (from 0 to n-1)\n\n\nreturn Event();");
 	editorExit-> setPlainText("//Code executed at the end of the simulation.\n");
 	editorState-> setPlainText ("// Declare the state,\n// output variables\n// and parameters\n");
 	editorInit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
