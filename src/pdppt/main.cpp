@@ -108,9 +108,16 @@ int main(int argc, char **argv)
 #ifdef RTAIOS
 			  pdif.startDetached("/usr/bin/kdesudo", QStringList() << "../bin/pdif" << filename.left(filename.  lastIndexOf(".")) + ".stm");
 #else
-			  if (!silent)
+			  if (!silent) {
+#ifdef Q_OS_LINUX
+          bool pdifRunning = system("ps -e | grep pdif") == 0;
+          qDebug() << "PDIF running = " << pdifRunning;
+          if (pdifRunning) {
+            system("killall pdif");
+          }
+#endif
 				  pdif.startDetached("../bin/pdif", QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
-			  else {
+			  } else {
 				  QFile stm(filename.left(filename.lastIndexOf(".")) + ".stm");
 				  //qDebug() << (filename.left(filename.lastIndexOf(".")) + ".stm");
 				  double tf,ti;
