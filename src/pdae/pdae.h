@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QtGui>
+#include <QDebug>
 #include <QTextCursor>
 #include <QList>
 #include <QMainWindow>
@@ -41,6 +42,13 @@ public slots:
 
 private slots:
   void onStateCursorChanged();
+  void onInitCursorChanged();
+  void onDintCursorChanged();
+  void onDextCursorChanged();
+  void onTaCursorChanged();
+  void onLambdaCursorChanged();
+  void onExitCursorChanged();
+  void tabChanged(int );
 private:
     void setupEditor();
     void setupFileMenu();

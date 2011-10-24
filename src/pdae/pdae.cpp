@@ -200,22 +200,13 @@ void PDAE::newFile()
 			saveFileToCpp(false);
 	}
 	firsttime = false;
-	editorInit->
-	    setPlainText
-	    ("//The 'parameters' variable contains the parameters transferred from the editor.\nva_list parameters;\nva_start(parameters,t);\n//To get a parameter: %Name% = va_arg(parameters,%Type%)\n//where:\n//      %Name% is the parameter name\n//	%Type% is the parameter type\n");
+	editorInit-> setPlainText ("//The 'parameters' variable contains the parameters transferred from the editor.\nva_list parameters;\nva_start(parameters,t);\n//To get a parameter: %Name% = va_arg(parameters,%Type%)\n//where:\n//      %Name% is the parameter name\n//	%Type% is the parameter type\n");
 	editorTa->setPlainText("//This function returns a double.\n");
 	editorDInt->setPlainText("");
-	editorDExt->
-	    setPlainText
-	    ("//The input event is in the 'x' variable.\n//where:\n//     'x.value' is the value (pointer to void)\n//     'x.port' is the port number\n//     'e' is the time elapsed since last transition\n");
-	editorLambda->
-	    setPlainText
-	    ("//This function returns an Event:\n//     Event(%&Value%, %NroPort%)\n//where:\n//     %&Value% points to the variable which contains the value.\n//     %NroPort% is the port number (from 0 to n-1)\n");
-	editorExit->
-	    setPlainText("//Code executed at the end of the simulation.\n");
-	editorState->
-	    setPlainText
-	    ("// Declare the state,\n// output variables\n// and parameters\n");
+	editorDExt-> setPlainText ("//The input event is in the 'x' variable.\n//where:\n//     'x.value' is the value (pointer to void)\n//     'x.port' is the port number\n//     'e' is the time elapsed since last transition\n");
+	editorLambda-> setPlainText ("//This function returns an Event:\n//     Event(%&Value%, %NroPort%)\n//where:\n//     %&Value% points to the variable which contains the value.\n//     %NroPort% is the port number (from 0 to n-1)\n");
+	editorExit-> setPlainText("//Code executed at the end of the simulation.\n");
+	editorState-> setPlainText ("// Declare the state,\n// output variables\n// and parameters\n");
 	editorInit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 	editorTa->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 	editorDInt->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
@@ -223,6 +214,7 @@ void PDAE::newFile()
 	editorLambda->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 	editorExit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 	editorState->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+  onStateCursorChanged();
 	headers.clear();
 	libs.clear();
 	headersDirs.clear();
@@ -483,15 +475,22 @@ void PDAE::setupEditor()
 	qhboxLay = new QHBoxLayout;
 	qvboxLay = new QVBoxLayout;
 	tabWidget = new QTabWidget;
+  connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(tabChanged(int)));
 
 	editorState = new QTextEdit;
   connect(editorState,SIGNAL(cursorPositionChanged()),this,SLOT(onStateCursorChanged()));
 	editorInit = new QTextEdit;
+  connect(editorInit,SIGNAL(cursorPositionChanged()),this,SLOT(onInitCursorChanged()));
 	editorTa = new QTextEdit;
+  connect(editorTa,SIGNAL(cursorPositionChanged()),this,SLOT(onTaCursorChanged()));
 	editorDInt = new QTextEdit;
+  connect(editorDInt,SIGNAL(cursorPositionChanged()),this,SLOT(onDintCursorChanged()));
 	editorDExt = new QTextEdit;
+  connect(editorDExt,SIGNAL(cursorPositionChanged()),this,SLOT(onDextCursorChanged()));
 	editorLambda = new QTextEdit;
+  connect(editorLambda,SIGNAL(cursorPositionChanged()),this,SLOT(onLambdaCursorChanged()));
 	editorExit = new QTextEdit;
+  connect(editorExit,SIGNAL(cursorPositionChanged()),this,SLOT(onExitCursorChanged()));
 
 	qhboxWidget = new QWidget;
 	qvboxWidget = new QWidget;
@@ -629,4 +628,107 @@ void PDAE::onStateCursorChanged()
 	  QString hFile = name.left(name.lastIndexOf(".")) + ".h";
     statusBar()->showMessage(QString("File: %1. Line: %2").arg(hFile).arg(line));
   }
+}
+
+void PDAE::onInitCursorChanged()
+{
+  int line = 3 + editorInit->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorInit->setFocus();
+}
+
+void PDAE::onTaCursorChanged()
+{
+  int line = 5 + editorInit->document()->blockCount() + editorTa->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorTa->setFocus();
+}
+
+
+void PDAE::onDintCursorChanged()
+{
+  int line = 7 + editorInit->document()->blockCount() + editorTa->document()->blockCount() + editorDInt->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorDInt->setFocus();
+}
+
+void PDAE::onDextCursorChanged()
+{
+  int line = 9 + editorInit->document()->blockCount() + editorTa->document()->blockCount() + 
+             editorDInt->document()->blockCount() + editorDExt->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorDExt->setFocus();
+}
+
+void PDAE::onLambdaCursorChanged()
+{
+  int line = 11 + editorInit->document()->blockCount() + editorTa->document()->blockCount() + 
+             editorDInt->document()->blockCount() + editorDExt->document()->blockCount() + editorLambda->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorLambda->setFocus();
+}
+
+void PDAE::onExitCursorChanged()
+{
+  int line = 13 + editorInit->document()->blockCount() + editorTa->document()->blockCount() + 
+             editorDInt->document()->blockCount() + editorDExt->document()->blockCount() + 
+             editorLambda->document()->blockCount() + editorExit->textCursor().blockNumber();
+  if (name == "") 
+    statusBar()->showMessage(QString("Unsaved file. Line: %2").arg(line));
+  else {
+	  QString cppFile = name.left(name.lastIndexOf(".")) + ".cpp";
+    statusBar()->showMessage(QString("File: %1. Line: %2").arg(cppFile).arg(line));
+  }
+  editorExit->setFocus();
+}
+
+void PDAE::tabChanged(int tab)
+{
+  switch (tab)
+  {
+    case 0:
+      onInitCursorChanged();
+      break;
+    case 1:
+      onTaCursorChanged();
+      break;
+    case 2:
+      onDintCursorChanged();
+      break;
+    case 3:
+      onDextCursorChanged();
+      break;
+    case 4:
+      onLambdaCursorChanged();
+      break;
+    case 5:
+      onExitCursorChanged();
+      break;
+  }
+
 }
