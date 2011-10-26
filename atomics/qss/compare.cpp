@@ -29,10 +29,11 @@ advance_time(u[1],sigma,-1);
 for (int i=0;i<4;i++) {
   du[i]=u[0][i]-u[1][i];		
 };
-if (sigma>0){
+if (sigma>0||du[0]==0){
 	du[0]=0;
 	advance_time(du,1e-20,-1);
-};	
+};
+	
 sigma=minposroot(du,4);
 sw=-sw;
 }

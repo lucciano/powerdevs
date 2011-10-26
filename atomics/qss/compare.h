@@ -1,5 +1,4 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/compare.cpp
 #if !defined compare_h
 #define compare_h
@@ -8,7 +7,7 @@
 #include "event.h"
 #include "stdarg.h"
 
-#include "qss/qsstools.h"
+#include "qsstools.h"
 
 
 class compare: public Simulator { 
@@ -24,6 +23,7 @@ double y[10];
 double low,up;
 
 #define INF 1e20
+
 
 
 
