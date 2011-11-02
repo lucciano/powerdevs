@@ -1,27 +1,15 @@
 //CPP:qss/qss_wsum.cpp
-
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/qss_integrator.cpp
-
 //CPP:qss/qss.cpp
-
 //CPP:qss/qss2.cpp
-
 //CPP:qss/qss3.cpp
-
 //CPP:qss/qss4.cpp
-
 //CPP:qss/liqss.cpp
-
 //CPP:qss/liqss2.cpp
-
 //CPP:qss/liqss3.cpp
-
 //CPP:qss/bqss.cpp
-
 //CPP:qss/cqss.cpp
-
 //CPP:vector/qss_integrator_vec.cpp
 #if !defined qss_integrator_vec_h
 #define qss_integrator_vec_h
@@ -51,13 +39,15 @@ class qss_integrator_vec: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[10000];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[10000];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 vector vec;
 Event y;
 int N,Ni;
+
+
 
 
 

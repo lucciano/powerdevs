@@ -72,4 +72,5 @@ return y;
 }
 void normal_gen_vec::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

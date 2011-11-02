@@ -83,4 +83,5 @@ return y;
 }
 void qss_integrator_vec::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

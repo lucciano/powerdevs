@@ -81,4 +81,5 @@ return y;
 }
 void vector_unitdelay::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

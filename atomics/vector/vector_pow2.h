@@ -1,7 +1,5 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/xpower2.cpp
-
 //CPP:vector/vector_pow2.cpp
 #if !defined vector_pow2_h
 #define vector_pow2_h
@@ -22,13 +20,15 @@ class vector_pow2: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[10000];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[10000];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 vector vec;
 Event y;
 int N,Ni;
+
+
 
 
 

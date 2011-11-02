@@ -65,4 +65,5 @@ return y;
 }
 void vector_pow2::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

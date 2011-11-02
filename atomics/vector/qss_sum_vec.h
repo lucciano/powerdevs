@@ -1,7 +1,5 @@
 //CPP:qss/qss_wsum.cpp
-
 //CPP:qss/qsstools.cpp
-
 //CPP:vector/qss_sum_vec.cpp
 #if !defined qss_sum_vec_h
 #define qss_sum_vec_h
@@ -22,13 +20,15 @@ class qss_sum_vec: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[10000];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[10000];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 vector vec;
 Event y;
 int N;
+
+
 
 
 

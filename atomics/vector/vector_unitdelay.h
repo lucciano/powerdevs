@@ -18,13 +18,15 @@ class vector_unitdelay: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[10000];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[10000];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 vector vec;
 Event y;
 int N,Ni;
+
+
 
 
 

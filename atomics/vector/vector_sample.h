@@ -1,7 +1,5 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/samplehold.cpp
-
 //CPP:vector/vector_sample.cpp
 #if !defined vector_sample_h
 #define vector_sample_h
@@ -22,13 +20,14 @@ class vector_sample: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[10000];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[10000];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 vector vec;
 Event y;
 int N,Ni;
+
 
 
 

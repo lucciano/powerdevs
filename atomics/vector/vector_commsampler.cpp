@@ -65,4 +65,5 @@ return y;
 }
 void vector_commsampler::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

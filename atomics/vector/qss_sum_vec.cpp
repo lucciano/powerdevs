@@ -81,4 +81,6 @@ return y;
 }
 void qss_sum_vec::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
+
 }

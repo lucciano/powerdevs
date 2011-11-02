@@ -82,4 +82,5 @@ return y;
 }
 void vector_sample::exit() {
 //Code executed at the end of the simulation.
+D0->exit();
 }

@@ -1,9 +1,6 @@
 //CPP:/random/normal_gen.cpp
-
 //CPP:/random/lib/stocc.cpp
-
 //CPP:/random/lib/randomc.cpp
-
 //CPP:vector/normal_gen_vec.cpp
 #if !defined normal_gen_vec_h
 #define normal_gen_vec_h
@@ -25,13 +22,15 @@ class normal_gen_vec: public Simulator {
 // and parameters
 
 Coupling *D0;
-Simulator **D1[1];
-Connection **EIC1[1]; 
-Connection **EOC1[1];
-Connection **IC1[1];
+//Simulator **D1[1];
+//Connection **EIC1[1]; 
+//Connection **EOC1[1];
+//Connection **IC1[1];
 int N;
 vector vec;
 Event y;
+
+
 
 
 
