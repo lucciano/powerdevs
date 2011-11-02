@@ -502,7 +502,8 @@ void PowerGui::on_actionSave_triggered()
 void PowerGui::on_actionSave_as_triggered()
 {
   GpxEditionWindow *model =  getActiveWindow(); 
-  QString examplePath = QCoreApplication::applicationDirPath() + "/" + getSetting("Path/examplePath").toString() + "/untitled.pdm";
+  QString name = model->getCoupled()->name().c_str();
+  QString examplePath = QCoreApplication::applicationDirPath() + "/" + getSetting("Path/examplePath").toString() + "/" + name + "1.pdm";
   QFileDialog d;
   d.setDefaultSuffix("pdm");
 	QString fileName = d.getSaveFileName(this, "Save model", examplePath, "PowerDEVS Model *.pdm (*.pdm);;PowerDEVS Library *.pdl (*.pdl)");
