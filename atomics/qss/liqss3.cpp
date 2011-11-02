@@ -52,7 +52,7 @@ void liqss3::dext(Event x, double t) {
 //     'x.port' is the port number
 double *derx;
 double diffxq[10];
-double dt1;
+double dt1,dt2,dt3;
 
 derx=(double*)x.value;
 
@@ -84,36 +84,32 @@ if (x.port==0) {
 		}
 		if (sigma>0){
 		  	diffxq[1]=q[1]-X[1];
-			diffxq[2]=q[2]-X[2];
-			diffxq[3]=-X[3];
+			  diffxq[2]=q[2]-X[2];
+			  diffxq[3]=-X[3];
 	   		diffxq[0]=q[0]-X[0]-dQ;
 		   	sigma=minposroot(diffxq,3);
 	   		diffxq[0]=q[0]-X[0]+dQ;
 		   	dt1=minposroot(diffxq,3);
 		   	if (dt1<sigma) sigma=dt1;
-			if (dt1!=sigma) {diffxq[0]=q[0]-X[0]-dQ;}
-		       	if(a!=0&&(fabs(X[3])>1e-10)&&!band3&&!band2){
-				double diff1[10];
-				diff1[0]=a*a*a*(q[0]+dq)+a*a*u[0]+a*u[1]+2*u[2];
-				diff1[1]=a*a*a*q[1]+a*a*u[1]+a*2*u[2];
-				diff1[2]=a*a*a*q[2]+a*a*u[2];
-				dt1=minposroot(diff1,2);
-				//printLog("t=%g: Computing sigma=%g, dt1=%g\n",t,sigma,dt1);
-				if (dt1<sigma){
-					band2=true;				
-					//printLog("t=%g: Changing sigma from %g to %g\n",t,sigma,dt1);
-					sigma=dt1;
-				} else {
-					band2=false;
+				if (dt1!=sigma) {diffxq[0]=q[0]-X[0]-dQ;}
+		 	  if (a!=0&&(fabs(X[3])>1e-10)&&!band3&&!band2){
+					double diff1[10];
+					diff1[0]=a*a*a*(q[0]+dq)+a*a*u[0]+a*u[1]+2*u[2];
+					diff1[1]=a*a*a*q[1]+a*a*u[1]+a*2*u[2];
+					diff1[2]=a*a*a*q[2]+a*a*u[2];
+					dt3=minposroot(diff1,2);
+					if (dt3<sigma){
+						band2=true;				
+						sigma=dt3;
+					} else {
+						band2=false;
+					}
 				}
-			}
-  		if (sigma==0)printLog("t=%g: e=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,e,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
-			if (sigma>getFinalTime())sigma=getFinalTime()+1;
+  		//if (sigma==0)printLog("t=%g: e=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,e,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
+				if (sigma>getFinalTime())sigma=getFinalTime();
 		  	advance_time(diffxq,sigma/2,3);
 		  	if (fabs(diffxq[0])>3*dQ) {
-	//				printLog("t=%g: sigma=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,sigma,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
 					sigma=1e-12;	
-
 		 	}
 	
 		};

@@ -111,7 +111,7 @@ if (x.port==0) {
 			} else {
 				band2=false;
 			}
-			if (sigma>getFinalTime())sigma=getFinalTime()+1;
+			if (sigma>getFinalTime())sigma=getFinalTime();
 			advance_time(diffxq,sigma/2,2);
 			if (fabs(diffxq[0])>3*(dQmin+dQrel*fabs(q[0]))){
 			  //printLog("t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
