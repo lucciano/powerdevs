@@ -1,5 +1,4 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/liqss2.cpp
 #if !defined liqss2_h
 #define liqss2_h

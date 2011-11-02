@@ -1,5 +1,4 @@
 //CPP:qss/qsstools.cpp
-
 //CPP:qss/liqss3.cpp
 #if !defined liqss3_h
 #define liqss3_h
@@ -25,6 +24,8 @@ double dQ;
 double dQmin,dQrel;
 double y[10]; //output
 bool band,band2,band3,band4;
+
+
 
 
 

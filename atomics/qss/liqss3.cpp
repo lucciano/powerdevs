@@ -74,11 +74,14 @@ if (x.port==0) {
 		u[2]=derx[2]-a*q[2];
 
 		X[0]=X[0]+X[1]*e+X[2]*e*e+X[3]*e*e*e;
-	   	X[1]=derx[0];
+	  X[1]=derx[0];
 		X[2]=derx[1]/2;
 		X[3]=derx[2]/3;
 		//printLog("t=%g: e=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,e,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
-		if (band4) sigma=0;
+		if (band4){
+		 //printLog("t=%g: e=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,e,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
+		 sigma=0;
+		}
 		if (sigma>0){
 		  	diffxq[1]=q[1]-X[1];
 			diffxq[2]=q[2]-X[2];
@@ -104,13 +107,15 @@ if (x.port==0) {
 					band2=false;
 				}
 			}
+  		if (sigma==0)printLog("t=%g: e=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,e,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
+			if (sigma>getFinalTime())sigma=getFinalTime()+1;
 		  	advance_time(diffxq,sigma/2,3);
 		  	if (fabs(diffxq[0])>3*dQ) {
+	//				printLog("t=%g: sigma=%g, X=[%g, %g, %g, %g], q= [%g, %g, %g], u=[%g ,%g, %g], a=%g \n",t,sigma,X[0],X[1],X[2],X[3],q[0],q[1],q[2],u[0],u[1],u[2],a);
 					sigma=1e-12;	
+
 		 	}
-	//	  	if (fabs(X[0]-q[0])>dQ) {
-	//				sigma=1e-12;
-	//		}
+	
 		};
 } else {
 	advance_time(X,e,3);

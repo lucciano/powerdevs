@@ -31,6 +31,7 @@ band2=false; //this flag becomes true when a future situation ddx=0 is detected.
 band3=false;//this flag becomes true after sending an event trying to provoke ddx=0.
 band4=false;
 sigma=0;
+
 }
 double liqss2::ta(double t) {
 //This function return a double.
@@ -80,7 +81,10 @@ if (x.port==0) {
 	X[0]=X[0]+X[1]*e+X[2]*e*e;
 	X[1]=derx[0];
 	X[2]=derx[1]/2;
-	if (band4) sigma=0;
+	if (band4) {
+		sigma=0;
+	  	//printLog("Ext: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
+	}
 	//printLog("Ext: t=%g: e=%g, X=[%g, %g, %g], q= [%g, %g], u=[%g ,%g], a=%g \n",t,e,X[0],X[1],X[2],q[0],q[1],u[0],u[1],a);
 
 	if (sigma>0){
@@ -107,8 +111,12 @@ if (x.port==0) {
 			} else {
 				band2=false;
 			}
+			if (sigma>getFinalTime())sigma=getFinalTime()+1;
 			advance_time(diffxq,sigma/2,2);
-			if (fabs(diffxq[0])>3*(dQmin+dQrel*fabs(q[0]))) sigma=1e-12;
+			if (fabs(diffxq[0])>3*(dQmin+dQrel*fabs(q[0]))){
+			  //printLog("t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
+			 sigma=1e-12;
+			}
 	   	//if (fabs(X[0]-q[0])>3*dQ) sigma=1e-12;
 
 	}
@@ -181,14 +189,15 @@ if (!band2){
 		};
 	   }; 
 	  //if (band4) printLog("band4=true\n");
-    	  if (q[1]*X[1]<0&&!band4&&!band2&&!band3) {
+    if (q[1]*X[1]<0&&!band4&&!band2&&!band3) {
   		if (q[1]<0) {
 			dq=q_old-q[0]+dq_old-fabs(dq_old)*0.1;
   		} else {
 			dq=q_old-q[0]+dq_old+fabs(dq_old)*0.1;
   		}
   		band4=true; //do it only once
-		//  printLog("We detected a change\n");
+		  //	  	printLog("Out: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
+
 	  } else if (band4) {
   		band4=false;
   		if (fabs(-u[1]/a/a-u[0]/a-q[0])<3*dQ){ 
