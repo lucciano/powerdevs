@@ -313,7 +313,7 @@ Coupled
             }
         Atomic
             {
-            Name = Vector unit_delay0
+            Name = Vector Unit_Delay
             Ports = 1 ; 1
             Path = vector/vector_unitdelay.h
             Description = Vector Unit Delay
@@ -330,6 +330,26 @@ Coupled
                 x0 = Str; 0 ; Initial State (Scilab)
                 Ts = Str; 1 ; Sampling Time (Scilab)
                 Size = Str; 10 ; Vector Size (Scilab)
+                }
+            }
+        Atomic
+            {
+            Name = Vector Multiplier
+            Ports = 2 ; 1
+            Path = vector/qss_multiplier_vec.h
+            Description = y = u0 * u1 * ... * u7 (QSS1 to 4)
+            Graphic
+                {
+                Position = 1020 ; -1380
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%multiplier.svg
+                }
+            Parameters
+                {
+                Inputs = Str; %Inputs ; 
+                Size = Str; 10 ; Vector Size
                 }
             }
         }
