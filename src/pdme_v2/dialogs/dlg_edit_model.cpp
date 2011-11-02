@@ -49,7 +49,7 @@ DlgEditModel::DlgEditModel(Coupled *c): prev(NULL), _b(NULL), _c(c)
 	  Parameter *par = c->parameter(p);
     parameters->insertRow(p);
     parameters->setItem(p,0,new QTableWidgetItem(par->name().c_str()));
-    parameters->setItem(p,3,new QTableWidgetItem(par->description().c_str()));
+    parameters->setItem(p,3,new QTableWidgetItem(QString(par->description().c_str()).replace("\\n","\n")));
     if (par->isString()) {
       parameters->setItem(p,1,new QTableWidgetItem("String"));
       StringParameter *sp = dynamic_cast<StringParameter*>(par);
@@ -83,7 +83,7 @@ DlgEditModel::DlgEditModel(GpxBlock *b): prev(NULL), _b(b), _c(NULL)
   validator = new QDoubleValidator(this);
   QApplication::setOverrideCursor (QCursor(Qt::ArrowCursor)); 
   name->setText(_b->model()->name().c_str());
-  description->setPlainText(_b->model()->description().c_str());
+  description->setPlainText(QString(_b->model()->description().c_str()).replace("\\n","\n"));
   inputs->setValue(_b->model()->inPorts());
   outputs->setValue(_b->model()->outPorts());
   qDebug() << "WIDTH: " << _b->getWidth();
@@ -138,7 +138,7 @@ DlgEditModel::DlgEditModel(GpxBlock *b): prev(NULL), _b(b), _c(NULL)
 	  Parameter *par = b->model()->parameter(p);
     parameters->insertRow(p);
     parameters->setItem(p,0,new QTableWidgetItem(par->name().c_str()));
-    parameters->setItem(p,3,new QTableWidgetItem(par->description().c_str()));
+    parameters->setItem(p,3,new QTableWidgetItem(QString(par->description().c_str()).replace("\\n","\n")));
     if (par->isString()) {
       parameters->setItem(p,1,new QTableWidgetItem("String"));
       StringParameter *sp = dynamic_cast<StringParameter*>(par);
@@ -480,7 +480,7 @@ void DlgEditModel::on_descParam_textChanged ( )
     return;
   int row=parameters->row(sel.first());
   qDebug() << "change " << row;
-	_parameters[row]->setDescription(qPrintable(descParam->toPlainText().trimmed()));
+	_parameters[row]->setDescription(qPrintable(QString(descParam->toPlainText().trimmed()).replace("\n","\\n")));
   parameters->item(row,3)->setText(descParam->toPlainText());
 }
 
@@ -682,7 +682,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
 	      c->setOutportsTo(outputs->value());
         _b->itemChange(QGraphicsItem::ItemPositionHasChanged,QVariant());
 	      }
-	      m->setDescription(qPrintable(description->toPlainText()));
+	      m->setDescription(qPrintable(description->toPlainText().replace("\n","\\n")));
 	      m->setParameters(_parameters);
 		  } else {
 	      _c->setParameters(_parameters);

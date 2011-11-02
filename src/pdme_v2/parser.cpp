@@ -201,6 +201,8 @@ QStringList unescapeParams(QString str)
   QStringList ret,lsv;
   QString val;
   lsv = str.split(TOKCOLON);
+  if (lsv.size()<3)
+    return ret;
   ret << lsv.takeFirst();
   ret << lsv.takeLast();
   val = lsv.join(QString(";"));
@@ -228,6 +230,10 @@ vector<Parameter*> parseParameters()
 		  lsv = unescapeParams(lsn.last());
     else
 		  lsv = lsn.last().split(TOKCOLON);
+    if (lsv.size()<3) {
+      printf("Error while parsing parameters\n");
+      return vector<Parameter*>();
+    }
 		type = lsv.takeFirst().trimmed();
 		value = lsv.takeFirst().trimmed();
 		desc = lsv.takeFirst().trimmed();
@@ -331,6 +337,7 @@ Atomic *parseAtomic()
 	if (!checkEqual(strLine, TOKPARAMETERS))
 		return NULL;
 	vector< Parameter * >params = parseParameters();
+  
 
 	strLine = getLine();
 	if (!checkEqual(strLine, TOKCBRACE))
@@ -699,10 +706,15 @@ Coupled *parseCoupled()
 		strLine = getLine();
 		if (strLine == TOKATOMIC) {
       Atomic *a = parseAtomic();
+      if (a==NULL)
+        return NULL;
       a->setFather(ret);
 			ret->addChild(a);
 		} else if (strLine == TOKCOUPLED) {
 			Coupled *cp= parseCoupled();
+      if (cp==NULL)
+        return NULL;
+      qDebug() << "Cp = " << cp;
 			cp->setFather(ret);
 			ret->addChild(cp);
 		} else if (strLine == TOKINPORT) {

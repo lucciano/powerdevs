@@ -38,7 +38,7 @@ DlgChangeParameters::DlgChangeParameters(Coupled *c): _c(c), _b(NULL)
   setWindowTitle(QString("Parameters: %1").arg(c->name().c_str()));
   _desc_layout = new QVBoxLayout();
   _params_layout = new QVBoxLayout();
-  _desc = new QTextEdit(c->description().c_str());
+  _desc = new QTextEdit(QString(c->description().c_str()).replace("\\n","<br>"));
   _desc->setTextInteractionFlags(Qt::NoTextInteraction);
   _desc_group = new QGroupBox();
   _params_group = new QGroupBox();
@@ -65,7 +65,7 @@ DlgChangeParameters::DlgChangeParameters(Coupled *c): _c(c), _b(NULL)
       qDebug() << sp << endl;
       QLabel *name;
       if (strlen(sp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(sp->name().c_str()).arg(sp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(sp->name().c_str()).arg(QString(sp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(sp->name().c_str()));
  
@@ -87,7 +87,7 @@ DlgChangeParameters::DlgChangeParameters(Coupled *c): _c(c), _b(NULL)
 
       QLabel *name;
       if (strlen(vp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(vp->name().c_str()).arg(vp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(vp->name().c_str()).arg(QString(vp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(vp->name().c_str()));
       QLineEdit *field = new QLineEdit(QString("%1").arg(vp->value()));
@@ -102,7 +102,7 @@ DlgChangeParameters::DlgChangeParameters(Coupled *c): _c(c), _b(NULL)
       qDebug() << lp << endl;
       QLabel *name;
       if (strlen(lp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(lp->name().c_str()).arg(lp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(lp->name().c_str()).arg(QString(lp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(lp->name().c_str()));
  
@@ -134,7 +134,7 @@ DlgChangeParameters::DlgChangeParameters(GpxBlock *b): _b(b), _c(NULL)
   setWindowTitle(QString("Parameters: %1").arg(m->name().c_str()));
   _desc_layout = new QVBoxLayout();
   _params_layout = new QVBoxLayout();
-  _desc = new QTextEdit(m->description().c_str());
+  _desc = new QTextEdit(QString(m->description().c_str()).replace("\\n","<br>"));
   _desc->setTextInteractionFlags(Qt::NoTextInteraction);
   _desc_group = new QGroupBox();
   _params_group = new QGroupBox();
@@ -161,7 +161,7 @@ DlgChangeParameters::DlgChangeParameters(GpxBlock *b): _b(b), _c(NULL)
       qDebug() << sp << endl;
       QLabel *name;
       if (strlen(sp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(sp->name().c_str()).arg(sp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(sp->name().c_str()).arg(QString(sp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(sp->name().c_str()));
  
@@ -199,7 +199,7 @@ DlgChangeParameters::DlgChangeParameters(GpxBlock *b): _b(b), _c(NULL)
 
       QLabel *name;
       if (strlen(vp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(vp->name().c_str()).arg(vp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(vp->name().c_str()).arg(QString(vp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(vp->name().c_str()));
       QLineEdit *field = new QLineEdit(QString("%1").arg(vp->value()));
@@ -214,7 +214,7 @@ DlgChangeParameters::DlgChangeParameters(GpxBlock *b): _b(b), _c(NULL)
       qDebug() << lp << endl;
       QLabel *name;
       if (strlen(lp->description().c_str()))
-        name = new QLabel(QString("%1 (%2)").arg(lp->name().c_str()).arg(lp->description().c_str()));
+        name = new QLabel(QString("%1 (%2)").arg(lp->name().c_str()).arg(QString(lp->description().c_str()).replace("\\n","\n")));
       else
         name = new QLabel(QString("%1").arg(lp->name().c_str()));
  

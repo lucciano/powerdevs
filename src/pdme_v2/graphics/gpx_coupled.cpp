@@ -50,7 +50,7 @@ GpxCoupled::GpxCoupled(QGraphicsScene * scene, Coupled *coupledData):_coupledDat
   for (int p=0;p<coupledData->outPorts();p++)
     addOutport();
   setName(coupledData->name().c_str());
-	setToolTip(coupledData->description().c_str());
+	setToolTip(QString(coupledData->description().c_str()).replace("\\n","\n"));
   _edit = new EditCoupled(this);
 }
 

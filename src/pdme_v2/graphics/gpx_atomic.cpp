@@ -54,7 +54,7 @@ GpxAtomic::GpxAtomic(QGraphicsScene * scene, Atomic *a): GpxBlock(), _atomicData
     GpxBlock::addOutport();
   setName(a->name().c_str());
 	setAcceptHoverEvents(true);
-	setToolTip(a->description().c_str());
+	setToolTip(QString(a->description().c_str()).replace("\\n","\n"));
   _name_item.setTextWidth(_width+10);
   _name_item.document()->setTextWidth(_width+10);
   QTextOption o;
