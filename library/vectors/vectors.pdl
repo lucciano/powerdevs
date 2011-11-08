@@ -352,5 +352,45 @@ Coupled
                 Size = Str; 10 ; Vector Size
                 }
             }
+        Atomic
+            {
+            Name = Index Selector
+            Ports = 1 ; 1
+            Path = vector/index_selector.h
+            Description = Vector Index Selector. Only propagates messages when index is between from and to
+            Graphic
+                {
+                Position = 4770 ; 3945
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%indexselector.svg
+                }
+            Parameters
+                {
+                from = Str; 0 ; Starting Signal Index
+                to = Str; 9 ; Ending Signal Index
+                }
+            }
+        Atomic
+            {
+            Name = Index Mapper
+            Ports = 1 ; 1
+            Path = vector/index_mapper.h
+            Description = Vector Index Mapper. Computes y(index)=u(map(index)). map is an NxN matrix with 0 or 1.
+            Graphic
+                {
+                Position = 4665 ; 1905
+                Dimension = 720 ; 705
+                Direction = Right
+                Color = 15
+                Icon = %vectors%indexmap.svg
+                }
+            Parameters
+                {
+                map = Str; [0 1\; 0 0] ; Mapping matrix
+                N = Str; 2 ; Vector Size
+                }
+            }
         }
     }
