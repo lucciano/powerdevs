@@ -91,6 +91,8 @@ bool band,band2,band3,band4;
 
 
 
+
+
 public:
 	liqss3(const char *n): Simulator(n) {};
 	void init(double, ...);

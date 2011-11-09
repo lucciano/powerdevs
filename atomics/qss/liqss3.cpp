@@ -118,6 +118,10 @@ if (x.port==0) {
 	X[0]=derx[0];
 	sigma=0;
 	band2=false;
+  band=false;
+  band3=false;
+  band4=false;
+  a=0;
 }
 }
 Event liqss3::lambda(double t) {
@@ -189,6 +193,7 @@ double ddx_est;
  
 	} else {
          	//not enough self feedback
+		band4=false;
 		if (X[3]>0) {dq=-dQ;} else {dq=dQ;}
 	}
  	if (!band3) {

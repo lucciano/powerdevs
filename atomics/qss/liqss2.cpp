@@ -83,7 +83,7 @@ if (x.port==0) {
 	X[2]=derx[1]/2;
 	if (band4) {
 		sigma=0;
-	  	//printLog("Ext: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
+	  //	printLog("Ext: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
 	}
 	//printLog("Ext: t=%g: e=%g, X=[%g, %g, %g], q= [%g, %g], u=[%g ,%g], a=%g \n",t,e,X[0],X[1],X[2],q[0],q[1],u[0],u[1],a);
 
@@ -196,7 +196,7 @@ if (!band2){
 			dq=q_old-q[0]+dq_old+fabs(dq_old)*0.1;
   		}
   		band4=true; //do it only once
-		  //	  	printLog("Out: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
+		 // printLog("Out: t=%g: sigma=%g, X[0]=%g, X[1]=%g, X[2]=%g, q[0]=%g, q[1]=%g,dQ=%g. We found a problem \n",t,sigma,X[0],X[1],X[2],q[0],q[1],dQ);
 
 	  } else if (band4) {
   		band4=false;
@@ -205,11 +205,14 @@ if (!band2){
 			band3=true;
 			//       printLog("We try provoke X[2]=0\n");
 
+			} 
+	  } else {
+			band4=false;
 		}
-	  }
   
 	} else {
          	//not enough self feedback
+		band4=false;
 		if (X[2]<0) {dq=-dQ;} else {dq=dQ;}
 	}
 
