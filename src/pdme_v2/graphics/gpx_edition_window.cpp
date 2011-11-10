@@ -108,6 +108,12 @@ void GpxEditionWindow::setFileName(QString fileName)
 
 void GpxEditionWindow::closeEvent(QCloseEvent *event)
 {
+  if (count()>1 && currentIndex()>0) {
+    on_tabCloseRequested(currentIndex());
+    event->ignore();
+    return;
+  }
+   
   if (isDirty())
   {
     event->ignore();
