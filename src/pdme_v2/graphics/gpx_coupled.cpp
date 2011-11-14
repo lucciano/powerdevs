@@ -45,10 +45,14 @@ GpxCoupled::GpxCoupled(QGraphicsScene * scene, Coupled *coupledData):_coupledDat
     svg->setFlag(QGraphicsItem::ItemStacksBehindParent,true );
     svg->setFlag(QGraphicsItem::ItemIgnoresTransformations,true );
   }
-  for (int p=0;p<coupledData->inPorts();p++)
+  for (int p=0;p<coupledData->inPorts();p++) {
     addInport();
-  for (int p=0;p<coupledData->outPorts();p++)
+    _inPorts.at(p)->setToolTip(coupledData->inport(p)->name().c_str());
+  }
+  for (int p=0;p<coupledData->outPorts();p++) {
     addOutport();
+    _outPorts.at(p)->setToolTip(coupledData->outport(p)->name().c_str());
+  }
   setName(coupledData->name().c_str());
 	setToolTip(QString(coupledData->description().c_str()).replace("\\n","\n"));
   _edit = new EditCoupled(this);
