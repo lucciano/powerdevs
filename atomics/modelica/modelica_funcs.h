@@ -10,6 +10,9 @@
 #include <simulation_runtime.h>
 #include <simulation_result.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 int init_runtime();
 int function_staticBlocks(int,double,double*,double*);
 bool functionQssWhen(int,double,double*,double*);
@@ -24,5 +27,8 @@ bool condition(unsigned int);
 void set_condition_to(unsigned int, bool);
 void function_sample(int i, double *y);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

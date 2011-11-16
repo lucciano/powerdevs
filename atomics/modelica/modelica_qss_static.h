@@ -1,8 +1,6 @@
 //CPP:Modelica/modelica_funcs.cpp
-
 //CPP:qss/qsstools.cpp
-
-//CPP:./modelica_qss_static.cpp
+//CPP:modelica/modelica_qss_static.cpp
 #if !defined modelica_qss_static_h
 #define modelica_qss_static_h
 
@@ -29,7 +27,7 @@ double inp[200],outp[200],out_dt[200],outdt[200],out2dt[200],out_2dt[200];
 int order;
 double dt,dtmax,tolerr;
 int lastport;
-bool dummy;
+bool fromext;
 //parameters
 int Inputs,Outputs,Index;
 double abs_accuracy,rel_accuracy;
@@ -38,6 +36,8 @@ char* Method;
 double y[10];
 
 #define INF 1e20
+
+
 
 
 

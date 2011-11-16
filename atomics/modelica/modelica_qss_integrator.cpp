@@ -9,7 +9,7 @@ va_start(parameters,t);
 //where:
 //      %Name% is the parameter name
 //      %Type% is the parameter type
-int Index=(int)va_arg(parameters,double);
+Index=(int)va_arg(parameters,double);
 Method=int_method();
 init_runtime();
 
@@ -88,6 +88,7 @@ Event modelica_qss_integrator::lambda(double t) {
 //     %&Value% is a direction to the variable that contain the value.
 //     %NroPort% is the port number (from 0 to n-1)
 Event e=solver->lambda(t);
+printLog("[t=%g] Int: %d Emitting {%g,%g}\n",t,Index,e.getDouble(),e.getDouble(1));
 return e;
 }
 void modelica_qss_integrator::exit() {

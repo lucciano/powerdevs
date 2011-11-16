@@ -47,17 +47,11 @@ if (strcmp(Method,"QSS4")==0){
 if ((strcmp(Method,"BQSS")==0)||(strcmp(Method,"CQSS")==0)){
 	order=1; 
 };
+fromext=false;
 
 lastport=Outputs;
 
-function_staticBlocks(Index,t,inp,outp); //evaluate in case no input
-					  //arrives
-  	for (int i=0;i<Outputs;i++) {
-		f[i][0]=outp[i];
-	} 
-
-//Start with a small step (in case no input arrives)
-sigma=1e-8;
+sigma=INF;
 }
 double modelica_qss_static::ta(double t) {
 //This function returns a double.
@@ -65,25 +59,48 @@ return sigma;
 }
 void modelica_qss_static::dint(double t) {
 double ddf;
-if (sigma>0) { //We did not received any events
+fromext=false;
+sigma=INF;
+
+}
+void modelica_qss_static::dext(Event x, double t) {
+//The input event is in the 'x' variable.
+//where:
+//     'x.value' is the value (pointer to void)
+//     'x.port' is the port number
+
+for (int i=0;i<Inputs-1;i++) {
+	advance_time(u[i],e,order);	 // This is not CORRECT
+};
+if (x.port!=Inputs-1) { //not a dummy event 
+	for (int j=0;j<order;j++) {
+		 u[x.port][j]=x.getDouble(j);
+	}
+  printLog("[t=%g] SF %d: Received {%g,%g} through port %d\n",t,Index,u[x.port][0],u[x.port][1],x.port);
+//	if (e>1e-5){dt=e/100;}
+} 
+
+
+sigma=0; 
+fromext=true;
+
+lastport=Outputs-1;
+}
+Event modelica_qss_static::lambda(double t) {
+//This function returns an Event:
+//     Event(%&Value%, %NroPort%)
+//where:
+//     %&Value% points to the variable which contains the value.
+//     %NroPort% is the port number (from 0 to n-1)
+
+if (fromext) { //We received events
 
 	switch(order) { 
 
 	case 1: 
-		for (int i=0;i<Inputs-1;i++) {
-			inp[i]=u[i][0];
-		}
-		function_staticBlocks(Index,t,inp,outp); //evaluate the right hand side
-		for (int i=0;i<Outputs;i++) {
-			f[i][0]=outp[i];
-		}
-
-   break;
-
 	case 2: 
-		for (int i=0;i<Inputs-1;i++) {
-				advance_time(u[i],sigma,1);	
-		};
+	case 3: 
+	case 4: 
 		for (int i=0;i<Inputs-1;i++) {
 			inp[i]=u[i][0];
 		}
@@ -101,239 +118,18 @@ if (sigma>0) { //We did not received any events
 			f[i][0]=outp[i];
 			f[i][1]=(outdt[i]-out_dt[i])/(2*dt);
 		} 	
-	break;
-
-case 3: 
-	for (int i=0;i<Inputs-1;i++) {
-			advance_time(u[i],sigma,2);
-	};
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=u[i][0];
+		break;
 	}
-	function_staticBlocks(Index,t,inp,outp); 
-   //we evaluated the right hand side...
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],dt,2);
-	}
-	function_staticBlocks(Index,t+dt,inp,outdt); 
- //we evaluated the right hand side again...
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],-dt,2);
-	}
-	function_staticBlocks(Index,t-dt,inp,out_dt); 
- 	for (int i=0;i<Outputs;i++) {
-		f[i][0]=outp[i];
-		f[i][1]=(outdt[i]-out_dt[i])/(2*dt);
-		f[i][2]=(outdt[i]-2*outp[i]+out_dt[i])/(dt*dt*2);
-	} 	
-	break;
-
-	}
-
 	lastport=Outputs-1;
-	sigma=0;
 
-} else {	// Sigma ==0
-	if (lastport==0) {
-		sigma=INF;
-
-		switch(order) {
-
-		case 1:
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=u[i][0];
-			}
-			function_staticBlocks(Index,t+dt,inp,outp); //evaluate the right hand side
-			for (int i=0;i<Outputs;i++) {
-				//printLog("With Index= %d; We evaluate f[i][0]= %g  and outp[i]=%g \n",Index,f[i][0],outp[i]);
-				if (outp[i]!=f[i][0]) {
-					tolerr=abs_accuracy+rel_accuracy*fabs(f[i][0]);
-					dtmax=tolerr*dt/fabs(outp[i]-f[i][0])+1e-12;
-					if (dtmax<sigma){
-						sigma=dtmax;
-					}
-				}	
-			}
-		if (sigma>1e-12){dt=sigma/100;}
-
-		break;
-
-		case 2:
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],dt,1);
-			}
-			function_staticBlocks(Index,t+dt,inp,outdt); 
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],-dt,1);
-			}
-			function_staticBlocks(Index,t-dt,inp,out_dt); 
- 
- 			for (int i=0;i<Outputs;i++) {
-        ddf=(outdt[i]-2*f[i][0]-out_dt[i])/(dt*dt*2);
-				if (ddf!=0) {
-					tolerr=abs_accuracy+rel_accuracy*fabs(f[i][0]);
-					dtmax=dt*sqrt(fabs(tolerr/ddf))+1e-8;
-					if (dtmax<sigma){
-						sigma=dtmax;
-					}
-				}					
-			}
-			if (sigma>1e-8){dt=sigma/100;} 			
-		 // sigma=INF;	
-		break;
-
-		case 3:
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],dt,2);
-			}
-			function_staticBlocks(Index,t+dt,inp,outdt); 
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],-dt,2);
-			}
-			function_staticBlocks(Index,t-dt,inp,out_dt); 
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],2*dt,2);
-			}
-			function_staticBlocks(Index,t+2*dt,inp,out2dt); 
-			for (int i=0;i<Inputs-1;i++) {
-				inp[i]=evaluate_poly(u[i],-2*dt,2);
-			}
-			function_staticBlocks(Index,t-2*dt,inp,out_2dt); 
-
- 			for (int i=0;i<Outputs;i++) {
-        double f3 = (out2dt[i]-2*outdt[i]+2*out_dt[i]-out_2dt[i])/(12*dt*dt*dt);
-				if (f3!=0) {
-					tolerr=abs_accuracy+rel_accuracy*fabs(f[i][0]);
-					dtmax=pow(fabs(tolerr/f3),1/3.0)+1e-12;
-					if (dtmax<sigma){
-					  sigma=dtmax;
-					}
-				}
-			}
-		break;
-
-
-		}
-    	lastport=Outputs; //next event goes nowhere
-		//printLog("t=%g: Static Func[%i]: We set sigma=%g \n",t,Index,sigma);
-  } else {
-    sigma=0;
-    lastport--;
-  };
-
-}
-
-}
-void modelica_qss_static::dext(Event x, double t) {
-//The input event is in the 'x' variable.
-//where:
-//     'x.value' is the value (pointer to void)
-//     'x.port' is the port number
-
-
-if (x.port!=Inputs-1) { //not a dummy event 
-	for (int j=0;j<order;j++) {
-		 u[x.port][j]=x.getDouble(j);
-	}
-	dummy=false;
-	if (e>1e-5){dt=e/100;}
 } else {
-  dummy=true;
-//  printLog("Dummy event\n");
-}
-
-sigma=0; 
-
-
-switch(order) { 
-case 1: 
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=u[i][0];
-	}
-	function_staticBlocks(Index,t,inp,outp); //evaluate the right hand side
-  for (int i=0;i<Outputs;i++) {
-		f[i][0]=outp[i];
-	} 
-	
- 
-break;
-
-case 2: 
-	for (int i=0;i<Inputs-1;i++) {
-		if (i!=x.port) {
-			advance_time(u[i],e,1);
-		};
-	};
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=u[i][0];
-	}
-	function_staticBlocks(Index,t,inp,outp); 
-   //we evaluated the right hand side...
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],dt,1);
-	}
-	function_staticBlocks(Index,t+dt,inp,outdt); 
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],-dt,1);
-	}
-	function_staticBlocks(Index,t-dt,inp,outdt); 
- 
- 	for (int i=0;i<Outputs;i++) {
-		f[i][0]=outp[i];
-		f[i][1]=(outdt[i]-out_dt[i])/(2*dt);
-	} 	
-
-break;
-
-case 3: 
-	for (int i=0;i<Inputs-1;i++) {
-		if (i!=x.port) {
-			advance_time(u[i],e,2);
-		};
-	};
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=u[i][0];
-	}
-	function_staticBlocks(Index,t,inp,outp); 
-  //we evaluated the right hand side...
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],dt,2);
-	}
-	function_staticBlocks(Index,t+dt,inp,outdt);
-	for (int i=0;i<Inputs-1;i++) {
-		inp[i]=evaluate_poly(u[i],-dt,2);
-	}
-	function_staticBlocks(Index,t-dt,inp,out_dt); 
-
- 	for (int i=0;i<Outputs;i++) {
-		f[i][0]=outp[i];
-		f[i][1]=(outdt[i]-out_dt[i])/(2*dt);
-		f[i][2]=(outdt[i]-2*outp[i]+out_dt[i])/(dt*dt*2);
-	} 	
-  //printLog("[t=%g] Function value (%d) is {%g,%g,%g}\n",t,Index,f[0][0],f[0][1],f[0][2]);
-
-break;
 
 }
+printLog("[t=%g] SF: %d Emmiting {%g,%g} through port %d. Input {%g,%g}\n",t,Index,f[lastport][0],f[lastport][1],lastport,u[0][0],u[0][1]);
 
-lastport=Outputs-1;
-}
-Event modelica_qss_static::lambda(double t) {
-//This function returns an Event:
-//     Event(%&Value%, %NroPort%)
-//where:
-//     %&Value% points to the variable which contains the value.
-//     %NroPort% is the port number (from 0 to n-1)
-
-if (sigma==0) {
-	for (int i=0;i<order;i++) { 
-		y[i]=f[lastport][i];
-	};
-//	printLog("Emitting %g through port %d\n",y[0],lastport);
-} else {
-	//printLog("Emitting %g %g through port %d\n",y[0],y[1],lastport);
-  //printLog("sigma>0\n");
-}; 
+fromext=false;
+for (int i=0;i<10;i++) 
+  y[i] = f[lastport][i];
 return Event(y,lastport);
 }
 void modelica_qss_static::exit() {

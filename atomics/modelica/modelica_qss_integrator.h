@@ -49,6 +49,7 @@ Simulator *solver;
 enum { QSS, QSS2, QSS3, QSS4, 
 	BQSS,CQSS,LIQSS,LIQSS2,
 	LIQSS3 } met;
+int Index;
 public:
 	modelica_qss_integrator(const char *n): Simulator(n) {};
 	void init(double, ...);
