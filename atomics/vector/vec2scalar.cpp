@@ -27,7 +27,7 @@ void vec2scalar::dext(Event x, double t) {
 //     'x.port' is the port number
 //     'e' is the time elapsed since last transition
 vector vec=*(vector*)x.value;
-if (vec.index==index){
+if (vec.index==index || vec.index<0){
    for (int i=0;i<10;i++) y[i]=x.getDouble(i);
 	sigma=0;
 };

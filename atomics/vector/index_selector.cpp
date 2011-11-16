@@ -35,6 +35,8 @@ if (vec.index>to || vec.index<from){
 } else {
 		sigma=0;
 };
+if (vec.index<0)
+	sigma=0;
 }
 Event index_selector::lambda(double t) {
 //This function returns an Event:

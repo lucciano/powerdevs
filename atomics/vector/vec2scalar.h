@@ -24,6 +24,7 @@ double y[10];
 
 
 
+
 public:
 	vec2scalar(const char *n): Simulator(n) {};
 	void init(double, ...);

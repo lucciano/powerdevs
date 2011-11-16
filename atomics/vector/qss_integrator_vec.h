@@ -58,6 +58,7 @@ int N,Ni;
 
 
 
+
 public:
 	qss_integrator_vec(const char *n): Simulator(n) {};
 	void init(double, ...);
