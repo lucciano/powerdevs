@@ -85,7 +85,7 @@ Coupled
             Name = Switch
             Ports = 3 ; 1
             Path = qss/qss_switch.h
-            Description = If u2>level then y=u0. Otherwise y=u1
+            Description = If u1>level then y=u0. Otherwise y=u2
             Graphic
                 {
                 Position = 3420 ; 225
