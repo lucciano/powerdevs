@@ -34,8 +34,6 @@ LibraryWindow::LibraryWindow(): QDockWidget()
 }
 LibraryWindow::~LibraryWindow()
 {
-  int lib_width = width();
-  setSetting("LibraryWidth",lib_width);
 }
 QSize LibraryWindow::sizeHint() const
 {

@@ -111,6 +111,9 @@ PowerGui::PowerGui(): PowerGui_class()
 
 PowerGui::~PowerGui()
 {
+  
+  setSetting("LibraryWidth",dockLib.widget()->width());
+  
   foreach(QAction *a,_userActions) 
     delete (UserMenuAction*) _userMenuMapper.mapping(a);
   foreach(Coupled *c,_loadedLibs) 
@@ -291,6 +294,7 @@ bool PowerGui::loadLibrary()
     view->setRenderHints(QPainter::Antialiasing);
     view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->resize(getSetting("LibraryWidth").toInt(),view->height());
 		toolBox->addItem(view, QIcon(getImage(coupled_lib->graphic().icon().c_str())), coupled_lib->name().c_str());
   }
 	dockLib.setWidget(toolBox);
