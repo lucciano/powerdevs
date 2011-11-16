@@ -69,8 +69,8 @@ if (getOs()!=WINDOWS) {
    int res=system(buff);//delete old .csv files
    sprintf(buff,"find ./plots/%s.plt -ctime 1 -exec rm -rf {} \\;","*");
    res=system(buff);//delete old .plt files
-   if (res<=0)
-    printLog("Failed system in gnuplot\n");
+   //if (res<=0)
+   // printLog("Failed system in gnuplot\n");
 	}
 else {
 	char buff[1024];
