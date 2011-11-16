@@ -10,7 +10,7 @@ Coupled
         Dimension = 555; 555
         Direction = Right
         Color = 15
-        Icon = None
+        Icon = %realtime%clock.svg
         Window = 2685; 1920; 6615; 5145
         }
     Parameters

@@ -10,7 +10,7 @@ Coupled
         Dimension = 555; 555
         Direction = Right
         Color = 15
-        Icon = %discrete%/discrete.bmp
+        Icon = %discrete%/discrete.svg
         Window = 4365; 3150; 6615; 5205
         }
     Parameters

@@ -10,7 +10,7 @@ Coupled
         Dimension = 675; 675
         Direction = Right
         Color = 15
-        Icon = None
+        Icon = %continuous%integrator.svg
         Window = 5000; 5000; 5000; 5000
         }
     Parameters

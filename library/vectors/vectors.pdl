@@ -10,7 +10,7 @@ Coupled
         Dimension = 0; 0
         Direction = Down
         Color = 15
-        Icon = 
+        Icon = %vectors%indexshift.svg
         Window = 5000; 5000; 5000; 5000
         }
     Parameters
@@ -390,6 +390,28 @@ Coupled
                 {
                 map = Str; [0 1\; 0 0] ; Mapping matrix
                 N = Str; 2 ; Vector Size
+                }
+            }
+        Atomic
+            {
+            Name = Poisson generator
+            Ports = 0 ; 1
+            Path = vector/poisson_generator.h
+            Description = Atomic DEVS model
+            Graphic
+                {
+                Position = 4095 ; 1020
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %vectors%poisson.svg
+                }
+            Parameters
+                {
+                lambda = Str; 1 ; Mean occurrence rate (Scilab)
+                y = Str; 1 ; Output Value (Scilab)
+                Seed = Str; 0 ; an integer or empty string for a random seed (Scilab)
+                Size = Str; 10 ; Vector size
                 }
             }
         }

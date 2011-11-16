@@ -280,5 +280,26 @@ Coupled
                 Random seed = Str;  ; an integer or empty string for a random seed
                 }
             }
+        Atomic
+            {
+            Name = Poisson generator
+            Ports = 0 ; 1
+            Path = random/poisson_gen.h
+            Description = Atomic DEVS model
+            Graphic
+                {
+                Position = 1170 ; 3045
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %sources%poisson.svg
+                }
+            Parameters
+                {
+                lambda = Str; 1 ; Mean occurrence rate (Scilab)
+                y = Str; 1 ; Output Value (Scilab)
+                Seed = Str; 0 ; an integer or empty string for a random seed (Scilab)
+                }
+            }
         }
     }
