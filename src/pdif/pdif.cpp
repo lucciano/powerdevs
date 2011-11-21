@@ -166,7 +166,7 @@ void msg(QString m)
 void PDIF::binaryFinish(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus != QProcess::NormalExit) {
-		msg("The process aborted");
+		msg(QString("The process terminated abnormally with exit code  = %1").arg(exitCode));
 	} else {
 		pg->setFormat("Simulation Completed");
 	}
@@ -176,15 +176,10 @@ void PDIF::binaryFinish(int exitCode, QProcess::ExitStatus exitStatus)
 void PDIF::startModel()
 {
 
-	QString outputDir =
-	    QCoreApplication::applicationDirPath() + "/../output/";
+	QString outputDir = QCoreApplication::applicationDirPath() + "/../output/";
 	QDir::setCurrent(outputDir);
 
-#ifdef RTAIOS
-	QObject::connect(qProc, SIGNAL(finished(int, QProcess::ExitStatus)),
-			 this, SLOT(binaryFinish(int, QProcess::ExitStatus)));
-	return;
-#endif
+	QObject::connect(qProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(binaryFinish(int, QProcess::ExitStatus)));
 	QObject::connect(qProc, SIGNAL(readyRead()), this, SLOT(modelWrote()));
 #ifdef Q_OS_WIN32
         QString path = QCoreApplication::applicationDirPath();
