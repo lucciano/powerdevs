@@ -1,6 +1,5 @@
 //CPP:qss/qss_wsum.cpp
 //CPP:qss/qsstools.cpp
-//CPP:qss/qss_integrator.cpp
 //CPP:vector/index_selector.cpp
 #if !defined index_selector_h
 #define index_selector_h
@@ -12,7 +11,7 @@
 #include "engine.h"
 #include "qss/qsstools.h"
 #include "vector.h"
-#include "qss/qss_integrator.h"
+
 
 
 class index_selector: public Simulator { 
