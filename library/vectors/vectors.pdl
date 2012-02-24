@@ -410,7 +410,7 @@ Coupled
                 {
                 lambda = Str; 1 ; Mean occurrence rate (Scilab)
                 y = Str; 1 ; Output Value (Scilab)
-                Seed = Str; 0 ; an integer or empty string for a random seed (Scilab)
+                Seed = Str; ; an integer or empty string for a random seed (Scilab)
                 Size = Str; 10 ; Vector size
                 }
             }

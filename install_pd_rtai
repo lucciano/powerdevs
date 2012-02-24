@@ -1,0 +1,10 @@
+#/bin/bash
+#apt-get update
+dpkg -i /tmp/powerdevs_i386.deb
+#apt-get install -f
+cd /usr/src
+tar xvjf /tmp/rtai-3.8.1.tar.bz2
+ln -s rtai-3.8.1 rtai
+cd rtai
+cp /tmp/.rtai_config .
+make 
