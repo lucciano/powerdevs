@@ -21,8 +21,9 @@ sudo ./uck-remaster-remove-win32-files ../tmp
 sudo ./uck-remaster-chroot-rootfs ../tmp "/tmp/install_pd_rtai"
 #sudo mv ../tmp/sources.list ../tmp/remaster-root/etc/apt/sources.list 
 #sudo rm -rf tmp
-sudo uck-remaster-pack-initrd ../tmp
-sudo uck-remaster-pack-rootfs ../tmp
-sudo uck-remaster-pack-iso "pd_rtai.iso" ../tmp
-sudo uck-remaster-clean ../tmp
+cd uck-2.4.5
+sudo ./uck-remaster-pack-initrd ../tmp
+sudo ./uck-remaster-pack-rootfs ../tmp
+sudo ./uck-remaster-pack-iso "pd_rtai.iso" ../tmp
+sudo u./ck-remaster-clean ../tmp
 echo "Generation completed SUCCESSFULLY, find your ISO in ../tmp/remaster-new-files"

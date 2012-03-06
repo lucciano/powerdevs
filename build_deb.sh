@@ -7,7 +7,7 @@ cat version.major rev > version
 VER=`cat version`
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
-make -f Makefile clean
+#make -f Makefile clean
 make -f Makefile MODE=release
 rm -rf tmp_deb
 svn export deb tmp_deb
@@ -30,6 +30,14 @@ cp version ./tmp_deb/opt/powerdevs
 cp bin/run.sh ./tmp_deb/opt/powerdevs/bin
 svn export build ./tmp_deb/opt/powerdevs/build
 svn export engine ./tmp_deb/opt/powerdevs/engine
+if [ $# -eq 1 ]; then
+  cat engine/Makefile.include \
+   | awk '{if (match($0,'/^CXX/')) print $0, " -DRTAIOS"; else print $0}' \
+   | awk '{if (match($0,'/^LIBS/')) print $0, " -L/usr/realtime/lib -lpthread -llxrt -lm "; else print $0}' \
+   | awk '{if (match($0,'/^INCLUDE/')) print $0, "-I/usr/realtime/include"; else print $0}'
+
+  echo "Blahhhhhhhhhhhhhhhhhhhh"
+fi
 svn export library ./tmp_deb/opt/powerdevs/library
 svn export examples ./tmp_deb/opt/powerdevs/examples
 svn export atomics ./tmp_deb/opt/powerdevs/atomics
