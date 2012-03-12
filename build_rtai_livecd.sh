@@ -1,6 +1,6 @@
 #!/bin/bash
 ARCH=`uname -m`
-./build_deb.sh
+./build_deb.sh rtai
 rm -rf tmp uck-2.4.5
 mkdir tmp
 tar xvzf uck_2.4.5.tar.gz 
@@ -25,5 +25,5 @@ cd uck-2.4.5
 sudo ./uck-remaster-pack-initrd ../tmp
 sudo ./uck-remaster-pack-rootfs ../tmp
 sudo ./uck-remaster-pack-iso "pd_rtai.iso" ../tmp
-sudo u./ck-remaster-clean ../tmp
+sudo ./uck-remaster-clean ../tmp
 echo "Generation completed SUCCESSFULLY, find your ISO in ../tmp/remaster-new-files"

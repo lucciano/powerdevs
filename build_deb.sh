@@ -34,9 +34,7 @@ if [ $# -eq 1 ]; then
   cat engine/Makefile.include \
    | awk '{if (match($0,'/^CXX/')) print $0, " -DRTAIOS"; else print $0}' \
    | awk '{if (match($0,'/^LIBS/')) print $0, " -L/usr/realtime/lib -lpthread -llxrt -lm "; else print $0}' \
-   | awk '{if (match($0,'/^INCLUDE/')) print $0, "-I/usr/realtime/include"; else print $0}'
-
-  echo "Blahhhhhhhhhhhhhhhhhhhh"
+   | awk '{if (match($0,'/^INCLUDE/')) print $0, "-I/usr/realtime/include"; else print $0}' > tmp_deb/opt/powerdevs/engine/Makefile.include 
 fi
 svn export library ./tmp_deb/opt/powerdevs/library
 svn export examples ./tmp_deb/opt/powerdevs/examples
