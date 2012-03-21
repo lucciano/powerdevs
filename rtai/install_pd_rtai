@@ -1,0 +1,27 @@
+#/bin/bash
+apt-get update
+dpkg -i /tmp/powerdevs_i386.deb
+dpkg -i /tmp/linux*
+yes | apt-get install -f
+sudo apt-get remove openoffice.org-* ubuntu-docs
+cd /usr/src
+ln -s linux linux-headers-2.6.32.11+drm33.2
+tar xvjf /tmp/rtai-3.8.1.tar.bz2
+ln -s rtai-3.8.1 rtai
+cd rtai
+cp /tmp/.rtai_config .
+cp /tmp/rtai_config.h .
+yes "" | make config
+make install
+make clean
+cp -a /usr/realtime/modules /lib/modules/2.6.32.11+drm33.2/kernel/rtai
+rm -rf /lib/modules/2.6.32-38-generic
+depmod 2.6.32.11+drm33.2 
+rm /initrd.img
+rm /vmlinuz
+ln -s /boot/vmlinuz-2.6.32.11+drm33.2  /vmlinuz
+ln -s /boot/intrd.gz /initrd.img
+echo "rtai_hal" >> /etc/modules
+echo "rtai_lxrt" >> /etc/modules
+echo "rtai_sem" >> /etc/modules
+echo "rtai_mbx" >> /etc/modules

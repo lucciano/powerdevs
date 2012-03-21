@@ -1,4 +1,5 @@
 MODE = debug
+RTAI = 
 all: pdae pdif pdppt pdme
 pdae:
 	cd ./src/pdae && qmake "CONFIG+=$(MODE)" 

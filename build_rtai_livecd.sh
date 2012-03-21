@@ -3,16 +3,16 @@ ARCH=`uname -m`
 ./build_deb.sh rtai
 rm -rf tmp uck-2.4.5
 mkdir tmp
-tar xvzf uck_2.4.5.tar.gz 
+tar xvzf rtai/uck_2.4.5.tar.gz 
 cd uck-2.4.5
 sudo ./uck-remaster-unpack-iso ../ubuntu-10.04.4-desktop-i386.iso ../tmp
 sudo ./uck-remaster-unpack-rootfs ../tmp
 sudo cp ../powerdevs_i386.deb /tmp
-sudo cp ../install_pd_rtai /tmp
-sudo cp ../rtai-3.8.1.tar.bz2 /tmp
-sudo cp ../.rtai_config /tmp
-sudo cp ../rtai_config.h /tmp
-sudo cp ../linux-*.deb /tmp
+sudo cp ../rtai/install_pd_rtai /tmp
+sudo cp ../rtai/rtai-3.8.1.tar.bz2 /tmp
+sudo cp ../rtai/.rtai_config /tmp
+sudo cp ../rtai/rtai_config.h /tmp
+sudo cp ../rtai/inux-*.deb /tmp
 #This is to use the local repoistories at CIFASIS
 sudo cp ../tmp/remaster-root/etc/apt/sources.list ../tmp
 sudo cp /etc/apt/sources.list ../tmp/remaster-root/etc/apt/sources.list 
