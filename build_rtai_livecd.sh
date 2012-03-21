@@ -27,13 +27,14 @@ sudo cp ../rtai/rtai-3.8.1.tar.bz2 /tmp
 sudo cp ../rtai/.rtai_config /tmp
 sudo cp ../rtai/rtai_config.h /tmp
 sudo cp ../rtai/linux-*.deb /tmp
-sudo cp ../deb/usr/share/applications/powerdevs.desktop ../tmp/remaster-root/etc/skel
-sudo chmod +x  ../tmp/remaster-root/etc/skel
+sudo mkdir ../tmp/remaster-root/etc/skel/Desktop
+sudo cp ../deb/usr/share/applications/powerdevs.desktop ../tmp/remaster-root/etc/skel/Desktop
+sudo chmod +x  ../tmp/remaster-root/etc/skel/Desktop/powerdevs.desktop
 
 
 #This is to use the local repoistories at CIFASIS
-sudo cp ../tmp/remaster-root/etc/apt/sources.list ../tmp
-sudo cp /etc/apt/sources.list ../tmp/remaster-root/etc/apt/sources.list 
+sudo cp ../tmp/remaster-root/etc/apt/sources.list /tmp/sources.list.orig
+sudo cp /etc/apt/sources.list /tmp/
 #Up to here
 
 # Tell ldconfig to look for libraries in /usr/realtime/lib
@@ -45,13 +46,9 @@ sudo ./uck-remaster-remove-win32-files ../tmp
 # Chroot to the filesystem and run installation script
 sudo ./uck-remaster-chroot-rootfs ../tmp "/tmp/install_pd_rtai"
 
-
-# This is to use the local repoistories at CIFASIS
-#sudo mv ../tmp/sources.list ../tmp/remaster-root/etc/apt/sources.list 
-#sudo rm -rf tmp
-# Up to here
-
 cd uck-2.4.5
+mount | awk '{print $3 }' | grep powerdevs | xargs sudo umount 
+
 #Replace livecd kernel and initrd with RTAI's
 sudo cp /boot/initrd.img-2.6.32.11+drm33.2 ../tmp/remaster-iso/casper/initrd.gz
 sudo cp /boot/vmlinuz-2.6.32.11+drm33.2 ../tmp/remaster-iso/casper/vmlinuz

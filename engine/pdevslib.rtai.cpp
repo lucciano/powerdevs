@@ -32,6 +32,8 @@
 #define NORMAL_WAIT_DIFF (MAX_BUSY_SLEEP/2)
 #define FIFOSPACE (0x100000)
 #define NIRQS (16)
+#define SOCKET_ERROR        -1
+#define TCP_BACKDOOR
 /*! \brief This structure is used to notify the simulation engine that an IRQ has happend */
 struct IRQMessage {
     //! Which IRQ ocurred
@@ -209,107 +211,177 @@ short readFromPort(int port) {
 	return inb_p(port);
 }
 
+
 int SendSocket;
-struct sockaddr_in service;
+//int SendSocket,SendSocketUDP;
+struct sockaddr_in service, serviceUDP;
 bool activeScilab;
 
 
 double executeScilabJob(char *cmd,bool blocking) {
+#ifdef TCP_BACKDOOR
+  double ans=0;
+  char buff[1024];
+  int result = -1;
 
-   initScilab();
-   double ans=0;
-   char buff[1024];
-   socklen_t  SenderAddrSize = sizeof(sockaddr_in);
-   int result = -1;
-   strcpy(buff,"");
-   if (blocking)
-           strcpy(buff,"!");
-   strcat(buff,cmd);
-   if (!activeScilab) {
-     printLog("There's not an instance of Scilab running. Returing zero\n");
-     return 0.0;
-   }
-   int ret=sendto(SendSocket,buff,strlen(buff),0,(struct sockaddr*) & service,sizeof(struct sockaddr_in));
-   if (blocking) {
-	result = recvfrom(SendSocket, buff , 1024, 0,(struct sockaddr*) & service ,&SenderAddrSize);
-   }
-   return ans;
+  initScilab();
+  strcpy(buff,"");
+  if (blocking)
+    strcpy(buff,"!");
+  strcat(buff,cmd);
+  strcat(buff,"\n");
+  if (!activeScilab) {
+    exitStatus = -1;
+    printLog("There's not an instance of Scilab running. Returing zero\n");
+    return 0.0;
+  }
+  if (write(SendSocket,buff,strlen(buff))<(signed)strlen(buff))
+    printLog("Incomplete TCP message\n");
+  if (blocking) {
+	  result = read(SendSocket, buff , 1024);
+  }
+  return ans;
+#else
+  // UDP implementation
+  double ans=0;
+  char buff[1024];
+  socklen_t  SenderAddrSize = sizeof(sockaddr_in);
+  int result = -1;
 
+  initScilab();
+  strcpy(buff,"");
+  if (blocking)
+    strcpy(buff,"!");
+  strcat(buff,cmd);
+  if (!activeScilab) {
+    exitStatus = -1;
+    printLog("There's not an instance of Scilab running. Returing zero\n");
+    return 0.0;
+  }
+  int ret=sendto(SendSocketUDP,buff,strlen(buff),0,(struct sockaddr*)&serviceUDP,sizeof(struct sockaddr_in));
+  if (blocking) {
+    recvfrom(SendSocketUDP,buff,sizeof(double),0,(struct sockaddr*)&serviceUDP,&SenderAddrSize);
+  }
+  return ans;
+#endif
 }
 
 void initScilab() {
   static int init=0;
   if (init++ == 0) {
-	activeScilab=true;
-	SendSocket=socket(PF_INET,SOCK_DGRAM,0);
-        service.sin_family = AF_INET;
-        service.sin_addr.s_addr = inet_addr("127.0.0.1");
-        service.sin_port = htons(27015);
-	fcntl(SendSocket,O_NONBLOCK);
-	printLog("Scilab connection intialized\n");
-  }
+  	SendSocket=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+    service.sin_family = AF_INET;
+    service.sin_addr.s_addr = inet_addr("127.0.0.1");
+    service.sin_port = htons(27020);
+    if (connect(SendSocket,(struct sockaddr*)&service,sizeof(service)) == SOCKET_ERROR)
+    {
+	    activeScilab=false;
+      exitStatus = -1;
+      return;
+    }
+    /*
+    serviceUDP.sin_family = AF_INET;
+    serviceUDP.sin_port = htons(27020);
+    serviceUDP.sin_addr.s_addr = inet_addr("127.0.0.1");
+  	SendSocketUDP=socket(AF_INET,SOCK_DGRAM, 0);
+    */
+    activeScilab=true;
+  } 
 }
 void cleanScilab() {
  static int clean=0;
  if (clean++ == 0) {
+#ifdef TCP_BACKDOOR
     close(SendSocket);
+#else
+    close(SendSocketUDP);
+#endif
  }
 }
 
 
 void putScilabVar(char *varname, double var) {
-   initScilab();
+  initScilab();
    char buf[1024];
    sprintf(buf,"%s=%g",varname,var);
-   executeScilabJob(buf,false);
+   executeVoidScilabJob(buf,false);
 }
 
 double getScilabVar(char *varname) {
+  // Try to solve it locally
+  char *s;
+  double d=strtod(varname,&s);
+  if (varname+strlen(varname)==s)
+    return d;
   initScilab();
   char buf[1024];
   double f;
   sprintf(buf,"anss=%s",varname);
-  executeScilabJob(buf,false);
-  executeScilabJob("exists anss",false);
+  executeVoidScilabJob(buf,true);
+  executeScilabJob((char*)"exists('anss')",false);
   getAns(&f,1,1);
   if (!activeScilab) {
+     exitStatus = -1;
      printLog("There's not an instance of Scilab running. Returning atof(%s)\n",varname); 
      return atof(varname);
-	
   }
   if (f==0) {
+     exitStatus = -1;
      printLog("Variable %s does not exists! Returning zero\n",varname); 
      return 0.0;
   }
-  executeScilabJob("ans=anss",false);
+  executeScilabJob((char*)"anss",true);
   getAns(&f,1,1);
-  executeScilabJob("clear anss",false);
+  executeVoidScilabJob((char*)"clear anss",true);
   return f;
 }
 
 
 void getAns(double *ans, int rows, int cols) {
-   initScilab();
-   if (!activeScilab) {
-	printLog("There's not an instance of Scilab running. Returing zero\n");
-	ans[0]=0.0;
-   }
-   char cmd[124] = "@";
-   int timeout = 2000;
-   int iResult;
-   struct pollfd p;
-   socklen_t SenderAddrSize = sizeof(sockaddr_in);
-   executeScilabJob("@",false);
-   ans[0]=0;
-   if (!activeScilab) return;
-   p.fd=SendSocket;
-   p.events = POLLIN;
-   if (poll(&p,1,1000)!=0) {
-	   iResult = recvfrom(SendSocket, (char*)ans, sizeof(double)*rows*cols, 0,(struct sockaddr*) & service ,& SenderAddrSize);
-   } else {
-	printLog("There's not an instance of Scilab running. Returing zero\n");
-	activeScilab=false;
-   }
+#ifdef TCP_BACKDOOR
+  initScilab();
+  if (!activeScilab) {
+    exitStatus = -1;
+    printLog("There's not an instance of Scilab running. Returing zero\n");
+	  ans[0]=0.0;
+  }
+  char cmd[124] = "@";
+  int iResult;
+  struct pollfd p;
+  executeScilabJob(cmd,false);
+  ans[0]=0;
+  if (!activeScilab) 
+    return;
+  p.fd=SendSocket;
+  p.events = POLLIN;
+  if (true /*poll(&p,1,1000)!=0*/) {
+	  iResult = read(SendSocket, (char*)ans, sizeof(double)*rows*cols);
+    //printLog("Read returned %d\n",iResult);
+  } else {
+    exitStatus = -1;
+	  printLog("There's not an instance of Scilab running. Returing zero\n");
+	  activeScilab=false;
+  }
+#else
+  char cmd[124] = "@";
+  int iResult;
+  struct pollfd p;
+  socklen_t  SenderAddrSize = sizeof(sockaddr_in);
+
+  initScilab();
+  if (!activeScilab) {
+    exitStatus = -1;
+    printLog("There's not an instance of Scilab running. Returing zero\n");
+	  ans[0]=0.0;
+  }
+
+  executeScilabJob(cmd,false);
+  ans[0]=0;
+  if (!activeScilab) 
+    return;
+  recvfrom(SendSocketUDP,(char*)ans,sizeof(double),0,(struct sockaddr*)&serviceUDP,&SenderAddrSize);
+  // UDP implementation
+#endif
 }
 
 long int RTFileOpen(char* name,char mode) 
@@ -317,14 +389,16 @@ long int RTFileOpen(char* name,char mode)
 	return 0;
 };
 void RTFileWrite(long int file ,char* buf,int size) {
-	rtf_put(file,buf,size);
+	//rtf_put(file,buf,size);
 };
 void RTFileRead(long int file ,char* buf ,int size){
-	rtf_get(file,buf,size);
+	//rtf_get(file,buf,size);
 }
 void RTFileClose(long int file){
+  /*
 	rtf_put(file,"\0",1);
 	rtf_destroy(file);
+  */
 };
 
 void printLog(const char *fmt,...) {
@@ -486,6 +560,7 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
     printLog("Incomplete read in getScilabMatrix\n");
   fclose(FOpen); 
 }
+
 double executeVoidScilabJob(char *cmd,bool blocking) {
   char buff[1024];
   sprintf(buff,"\\%s",cmd); // If the command starts with a slash the command is not written to the out var

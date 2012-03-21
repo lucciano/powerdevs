@@ -47,7 +47,7 @@
 #define CONFIG_RTAI_COMPILER "gcc version 4.4.3 (Ubuntu 4.4.3-4ubuntu5) "
 
 /* Kconfig */
-#define CONFIG_RTAI_CPUS 16
+#define CONFIG_RTAI_CPUS 64
 
 /* Kconfig */
 /* #undef CONFIG_RTAI_DEBUG_RTDM */
