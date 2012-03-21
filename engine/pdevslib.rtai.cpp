@@ -312,37 +312,17 @@ void getAns(double *ans, int rows, int cols) {
    }
 }
 
-int RTFileOpen(char* name,char mode) 
+long int RTFileOpen(char* name,char mode) 
 {
-	char nm [RTF_NAMELEN+1];
-	char execCmd[1024];
-	static int nextFreeFifo = 0;
-	rtf_create(nextFreeFifo,FIFOSPACE);
-	
-	int intmode = (mode == 'w' ? O_WRONLY : O_RDONLY);
-
-	int fd = open(rtf_getfifobyminor(nextFreeFifo,nm,sizeof(nm)),intmode) ;
-	if (fd<0) {
-		printf("Can't open fifo %d\n",nextFreeFifo);
-	}
-	rtf_put(nextFreeFifo,name,strlen(name));
-	rtf_put(nextFreeFifo,"\n",1);
-
-	sprintf(execCmd,"../bin/todisk %d",nextFreeFifo);
-	// Create non-realtime process
-	if (fork()) {
-		system(execCmd);	
-		exit(0);
-	}
-	return nextFreeFifo++;
+	return 0;
 };
-void RTFileWrite(int file ,char* buf,int size) {
+void RTFileWrite(long int file ,char* buf,int size) {
 	rtf_put(file,buf,size);
 };
-void RTFileRead(int file ,char* buf ,int size){
+void RTFileRead(long int file ,char* buf ,int size){
 	rtf_get(file,buf,size);
 }
-void RTFileClose(int file){
+void RTFileClose(long int file){
 	rtf_put(file,"\0",1);
 	rtf_destroy(file);
 };
@@ -475,4 +455,83 @@ void RequestIRQ(unsigned int irq, void *atomic) {
     }
     isr[irq]=newnode;
     return;
+}
+
+
+void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
+  char buf[1024];
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen;
+  FOpen=fopen("temp.dat","rb");
+  char name[24];
+  int res=fread(&name,24,1,FOpen);
+  int varint;
+  res=fread(&varint,sizeof(int),1,FOpen);
+  res=fread(rows,sizeof(int),1,FOpen);
+  res=fread(cols,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
+  int nrows=*rows;
+  int ncols=*cols;
+  double lastdata;
+  for (int j=0;j<ncols;j++) {
+    for (int i=0;i<nrows;i++) {
+       res=fread(&lastdata,sizeof(double),1,FOpen);
+       data[i][j]=lastdata;
+    }
+  }
+  if (res<=0)
+    printLog("Incomplete read in getScilabMatrix\n");
+  fclose(FOpen); 
+}
+double executeVoidScilabJob(char *cmd,bool blocking) {
+  char buff[1024];
+  sprintf(buff,"\\%s",cmd); // If the command starts with a slash the command is not written to the out var
+  executeScilabJob(buff,blocking);
+  return 0.0;
+}
+void getScilabVector(char* varname, int *length, double *data) {
+  int rows,cols;
+  char buf[1024];
+  sprintf(buf,"tempvar=%s",varname);
+  executeVoidScilabJob(buf,true);
+  sprintf(buf,"save('%s/../output/temp.dat',tempvar)",getenv("PWD"));
+  executeVoidScilabJob(buf,true);
+  FILE *FOpen;
+  FOpen=fopen("temp.dat","rb");
+  char name[24];
+  int res=fread(&name,24,1,FOpen);
+  int varint;
+  res=fread(&varint,sizeof(int),1,FOpen);
+  res=fread(&rows,sizeof(int),1,FOpen);
+  res=fread(&cols,sizeof(int),1,FOpen);
+  res=fread(&varint,sizeof(int),1,FOpen);
+  if (rows>cols) *length=rows; else *length=cols;
+  double lastdata;
+  for (int i=0;i<*length;i++) {
+     res=fread(&lastdata,sizeof(double),1,FOpen);
+     data[i]=lastdata;
+  }
+  if (res<=0)
+    printLog("Incomplete read in getScilabMatrix\n");
+  fclose(FOpen);  
+}
+
+
+extern double tf;
+double getFinalTime()
+{
+	return tf;
+}
+void cleanLib()
+{
+
+}
+void initLib()
+{
+  struct timeval tv;
+  gettimeofday(&tv,NULL);
+  realTiSimulation = tv.tv_sec + tv.tv_usec*1.0e-6;
 }
