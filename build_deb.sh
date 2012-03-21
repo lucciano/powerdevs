@@ -7,8 +7,12 @@ cat version.major rev > version
 VER=`cat version`
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
-#make -f Makefile clean
-make -f Makefile MODE=release
+make -f Makefile clean
+if [ $# -eq 1 ]; then
+  make -f Makefile MODE=release RTAI=yes
+else
+  make -f Makefile MODE=release
+fi
 rm -rf tmp_deb
 svn export deb tmp_deb
 mkdir ./tmp_deb/opt/powerdevs
@@ -49,3 +53,4 @@ fi
 if [ "$ARCH" == "x86_64" ]; then
   mv powerdevs.deb powerdevs_amd64.deb
 fi
+rm -rf tmp_deb
