@@ -64,9 +64,9 @@ int waitFor(Time t, RealTimeMode m) ;
 /*! Opens a file (works in realtime) */
 long int RTFileOpen(char* name,char mode);
 /*! Writes into a file (works in realtime) */
-void RTFileWrite(long int file ,char* buf,int size);
+long int RTFileWrite(long int file ,char* buf,int size);
 /*! Reads from a file (not implemented in RTAI) */
-void RTFileRead(long int file ,char* buf ,int size);
+long int RTFileRead(long int file ,char* buf ,int size);
 /*! Closes a file */
 void RTFileClose(long int file);
 

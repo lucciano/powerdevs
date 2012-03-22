@@ -86,13 +86,15 @@ long int RTFileOpen(char* name,char mode) {
 	strMode[1]='\0';
 	return (long int)fopen(name,strMode);
 };
-void RTFileWrite(long int file ,char* buf,int size) {
+long int RTFileWrite(long int file ,char* buf,int size) {
 	fwrite(buf,size,1,(FILE*)file);	
   fflush((FILE*)file);
 };
-void RTFileRead(long int file ,char* buf ,int size){
-	if (fread(buf,size,1,(FILE*)file)<1)
+long int RTFileRead(long int file ,char* buf ,int size){
+  int r;
+	if ((r=fread(buf,size,1,(FILE*)file))<size)
     printLog("Incomplete read from file\n");
+  return r;
 }
 void RTFileClose(long int file){
 	fclose((FILE*)file);

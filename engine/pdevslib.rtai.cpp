@@ -33,6 +33,7 @@
 #define FIFOSPACE (0x100000)
 #define NIRQS (16)
 #define NFILE 64
+#define NBUFF 131072
 /*! \brief This structure is used to notify the simulation engine that an IRQ has happend */
 struct IRQMessage {
     //! Which IRQ ocurred
@@ -236,7 +237,7 @@ long int RTFileOpen(char* name,char mode)
     fd[i].mode = O_WRONLY;
   } else {
     struct stat s;
-    int f=open(name,ORDONLY,0);
+    int f=open(name,O_RDONLY,0);
     if (f<0)
       return -1;
     fstat(f,&s);
@@ -250,34 +251,33 @@ long int RTFileOpen(char* name,char mode)
 	return i;
 };
 long int RTFileWrite(long int file ,char* buf,int size) {
-  memcpy(fd[i].buff+fd[i].p,buf,size);
-  fd[i].p+=size;
+  memcpy(fd[file].buff+fd[file].p,buf,size);
+  fd[file].p+=size;
   return size;
-	//rtf_put(file,buf,size);
 };
 
 long int RTFileRead(long int file ,char* buf ,int size){
-  if (fd[i].p+size > fd[i].size){
-    size=fd[i].size-fd[i].p;
+  if (fd[file].p+size > fd[file].size){
+    size=fd[file].size-fd[file].p;
   }
-  if (fd[i].p==fd[i].size) //EOF
+  if (fd[file].p==fd[file].size) //EOF
     return 0;
-  memcpy(buf,fd[i].buff+fd[i].p,size);
-  fd[i].p+=size;
+  memcpy(buf,fd[file].buff+fd[file].p,size);
+  fd[file].p+=size;
   return size;
 }
 
 void RTFileClose(long int file){
-  if (fd[i].buff==NULL)
+  if (fd[file].buff==NULL)
     return;
-  if (fd[i].mode==O_WRONLY)
+  if (fd[file].mode==O_WRONLY)
   {
-    int f=open(fd[i].name,O_WRONLY,0);
-    write(f,fd[i].buff,fd[i].p);
+    int f=open(fd[file].name,O_WRONLY,0);
+    write(f,fd[file].buff,fd[file].p);
     close(f);
   }
-  delete []fd[i].buff;
-  fd[i].buff = NULL;
+  delete []fd[file].buff;
+  fd[file].buff = NULL;
 };
 
 void printLog(const char *fmt,...) {
