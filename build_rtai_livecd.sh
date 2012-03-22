@@ -9,7 +9,7 @@ ARCH=`uname -m`
 ./build_deb.sh rtai
 
 #Clean directories
-rm -rf tmp uck-2.4.5
+sudo rm -rf tmp uck-2.4.5
 mkdir tmp
 tar xvzf rtai/uck_2.4.5.tar.gz 
 cd uck-2.4.5
@@ -46,9 +46,9 @@ sudo ./uck-remaster-remove-win32-files ../tmp
 # Chroot to the filesystem and run installation script
 sudo ./uck-remaster-chroot-rootfs ../tmp "/tmp/install_pd_rtai"
 
-cd uck-2.4.5
 mount | awk '{print $3 }' | grep powerdevs | xargs sudo umount 
-
+echo "Everything must be umounted"
+read -n1 kbd
 #Replace livecd kernel and initrd with RTAI's
 sudo cp /boot/initrd.img-2.6.32.11+drm33.2 ../tmp/remaster-iso/casper/initrd.gz
 sudo cp /boot/vmlinuz-2.6.32.11+drm33.2 ../tmp/remaster-iso/casper/vmlinuz
@@ -61,7 +61,7 @@ sudo ./uck-remaster-pack-rootfs ../tmp
 sudo ./uck-remaster-pack-iso "pd_rtai.iso" ../tmp
 
 # Clean dirs
-sudo ./uck-remaster-clean ../tmp
+#sudo ./uck-remaster-clean ../tmp
 #sudo rm -rf tmp uck-2.4.5 
 
 echo "Generation completed SUCCESSFULLY, find your ISO in ../tmp/remaster-new-files"

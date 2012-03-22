@@ -4,7 +4,7 @@ apt-get update
 dpkg -i /tmp/powerdevs_i386.deb
 dpkg -i /tmp/linux*
 yes | apt-get install -f
-#yes | sudo apt-get remove openoffice.org-* ubuntu-docs firefox evolution-common rhythmbox brasero-common
+yes | sudo apt-get remove openoffice.org-* ubuntu-docs firefox evolution-common rhythmbox brasero-common empathy-common scilab-doc
 cd /usr/src
 ln -s linux-headers-2.6.32.11+drm33.2 linux
 tar xvjf /tmp/rtai-3.8.1.tar.bz2
