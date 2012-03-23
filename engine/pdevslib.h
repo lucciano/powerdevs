@@ -62,13 +62,13 @@ short readFromPort(int port);
 int waitFor(Time t, RealTimeMode m) ;
 
 /*! Opens a file (works in realtime) */
-long int RTFileOpen(char* name,char mode);
+long int PDFileOpen(char* name,char mode);
 /*! Writes into a file (works in realtime) */
-long int RTFileWrite(long int file ,char* buf,int size);
+long int PDFileWrite(long int file ,char* buf,int size);
 /*! Reads from a file (not implemented in RTAI) */
-long int RTFileRead(long int file ,char* buf ,int size);
+long int PDFileRead(long int file ,char* buf ,int size);
 /*! Closes a file */
-void RTFileClose(long int file);
+void PDFileClose(long int file);
 
 class Simulator;
 extern bool debug;
@@ -81,6 +81,7 @@ OS getOs();
 /*! Debugs an event into the lof file. Debug is activated by the -d option when calling model */
 void DEBUG(DebugEvent, Simulator *, const char *,...);
 void initLib();
+void preinitLib();
 void cleanLib();
 void initScilab();
 void cleanScilab();

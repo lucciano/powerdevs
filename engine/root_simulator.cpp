@@ -34,6 +34,9 @@ double realTiSimulation;
 
 void RootSimulator::init(){
 	t=ti;
+#ifdef RTAIOS
+	preinitLib();
+#endif 
 	printLog("Simulation Initialized\n");
 	mainCoupling->init(t);
 	mainCoupling->imessage(0,0,t);
@@ -41,7 +44,7 @@ void RootSimulator::init(){
 	realTi = getTime();
 	lastTransition=0;
 	stepsCount=0;
-  initLib();
+  	initLib();
 #ifdef RTAIOS
 	enterRealTime();
 #endif
@@ -79,11 +82,11 @@ bool RootSimulator::step(){
 void RootSimulator::exit() 
 {
 #ifdef RTAIOS
-			leaveRealTime();
+	leaveRealTime();
 #endif
-			mainCoupling->exit();
-      cleanLib();
-			printLog("Simulation Ended (%.3g sec)\n",getTime()-realTi);
+	mainCoupling->exit();
+	printLog("Simulation Ended (%.3g sec)\n",getTime()-realTi);
+	cleanLib();
 }
 
 bool RootSimulator::step(int s) {

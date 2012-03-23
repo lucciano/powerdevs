@@ -33,7 +33,7 @@
 #define FIFOSPACE (0x100000)
 #define NIRQS (16)
 #define NFILE 64
-#define NBUFF 131072
+#define NBUFF 2097152
 /*! \brief This structure is used to notify the simulation engine that an IRQ has happend */
 struct IRQMessage {
     //! Which IRQ ocurred
@@ -65,9 +65,9 @@ typedef struct
   char *buff;
   long int p;
   long int size;
-} RTFile;
+} PDFile;
 
-RTFile fd[NFILE];
+PDFile fd[NFILE];
 
 double getRealSimulationTime() {
  	return getTime()-realTi;
@@ -221,11 +221,11 @@ short readFromPort(int port) {
 	return inb_p(port);
 }
 
-long int RTFileOpen(char* name,char mode) 
+long int PDFileOpen(char* name,char mode) 
 {
   int i;
   for (i=0;i<NFILE;i++)
-    if (fd[i].buff=NULL) 
+    if (fd[i].buff==NULL) 
       break;
   if (i==NFILE)
     return -1;
@@ -250,13 +250,21 @@ long int RTFileOpen(char* name,char mode)
   }
 	return i;
 };
-long int RTFileWrite(long int file ,char* buf,int size) {
+long int PDFileWrite(long int file ,char* buf,int size) {
+  if (fd[file].p+size>NBUFF && fd[file].size!=-1) 
+  { 
+    fd[file].size=-1;
+    if (strcmp(fd[file].name,"pdevs.log")!=0)
+      printLog("Buffer error writing %s. Try expanding NBUFF in %s\n",fd[file].name,__FILE__);
+  }
+  if (fd[file].p+size>NBUFF)
+    return -1;
   memcpy(fd[file].buff+fd[file].p,buf,size);
   fd[file].p+=size;
   return size;
 };
 
-long int RTFileRead(long int file ,char* buf ,int size){
+long int PDFileRead(long int file ,char* buf ,int size){
   if (fd[file].p+size > fd[file].size){
     size=fd[file].size-fd[file].p;
   }
@@ -267,12 +275,12 @@ long int RTFileRead(long int file ,char* buf ,int size){
   return size;
 }
 
-void RTFileClose(long int file){
+void PDFileClose(long int file){
   if (fd[file].buff==NULL)
     return;
   if (fd[file].mode==O_WRONLY)
   {
-    int f=open(fd[file].name,O_WRONLY,0);
+    int f=open(fd[file].name,O_WRONLY | O_CREAT | O_TRUNC,0666);
     write(f,fd[file].buff,fd[file].p);
     close(f);
   }
@@ -280,29 +288,31 @@ void RTFileClose(long int file){
   fd[file].buff = NULL;
 };
 
+int printlog_fd=0;
 void printLog(const char *fmt,...) {
   static int init=0;
+  char buff[128];
   if (!init) {
     init=1;
-    FILE *fd= fopen("pdevs.log","w");
-	if (fd!=NULL) {
+    printlog_fd= PDFileOpen("pdevs.log",'w');
+	if (printlog_fd>=0) {
+		
 		struct tm *ptr;
 		time_t tm;
 		tm = time(NULL);
 		ptr = localtime(&tm);
-		fprintf(fd,"Log of execution: %s\n",asctime(ptr));
-		fclose(fd);
+		sprintf(buff,"Log of execution: %s\n",asctime(ptr));
+		PDFileWrite(printlog_fd,buff,strlen(buff));
 	}
-	else printf("Error writing in log file\n");
+	else rtai_print_to_screen("Error writing in log file\n");
   }
 	va_list va;
 	va_start(va,fmt);
-	FILE *fd=fopen("pdevs.log","a");
-	if (fd!=NULL) {
-		vfprintf(fd,fmt,va);
-		fclose(fd);
+	if (printlog_fd>=0) {
+		vsprintf(buff,fmt,va);
+		PDFileWrite(printlog_fd,buff,strlen(buff));
 	} else {
-		printf("Error writing in log file\n");
+		rtai_print_to_screen("Error writing in log file\n");
 	}
 	va_end(va);
 }
@@ -410,16 +420,22 @@ void RequestIRQ(unsigned int irq, void *atomic) {
     return;
 }
 
+void preinitLib()
+{
+  for (int i=0;i<NFILE;i++)
+    fd[i].buff=NULL; // File closed
+}
 
 void cleanLib()
 {
+  if(printlog_fd>=0)	
+    PDFileClose(printlog_fd);
+
 
 }
 void initLib()
 {
   struct timeval tv;
-  for (int i=0;i<NFILE;i++)
-    fd[i].buff=NULL; // File closed
   gettimeofday(&tv,NULL);
   realTiSimulation = tv.tv_sec + tv.tv_usec*1.0e-6;
 }

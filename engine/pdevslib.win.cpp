@@ -217,20 +217,21 @@ double getFinalTime()
 	return tf;
 }
 
-long int RTFileOpen(char* name,char mode) {
+long int PDFileOpen(char* name,char mode) {
 	char strMode[2];
 	strMode[0]=mode;
 	strMode[1]='\0';
 	return (long int)fopen(name,strMode);
 };
-void RTFileWrite(long int file ,char* buf,int size) {
+long int PDFileWrite(long int file ,char* buf,int size) {
 	fwrite(buf,size,1,(FILE*)file);	
   fflush((FILE*)file);
 };
-void RTFileRead(long int file ,char* buf ,int size){
+
+long int PDFileRead(long int file ,char* buf ,int size){
 	fread(buf,size,1,(FILE*)file);
 }
-void RTFileClose(long int file){
+void PDFileClose(long int file){
 	fclose((FILE*)file);
 }
 

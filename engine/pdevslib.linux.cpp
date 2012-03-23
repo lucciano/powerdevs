@@ -80,23 +80,23 @@ short readFromPort(int port) {
   return 0;
 }
 
-long int RTFileOpen(char* name,char mode) {
+long int PDFileOpen(char* name,char mode) {
 	char strMode[2];
 	strMode[0]=mode;
 	strMode[1]='\0';
 	return (long int)fopen(name,strMode);
 };
-long int RTFileWrite(long int file ,char* buf,int size) {
+long int PDFileWrite(long int file ,char* buf,int size) {
 	fwrite(buf,size,1,(FILE*)file);	
   fflush((FILE*)file);
 };
-long int RTFileRead(long int file ,char* buf ,int size){
+long int PDFileRead(long int file ,char* buf ,int size){
   int r;
 	if ((r=fread(buf,size,1,(FILE*)file))<size)
     printLog("Incomplete read from file\n");
   return r;
 }
-void RTFileClose(long int file){
+void PDFileClose(long int file){
 	fclose((FILE*)file);
 };
 

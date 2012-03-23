@@ -78,7 +78,7 @@ else {
 	strcat(buff," -");
 	spawnProcess("../bin/gnuplot/bin/wgnuplot.exe",buff);
 }
-foutput=RTFileOpen(FName,'a');
+foutput=PDFileOpen(FName,'a');
 }
 double gnuplot::ta(double t) {
 //This function returns a double.
@@ -108,7 +108,7 @@ for (int i=0;i<n;i++) {
 }
 strcat(buf, "\n");
 //fwrite(buf,strlen(buf),1,foutput);
-RTFileWrite(foutput,buf,strlen(buf));
+PDFileWrite(foutput,buf,strlen(buf));
 #ifdef __WINDOWS__
  fclose((FILE*)foutput);
  foutput=(int)fopen(FName,"a"); 
@@ -118,7 +118,7 @@ Event gnuplot::lambda(double t) {
   return Event();
 }
 void gnuplot::exit() {
-	RTFileClose(foutput);
+	PDFileClose(foutput);
 	char Script[128];
 	char buff[128];
 	sprintf(Script,"plots/%d.plt",(int)this);
