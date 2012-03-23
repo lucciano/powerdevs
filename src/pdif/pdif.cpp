@@ -35,6 +35,7 @@ o*
 #include <QDoubleValidator>
 #include <QIntValidator>
 #include <QRegExp>
+#include <QProcessEnvironment>
 
 #include "pdif.h"
 
@@ -189,12 +190,16 @@ void PDIF::startModel()
 
 	qProc->start("./model.exe", QStringList() << "-i");
 #else
+#ifndef RTAIOS
 	qProc->start("./model", QStringList() << "-i");
 #endif
+#endif
+#ifndef RTAIOS
 	if (!qProc->waitForStarted()) {
 		msg("Could not execute the model binary!");
 		qApp->quit();
 	}
+#endif
 }
 
 void PDIF::modelWrote()
@@ -337,22 +342,21 @@ void PDIF::runSimulation()
 	}
 #else
 	// RTAI
-	QFile runInfo("./.runinfo");
-	QString
-	    runData
-	    ("model:lxrt+sem+mbx+msg+fifos:!./model -tf %1 ;popall:control_c\n");
-	runData = runData.arg(getFinalTime());
-	runInfo.open(QIODevice::WriteOnly);
-	runInfo.write(runData.toAscii(), runData.toAscii().count());
-	runInfo.close();
-	qProc->start("./run", QStringList());
 	qDebug("Starting %g ..", getFinalTime());
+	//qProc->start("./run", QStringList());
+	qDebug() << QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION");
+	if (QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION")=="gnome")
+	{
+		qDebug() << "/usr/bin/gksudo" << QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime());
+		qProc->start("/usr/bin/gksudo", QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime()));
+	} else {
+		qProc->start("/usr/bin/kdsudo", QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime()));
+	}
 	if (!qProc->waitForStarted()) {
 		stopMode();
 		msg("The process could not be started");
 		return;
 	}
-	qDebug("Started");
 #endif
   running.restart();
 	saveStmFile();
