@@ -345,12 +345,14 @@ void PDIF::runSimulation()
 	qDebug("Starting %g ..", getFinalTime());
 	//qProc->start("./run", QStringList());
 	qDebug() << QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION");
+	QStringList args;
+	args << "-k" << "-m" << "PowerDEVS requires root privileges to run the simulation under real time. Please enter your password" << QString("./model -tf %1").arg(getFinalTime());
+	qDebug() << args;
 	if (QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION")=="gnome")
 	{
-		qDebug() << "/usr/bin/gksudo" << QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime());
-		qProc->start("/usr/bin/gksudo", QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime()));
+		qProc->start("/usr/bin/gksudo", args);
 	} else {
-		qProc->start("/usr/bin/kdsudo", QStringList() << "-k" << "./model" << QString("-tf %1").arg(getFinalTime()));
+		qProc->start("/usr/bin/kdsudo", args);
 	}
 	if (!qProc->waitForStarted()) {
 		stopMode();
