@@ -262,28 +262,7 @@ long int PDFileOpen(char* name,char mode)
   }
 	return i;
 };
-long int PDFileWrite(long int file ,char* buf,int size) {
-  if (fd[file].p+size>NBUFF && fd[file].size!=-1) 
-  { 
-    fd[file].size=-1;
-    if (strcmp(fd[file].name,"pdevs.log")!=0)
-      printLog("Buffer error writing %s. Try expanding NBUFF in %s\n",fd[file].name,__FILE__);
-  }
-  if (fd[file].p+size>NBUFF)
-    return -1;
-  memcpy(fd[file].buff+fd[file].p,buf,size);
-  fd[file].p+=size;
-  return size;
-};
 
-long int PDFileRead(long int file ,char* buf ,int size){
-  if (fd[file].p+size > fd[file].size){
-    fd[i].buff = new char[NBUFF];
-    fd[i].mode = O_WRONLY;
-
-  }
-	return i;
-};
 long int PDFileWrite(long int file ,char* buf,int size) {
   if (fd[file].p+size>NBUFF && fd[file].size!=-1) 
   { 

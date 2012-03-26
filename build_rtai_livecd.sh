@@ -29,6 +29,7 @@ sudo cp ../rtai/rtai_config.h /tmp
 sudo cp ../rtai/linux-*.deb /tmp
 sudo mkdir ../tmp/remaster-root/etc/skel/Desktop
 sudo cp ../deb/usr/share/applications/powerdevs.desktop ../tmp/remaster-root/etc/skel/Desktop
+sudo cp ../rtai/*.txt ../tmp/remaster-root/etc/skel/Desktop
 sudo chmod +x  ../tmp/remaster-root/etc/skel/Desktop/powerdevs.desktop
 
 
