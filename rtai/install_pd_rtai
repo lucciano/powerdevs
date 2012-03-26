@@ -29,5 +29,6 @@ echo "rtai_hal" >> /etc/modules
 echo "rtai_lxrt" >> /etc/modules
 echo "rtai_sem" >> /etc/modules
 echo "rtai_mbx" >> /etc/modules
+echo "rtai_smi" >> /etc/modules
 cp /tmp/sources.list.orig /etc/apt/sources.list
 apt-get update

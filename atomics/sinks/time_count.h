@@ -14,7 +14,7 @@
 class time_count: public Simulator { 
 double Sigma;
 double intim;
-FILE *FOutput;
+long int FOutput;
 double tend;
 
 

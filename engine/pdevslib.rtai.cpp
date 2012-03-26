@@ -235,7 +235,7 @@ long int PDFileOpen(char* name,char mode)
   {
     fd[i].buff = new char[NBUFF];
     fd[i].mode = O_WRONLY;
-  } else {
+  } else if (mode=='r') {
     struct stat s;
     int f=open(name,O_RDONLY,0);
     if (f<0)
@@ -247,6 +247,40 @@ long int PDFileOpen(char* name,char mode)
     if (read(f,fd[i].buff,fd[i].size)!=fd[i].size)
       return -1;
     close(f);
+  } else if (mode=='a') {
+    struct stat s;
+    int f=open(name,O_RDONLY,0);
+    if (f<0)
+      return -1;
+    fstat(f,&s);
+    fd[i].p = s.st_size;
+    fd[i].buff = new char[NBUFF];
+    fd[i].mode = O_WRONLY;
+    if (read(f,fd[i].buff,fd[i].size)!=fd[i].size)
+      return -1;
+    close(f);
+  }
+	return i;
+};
+long int PDFileWrite(long int file ,char* buf,int size) {
+  if (fd[file].p+size>NBUFF && fd[file].size!=-1) 
+  { 
+    fd[file].size=-1;
+    if (strcmp(fd[file].name,"pdevs.log")!=0)
+      printLog("Buffer error writing %s. Try expanding NBUFF in %s\n",fd[file].name,__FILE__);
+  }
+  if (fd[file].p+size>NBUFF)
+    return -1;
+  memcpy(fd[file].buff+fd[file].p,buf,size);
+  fd[file].p+=size;
+  return size;
+};
+
+long int PDFileRead(long int file ,char* buf ,int size){
+  if (fd[file].p+size > fd[file].size){
+    fd[i].buff = new char[NBUFF];
+    fd[i].mode = O_WRONLY;
+
   }
 	return i;
 };

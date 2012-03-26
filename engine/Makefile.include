@@ -44,7 +44,7 @@ $(BUILDOBJ)/root_simulator.o: $(SRCENGINE)/root_simulator.cpp $(SRCENGINE)/root_
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c  $(SRCENGINE)/root_simulator.cpp -o $(BUILDOBJ)/root_simulator.o
 $(BUILDOBJ)/simulator.o: $(SRCENGINE)/simulator.cpp $(SRCENGINE)/simulator.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c  $(SRCENGINE)/simulator.cpp -o $(BUILDOBJ)/simulator.o
-$(BUILDOBJ)/pdevslib.o:	$(SRCENGINE)/pdevslib.h	$(SRCENGINE)/pdevslib.cpp $(SRCENGINE)/pdevslib.linux.cpp $(SRCENGINE)/pdevslib.win.cpp
+$(BUILDOBJ)/pdevslib.o:	$(SRCENGINE)/pdevslib.h	$(SRCENGINE)/pdevslib.cpp $(SRCENGINE)/pdevslib.linux.cpp $(SRCENGINE)/pdevslib.win.cpp $(SRCENGINE)/pdevslib.rtai.cpp $(SRCENGINE)/pdevslib.common.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c  $(SRCENGINE)/pdevslib.cpp -o $(BUILDOBJ)/pdevslib.o
 $(BUILDOBJ)/libsimpd.a:	$(BUILDOBJ)/connection.o $(BUILDOBJ)/coupling.o $(BUILDOBJ)/event.o $(BUILDOBJ)/root_coupling.o $(BUILDOBJ)/root_simulator.o $(BUILDOBJ)/simulator.o $(BUILDOBJ)/pdevslib.o
 	$(AR) rvs $(BUILDOBJ)/libsimpd.a $(BUILDOBJ)/connection.o $(BUILDOBJ)/coupling.o $(BUILDOBJ)/event.o $(BUILDOBJ)/root_coupling.o $(BUILDOBJ)/root_simulator.o $(BUILDOBJ)/simulator.o $(BUILDOBJ)/pdevslib.o

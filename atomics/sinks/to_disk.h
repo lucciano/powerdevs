@@ -11,7 +11,7 @@
 
 class to_disk: public Simulator { 
 double Sigma;
-FILE *FOutput;
+long int FOutput;
 
 
 

@@ -13,20 +13,18 @@ format[3] = (char*) va_arg(parameters, char*);
 format[4] = (char*) va_arg(parameters, char*);
 sprintf(FName,"plots/%d.csv",(int)this);
 sprintf(Script,"plots/%d.plt",(int)this);
-FILE *fd=fopen(FName,"w");
-fwrite("0",1,1,fd);
+long int fd=PDFileOpen(FName,'w');
+PDFileWrite(fd,"0",1);
 for (int i=0;i<n;i++)
 {
   if (i==0)
-     fwrite(",",1,1,fd);
-  fwrite("0",1,1,fd);
+     PDFileWrite(fd,",",1);
+  PDFileWrite(fd,"0",1);
   if (i+1!=n)
-     fwrite(",",1,1,fd);
+     PDFileWrite(fd,",",1);
 }
-fwrite("\n",1,1,fd);
-for (int i=0;i<n;i++)
-fflush(fd);
-fclose(fd);
+PDFileWrite(fd,"\n",1);
+PDFileClose(fd);
 hasOutput=0;
 char buff2[1096];
 strcpy(buff2,gformat);
@@ -54,9 +52,9 @@ strcpy(printString,buff);
 strcat(buff,"pause 0.5\nload \"");
 strcat(buff,Script);
 strcat(buff,"\"\n");
-fd=fopen(Script,"w");
-fwrite(buff,strlen(buff),1,fd);
-fclose(fd);
+fd=PDFileOpen(Script,'w');
+PDFileWrite(fd,buff,strlen(buff));
+PDFileClose(fd);
 //To get a parameter: %Name% = va_arg(parameters,%Type%)
 //where:
 //      %Name% is the parameter name
@@ -122,12 +120,12 @@ void gnuplot::exit() {
 	char Script[128];
 	char buff[128];
 	sprintf(Script,"plots/%d.plt",(int)this);
-	FILE *fd=fopen(Script,"w");
-	fwrite(printString,strlen(printString),1,fd);
+	long int fd=PDFileOpen(Script,'w');
+	PDFileWrite(fd,printString,strlen(printString));
 if (getOs()!=WINDOWS) 
        strcpy(buff,"\nset terminal wxt persist");
 else
 	strcpy(buff,"\npause 3600");
-	fwrite(buff,1,strlen(buff),fd);
-	fclose(fd);
+	PDFileWrite(fd,buff,strlen(buff));
+	PDFileClose(fd);
 }

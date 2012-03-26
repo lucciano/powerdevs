@@ -5,9 +5,7 @@ va_list parameters;
 va_start(parameters, t);
 FName=va_arg(parameters, char*);
 tend=va_arg(parameters, double);
-FOutput = fopen(FName, "w");
-fclose(FOutput);
-FOutput = fopen(FName, "a");
+FOutput = PDFileOpen(FName, 'w');
 Sigma=0;
 }
 double time_count::ta(double t) {
@@ -18,8 +16,9 @@ if (Sigma==0) {
    intim=clock();
    Sigma=tend;
 } else {
-  fprintf(FOutput, "%g\n",(double)(clock()-intim)/CLOCKS_PER_SEC);
-  fclose(FOutput);
+  char buff[128];
+  sprintf(buff, "%g\n",(double)(clock()-intim)/CLOCKS_PER_SEC);
+  PDFileWrite(FOutput,buff,strlen(buff));
   Sigma=4e10;
 };
 }
@@ -30,5 +29,5 @@ Event time_count::lambda(double t) {
 return Event(0,0);
 }
 void time_count::exit() {
-
+  PDFileClose(FOutput);
 }

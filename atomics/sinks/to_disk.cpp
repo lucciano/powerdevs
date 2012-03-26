@@ -5,7 +5,7 @@ va_list parameters;
 va_start(parameters, t);
 FName=va_arg(parameters, char*);
 Sigma=10e10;
-FOutput = fopen(FName, "w");
+FOutput = PDFileOpen(FName, 'w');
 }
 double to_disk::ta(double t) {
 return Sigma;
@@ -19,12 +19,12 @@ char buf[1024];
 	if (x.port>=0) {
 		Aux=(double*)(x.value);
 		sprintf(buf,"%g, %g\n",t,*Aux);
-		fwrite(buf,1,strlen(buf),FOutput);
+		PDFileWrite(FOutput,buf,strlen(buf));
 }
 }
 Event to_disk::lambda(double t) {
   return Event(0,0);
 }
 void to_disk::exit() {
-fclose(FOutput);
+PDFileClose(FOutput);
 }
