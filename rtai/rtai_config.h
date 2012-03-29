@@ -284,10 +284,10 @@
 /* #undef CONFIG_RTAI_USE_TLSF */
 
 /* Kconfig */
-/* #undef CONFIG_RTAI_USI */
+#define CONFIG_RTAI_USI 1
 
 /* Kconfig */
-/* #undef CONFIG_RTAI_USI_BUILTIN */
+#define CONFIG_RTAI_USI_BUILTIN 1
 
 /* Kconfig */
 #define CONFIG_RTAI_VERSION_MAJOR 3

@@ -66,6 +66,10 @@ int main(int argc,char **argv)
 	int breakCount = 1000000;
 	int i=1;
 
+#ifdef RTAIOS
+	preinitLib();
+#endif 
+
 	while (i<argc) {
 		if (strcmp("-tf",argv[i])==0) {
 			if (i > argc-2) {	

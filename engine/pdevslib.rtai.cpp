@@ -254,6 +254,7 @@ long int PDFileOpen(char* name,char mode)
       return -1;
     fstat(f,&s);
     fd[i].p = s.st_size;
+    fd[i].size = s.st_size;
     fd[i].buff = new char[NBUFF];
     fd[i].mode = O_WRONLY;
     if (read(f,fd[i].buff,fd[i].size)!=fd[i].size)

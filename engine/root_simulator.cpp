@@ -34,9 +34,6 @@ double realTiSimulation;
 
 void RootSimulator::init(){
 	t=ti;
-#ifdef RTAIOS
-	preinitLib();
-#endif 
 	printLog("Simulation Initialized\n");
 	mainCoupling->init(t);
 	mainCoupling->imessage(0,0,t);
