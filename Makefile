@@ -3,11 +3,11 @@ RTAI =
 all: pdae pdif pdppt pdme
 pdae:
 	cd ./src/pdae && qmake CONFIG+=$(MODE) 
-	make -C ./src/pdae 
+	make -C ./src/pdae -j 4
 
 pdppt:
 	cd ./src/pdppt && qmake CONFIG+=$(MODE) 
-	make -C ./src/pdppt 
+	make -C ./src/pdppt -j 4
 
 pdif:
 ifeq ($(RTAI),yes)
@@ -15,12 +15,12 @@ ifeq ($(RTAI),yes)
 else
 	cd ./src/pdif && qmake CONFIG+=$(MODE) 
 endif
-	make -C ./src/pdif 
+	make -C ./src/pdif -j 4
 
 
 pdme:
 	cd ./src/pdme_v2 && qmake CONFIG+=$(MODE) 
-	make -C ./src/pdme_v2
+	make -C ./src/pdme_v2 -j4
 
 clean:
 	make -C ./src/pdae clean
