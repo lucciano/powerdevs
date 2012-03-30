@@ -236,6 +236,17 @@ modelAtomic *parseAtomic()
 
 	strLine = getLine();
 	QString path = getValue(strLine, TOKPATH);
+  path = path.replace("Continuous","continuous");
+  path = path.replace("Discrete","discrete");
+  path = path.replace("Hybrid","hybrid");
+  path = path.replace("Qss","qss");
+  path = path.replace("Realtime","realtime");
+  path = path.replace("Sources","sources");
+  path = path.replace("Source","source");
+  path = path.replace("Sinks","sinks");
+  path = path.replace("Sink","sink");
+
+
 
 	strLine = getLine();
 	QString desc = getValue(strLine, TOKDESCRIPTION);
@@ -455,6 +466,15 @@ modelAtomic *parseSimulator()
 
 	strLine = getLine();
 	ret->path = getValue(strLine, TOKPATH);
+  ret->path = ret->path.replace("Continuous","continuous");
+  ret->path = ret->path.replace("Discrete","discrete");
+  ret->path = ret->path.replace("Hybrid","hybrid");
+  ret->path = ret->path.replace("Qss","qss");
+  ret->path = ret->path.replace("Realtime","realtime");
+  ret->path = ret->path.replace("Sources","sources");
+  ret->path = ret->path.replace("Sinks","sinks");
+  ret->path = ret->path.replace("Source","source");
+  ret->path = ret->path.replace("Sink","sink");
 
 	strLine = getLine();
 	ret->paramsString = getValue(strLine, TOKPARAMETERS);

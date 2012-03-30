@@ -39,7 +39,7 @@ QFile *fdPds;
 
 QString getRelativePath(QString p)
 {
-	return p.trimmed().replace("\\", "/").toLower();
+	return p.trimmed().replace("\\", "/");
 }
 
 QString getBaseFilename(QString s)
@@ -417,13 +417,14 @@ QString getExtraDep(QString at)
 	QString ret = "";
 	QString path = QCoreApplication::applicationDirPath();
 	QString file = getRelativePath(path + QString("/../atomics/") + at + ".h");
-  //qDebug() << "Getting extra deps for "<< file;
+  qDebug() << "Getting extra deps for "<< file;
   char buff[1024];
 
 	QFile fd(file);
 	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
     while (fd.readLine(buff,1024)>0) {
       QString line(buff);
+      qDebug() << buff;
       if (line.startsWith("//cpp:",Qt::CaseInsensitive)) {
         if (!line.contains(getClassName(at)))
           ret +=  " $(ATOMICS)/" + getBaseFilename(line.mid(6)) + ".cpp";
@@ -455,11 +456,12 @@ QSet < QString > getExtraObjs(QString at)
 	QFile fd(file);
 	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QString line = QString(fd.readLine());
+    qDebug() << line;
 		while (!line.startsWith("#")) {
 			line = getRelativePath(line);
-			if (line.startsWith("//cpp:")
-			    && !line.contains(getClassName(at))) {
+			if (line.startsWith("//cpp:",Qt::CaseInsensitive) && !line.contains(getClassName(at))) {
 				objects.insert(getBaseFilename(line.mid(6)) + ".o");
+        qDebug() << "Adding extra obj " << getBaseFilename(line.mid(6)) + ".o";
 			}
 			line = QString(fd.readLine());
 		}
@@ -485,9 +487,9 @@ void processChilds(QList < modelChild * >childs, int depth)
 			exit(-1);
 			
 			}
-			includes.insert(getRelativePath ((*i)->atomic->path.toLower()));
+			includes.insert(getRelativePath ((*i)->atomic->path));
 			objects.insert(getBaseFilename((*i)->atomic->path) + ".o");
-			getExtraObjs((*i)->atomic->path.toLower());
+			getExtraObjs((*i)->atomic->path);
 			constructor << QString("%1//D%2[%3] is  %4\n").
 			    arg(TAB(depth)).arg(idCoupled).arg(currentChild).
 			    arg((*i)->atomic->name.trimmed());
@@ -646,7 +648,7 @@ void generatePDS(modelCoupled * c, int depth)
 			sprintf(buff, "%s{\n", TAB(depth + 3));
 			fdPds->write(buff, strlen(buff));
 			sprintf(buff, "%sPath = %s\n", TAB(depth + 4),
-				QSTR((*i)->atomic->path.toLower()));
+				QSTR((*i)->atomic->path));
 			fdPds->write(buff, strlen(buff));
 			sprintf(buff, "%sParameters = %s\n", TAB(depth + 4),
 				QSTR(getParameterString
