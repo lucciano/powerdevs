@@ -248,7 +248,7 @@ Coupled
             {
             Name = Variable Delay
             Ports = 2 ; 1
-            Path = Qss\dqssv2o3.h
+            Path = qss\dqssv2o3.h
             Description = Variable Delay function (QSS methods). y(t)=u2(t-u1(t))
             Graphic
                 {

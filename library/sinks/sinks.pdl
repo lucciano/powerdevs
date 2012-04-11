@@ -164,7 +164,7 @@ Coupled
             {
             Name = Scilab Command
             Ports = 1 ; 0
-            Path = Hybrid\runscilabjob.h
+            Path = hybrid\runscilabjob.h
             Description = Runs Scilab commands at Init, Exit and when receive events.
             Graphic
                 {
