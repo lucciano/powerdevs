@@ -32,6 +32,8 @@ write(FOutput,&cols,sizeof(int));
 short s=0;
 write(FOutput,&s,sizeof(short));
 write(FOutput,&s,sizeof(short));
+close(FOutput);
+FOutput=PDFileOpen(FName,'a');
 }
 double toscilab_offline::ta(double t) {
 return Sigma;
@@ -42,8 +44,8 @@ Sigma=4e10;
 void toscilab_offline::dext(Event x, double t) {
 double Aux=(*(double*)(x.value));
 count++;
-write(FOutput,(char*)&t,sizeof(double));
-write(FOutput,(char*)&Aux,sizeof(double));
+PDFileWrite(FOutput,(char*)&t,sizeof(double));
+PDFileWrite(FOutput,(char*)&Aux,sizeof(double));
 //printLog("Transicion %d\n",count);
 }
 Event toscilab_offline::lambda(double t) {
@@ -55,6 +57,13 @@ sprintf(FName,"%d.dat",this);
 char buf[1024];
 int result;
 long pos=32;
+close(FOutput);
+#ifdef O_BINARY
+	FOutput = open(FName, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY);
+#endif
+#ifndef O_BINARY
+	FOutput = open(FName, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+#endif
 result=lseek(FOutput,pos,SEEK_SET);
 result=write(FOutput,&count,sizeof(int));
 close(FOutput);

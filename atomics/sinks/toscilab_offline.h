@@ -9,9 +9,6 @@
 #include "string.h"
 #include "unistd.h"
 #include "fcntl.h"
-#ifdef __WINDOWS__
-#include "direct.h"
-#endif
 #include "stdlib.h"
 #include "stdio.h"
 
@@ -22,6 +19,8 @@ int FOutput;
 char *time_var;
 char *signal_var;
 unsigned count;
+
+
 
 
 
