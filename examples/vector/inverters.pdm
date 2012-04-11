@@ -43,7 +43,7 @@ Coupled
             {
             Name = Index Shift 0
             Ports = 1 ; 1
-            Path = Vector\index_shift.h
+            Path = vector\index_shift.h
             Description = Vector Index Shift. Computes y(index)=u(index+shift)
             Graphic
                 {
@@ -62,7 +62,7 @@ Coupled
             {
             Name = Vector QSS_Int 0
             Ports = 1 ; 1
-            Path = Vector\qss_integrator_vec.h
+            Path = vector\qss_integrator_vec.h
             Description = Quantized Integrator (QSS methods) with logartithmic quantization
             Graphic
                 {
@@ -85,7 +85,7 @@ Coupled
             {
             Name = Vector WSum 0
             Ports = 4 ; 1
-            Path = Vector\qss_sum_vec.h
+            Path = vector\qss_sum_vec.h
             Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
             Graphic
                 {
@@ -134,7 +134,7 @@ Coupled
             {
             Name = Scalar_to Vector 0
             Ports = 1 ; 1
-            Path = Vector\scalar2vec.h
+            Path = vector\scalar2vec.h
             Description = Scalar to Vector Signal. Index -1 propagates the input to all outputs.
             Graphic
                 {
@@ -172,7 +172,7 @@ Coupled
             {
             Name = Vector 2Pow 0
             Ports = 1 ; 1
-            Path = Vector\vector_pow2.h
+            Path = vector\vector_pow2.h
             Description = y=u^2. (QSS1 to 4)
             Graphic
                 {
@@ -191,7 +191,7 @@ Coupled
             {
             Name = Vector 2Pow 1
             Ports = 1 ; 1
-            Path = Vector\vector_pow2.h
+            Path = vector\vector_pow2.h
             Description = y=u^2. (QSS1 to 4)
             Graphic
                 {
@@ -210,7 +210,7 @@ Coupled
             {
             Name = Vector Saturation 1
             Ports = 1 ; 1
-            Path = Vector\vector_sat.h
+            Path = vector\vector_sat.h
             Description = Vector Saturation
             Graphic
                 {
@@ -231,7 +231,7 @@ Coupled
             {
             Name = Vector WSum 2
             Ports = 3 ; 1
-            Path = Vector\qss_sum_vec.h
+            Path = vector\qss_sum_vec.h
             Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
             Graphic
                 {
@@ -259,7 +259,7 @@ Coupled
             {
             Name = Vector WSum 1
             Ports = 2 ; 1
-            Path = Vector\qss_sum_vec.h
+            Path = vector\qss_sum_vec.h
             Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
             Graphic
                 {
@@ -287,7 +287,7 @@ Coupled
             {
             Name = Scalar_to Vector 1
             Ports = 1 ; 1
-            Path = Vector\scalar2vec.h
+            Path = vector\scalar2vec.h
             Description = Scalar to Vector Signal. Index -1 propagates the input to all outputs.
             Graphic
                 {
@@ -390,7 +390,7 @@ Coupled
             {
             Name = Scalar_to Vector 2
             Ports = 1 ; 1
-            Path = Vector\scalar2vec.h
+            Path = vector\scalar2vec.h
             Description = Scalar to Vector Signal. Index -1 propagates the input to all outputs.
             Graphic
                 {
@@ -409,7 +409,7 @@ Coupled
             {
             Name = Vector_to Scalar 1
             Ports = 1 ; 1
-            Path = Vector\vec2scalar.h
+            Path = vector\vec2scalar.h
             Description = Vector to scalar signal
             Graphic
                 {

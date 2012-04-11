@@ -87,7 +87,7 @@ Coupled
             {
             Name = Vector WSum0
             Ports = 2 ; 1
-            Path = Vector\qss_sum_vec.h
+            Path = vector\qss_sum_vec.h
             Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
             Graphic
                 {
@@ -134,7 +134,7 @@ Coupled
             {
             Name = Scalar_to Vector0
             Ports = 1 ; 1
-            Path = Vector\scalar2vec.h
+            Path = vector\scalar2vec.h
             Description = Scalar to Vector Signal. Index -1 propagates the input to all outputs.
             Graphic
                 {
@@ -174,7 +174,7 @@ Coupled
             {
             Name = Vector_to Scalar0
             Ports = 1 ; 1
-            Path = Vector\vec2scalar.h
+            Path = vector\vec2scalar.h
             Description = Vector to scalar signal
             Graphic
                 {
