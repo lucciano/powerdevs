@@ -479,14 +479,35 @@ void processChilds(QList < modelChild * >childs, int depth)
 	for (i = childs.begin(); i != childs.end(); ++i, currentChild++) {
 		if ((*i)->childType == ATOMIC) {	// Atomic
 			if ((*i)->atomic->path.isEmpty()) {
-			QMessageBox msgBox;
-			msgBox.setText (QString("Error: The atomic %1 has no implementation associated.").arg((*i)->atomic->name));
-			msgBox.setIcon(QMessageBox::Critical);
-			msgBox.setWindowTitle("PowerDEVS");
-			msgBox.exec();
-			exit(-1);
-			
-			}
+			  QMessageBox msgBox;
+  			msgBox.setText (QString("Error: The atomic %1 has no implementation associated.").arg((*i)->atomic->name));
+	  		msgBox.setIcon(QMessageBox::Critical);
+		  	msgBox.setWindowTitle("PowerDEVS");
+			  msgBox.exec();
+  			exit(-1);
+			} else {
+
+        QString path = QCoreApplication::applicationDirPath();
+        QString file = getRelativePath(path + QString("/../atomics/") + (*i)->atomic->path);
+        QFile f(file);
+        qDebug() << file;
+        if (!f.exists()) {
+          //try it in lower case
+          QFile file_lower(getRelativePath(path + QString("/../atomics/") + (*i)->atomic->path.toLower()));
+          if (!file_lower.exists()) {
+			      QMessageBox msgBox;
+      			msgBox.setText (QString("Error: The implementation of atomic %1 does not exists (File missing %2).").arg((*i)->atomic->name).arg(file));
+    	  		msgBox.setIcon(QMessageBox::Critical);
+		      	msgBox.setWindowTitle("PowerDEVS");
+			      msgBox.exec();
+          } else {
+            // Convert it to lower
+            (*i)->atomic->path = (*i)->atomic->path.toLower();
+          }
+    
+        } 
+
+      }
 			includes.insert(getRelativePath ((*i)->atomic->path));
 			objects.insert(getBaseFilename((*i)->atomic->path) + ".o");
 			getExtraObjs((*i)->atomic->path);
