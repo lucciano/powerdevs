@@ -161,11 +161,11 @@ void GpxCoupled::removePort(Port *p)
 {
 	if(p->type() == Port::Inport){
 		_coupledData->removeInport(p);
-        removeInport(p->portNumber()); 
+    removeInport(p->portNumber()); 
 		_coupledData->setInports(_coupledData->inportCount());
 	} else {
 		_coupledData->removeOutport(p);
-        removeOutport(p->portNumber()); 
+    removeOutport(p->portNumber()); 
 		_coupledData->setOutports(_coupledData->inportCount());
 	}
 	delete p;

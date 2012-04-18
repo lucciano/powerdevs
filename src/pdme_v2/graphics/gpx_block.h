@@ -26,6 +26,7 @@
 
 #include <QGraphicsWidget>
 #include <QPainter>
+#include <QDebug>
 
 #include <data/model.h>
 #include <graphics/gpx_connection_inport.h>
@@ -81,7 +82,9 @@ class GpxBlock : public QGraphicsWidget
   int getBoundingHeight() { return _height+_name_item.boundingRect().height(); };
   void setName(QString);
   QString name() { return _name_item.toPlainText(); }
-  GpxConnectionInport  *inport(unsigned int i) { assert(i<_inPorts.size()); return _inPorts[i]; }
+  GpxConnectionInport  *inport(unsigned int i) { if (i>=_inPorts.size()) 
+      qDebug() << "block " << name() << " has only " << _inPorts.size() << " inports"; 
+      assert(i<_inPorts.size()); return _inPorts[i]; }
   GpxConnectionOutport *outport(unsigned int i) { assert(i<_outPorts.size()); return _outPorts[i]; }
   unsigned int inportIndex(GpxConnectionPoint *p) { return _inPorts.indexOf((GpxConnectionInport*)p); }
   unsigned int outportIndex(GpxConnectionPoint *p) { return _outPorts.indexOf((GpxConnectionOutport*)p); }

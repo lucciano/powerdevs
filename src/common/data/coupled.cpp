@@ -154,6 +154,23 @@ void Coupled::removeInport(Port *p)
 	  		}
 		} 
 	}
+  if (father()!=NULL) {
+    int myself=father()->childIndex(this);
+    for (int i=0;i<father()->lineCount();i++) {
+      Line *l=father()->lineAt(i);
+      cout << *l;
+      if (l->sourceType()==Line::COMPONENT && l->sources()[0]==myself+1 && l->sources()[1]>removing && l->sources()[2]==-1) {
+        vector<int> s=l->sources();
+        s[1]=s[1]-1;
+        l->setSources(s);
+      }
+      if (l->sinkType()==Line::COMPONENT && l->sinks()[0]==myself+1 && l->sinks()[1]>removing && l->sinks()[2]==-1) {
+        vector<int> s=l->sinks();
+        s[1]=s[1]-1;
+        l->setSink(s);
+      }
+    }
+  }
 }
 
 void Coupled::addOutport(Port *p) 
@@ -196,6 +213,24 @@ void Coupled::removeOutport(Port *p)
 	  		}
 		} 
 	}
+  if (father()!=NULL) {
+    int myself=father()->childIndex(this);
+    for (int i=0;i<father()->lineCount();i++) {
+      Line *l=father()->lineAt(i);
+      cout << *l;
+      if (l->sourceType()==Line::COMPONENT && l->sources()[0]==myself+1 && l->sources()[1]>removing && l->sources()[2]==0) {
+        vector<int> s=l->sources();
+        s[1]=s[1]-1;
+        l->setSources(s);
+      }
+      if (l->sinkType()==Line::COMPONENT && l->sinks()[0]==myself+1 && l->sinks()[1]>removing && l->sinks()[2]==0) {
+        vector<int> s=l->sinks();
+        s[1]=s[1]-1;
+        l->setSink(s);
+      }
+    }
+  }
+
 }
 
 int Coupled::portIndex(Port *p) const 
