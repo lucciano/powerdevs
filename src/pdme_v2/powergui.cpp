@@ -89,7 +89,6 @@ PowerGui::PowerGui(): PowerGui_class()
   bool startScilab = getSetting("startScilab").toBool(); 
   if (startScilab) { 
     splash->showMessage("Starting Scilab...",Qt::AlignLeft | Qt::AlignBottom);
-    QProcess q; 
     QString outputPath = getSetting("Path/outputPath").toString(); 
     qDebug() << "Starting Scilab from " << scilabPath << " in directory " << outputPath << " with arg " << getSetting("scilabArg").toString();
 #ifndef Q_OS_WIN32
@@ -99,9 +98,9 @@ PowerGui::PowerGui(): PowerGui_class()
 #endif
     if (!scilabRunning) {
       if (getSetting("scilabArg").toString().trimmed().size())
-        q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
+        QProcess::startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
       else
-        q.startDetached(scilabPath, QStringList(), outputPath); 
+        QProcess::startDetached(scilabPath, QStringList(), outputPath); 
     } else {
       qDebug() << "Scilab is already running";
     }
