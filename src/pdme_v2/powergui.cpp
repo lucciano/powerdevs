@@ -102,7 +102,6 @@ PowerGui::PowerGui(): PowerGui_class()
         q.startDetached(scilabPath, QStringList() << "-f" << getSetting("scilabArg").toString().replace("$HOMEAPP",QCoreApplication::applicationDirPath()), outputPath); 
       else
         q.startDetached(scilabPath, QStringList(), outputPath); 
-      q.waitForStarted();
     } else {
       qDebug() << "Scilab is already running";
     }
