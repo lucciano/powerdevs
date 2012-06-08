@@ -268,7 +268,8 @@ Coupled
             Parameters
                 {
                 T = Str; 1 ; Sampling Period (Scilab)
-                Size = Str; 10 ; Vector Size (Scilab)
+                phi = Str; 0 ; Delay
+                Size = Str; 10 ; Delay
                 }
             }
         Atomic
@@ -400,7 +401,7 @@ Coupled
             Description = Atomic DEVS model
             Graphic
                 {
-                Position = 4095 ; 1020
+                Position = 3120 ; 420
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
@@ -410,7 +411,7 @@ Coupled
                 {
                 lambda = Str; 1 ; Mean occurrence rate (Scilab)
                 y = Str; 1 ; Output Value (Scilab)
-                Seed = Str; ; an integer or empty string for a random seed (Scilab)
+                Seed = Str;  ; an integer or empty string for a random seed (Scilab)
                 Size = Str; 10 ; Vector size
                 }
             }
