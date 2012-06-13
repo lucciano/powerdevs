@@ -9,9 +9,9 @@ echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
 make -f Makefile clean
 if [ $# -eq 1 ]; then
-  make -f Makefile MODE=release RTAI=yes
+  make -f Makefile MODE=release RTAI=yes -j 8
 else
-  make -f Makefile MODE=release
+  make -f Makefile MODE=release -j 8
 fi
 rm -rf tmp_deb
 svn export deb tmp_deb
