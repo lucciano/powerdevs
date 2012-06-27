@@ -298,7 +298,9 @@ void PDAE::configureFile()
 	ConfigWindow w(this, &headers, &libs, &headersDirs, &cpps, &flags);
 	w.exec();
 	textChange();
-} QString bodyOf(QString f, QByteArray b)
+}
+
+QString bodyOf(QString f, QByteArray b)
 {
 	int start, end, braces, p, inLine = 0, inBlock = 0, i;
 	start = b.indexOf("{", b.indexOf("::" + f + "(")) + 2;
@@ -331,9 +333,8 @@ void PDAE::configureFile()
 			break;
 		}
 	}
-	if (!braces)
+	if (!braces && i-start>0)
 		return b.mid(start, i - start);
-	
 	else
 		return "";
 }
