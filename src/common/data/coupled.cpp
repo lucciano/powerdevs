@@ -33,7 +33,6 @@
 using namespace std;
 Coupled::~Coupled()
 {
-  cerr << "Releasing coupled data of " << name().c_str() << endl;
   for (unsigned int j=0;j<_childs.size();j++)
     delete _childs[j];
   for (unsigned int j=0;j<_lines.size();j++)
@@ -74,7 +73,6 @@ void printDebugLines(Coupled &c)
 void Coupled::addChild(Model *child) 
 { 
   _childs.push_back(child); 
-  cout << "Adding child with priority " << child->priority() << endl;
 }
 
 void Coupled::removeChild(Model *child) 
@@ -250,7 +248,6 @@ int Coupled::lineIndex(Line *l) const
 
 void Coupled::addPoint(Point *p) 
 { 
-  cout << "Adding point " << p << endl;
   _points.push_back(p);  
 }
 

@@ -39,7 +39,6 @@ public:
 	Atomic(): Model(NULL) {};
   virtual ~Atomic() 
   {
-    cerr << "Releasing atomic " << name().c_str() << endl;
   };
 	
   virtual bool isAtomic() { return true; }
