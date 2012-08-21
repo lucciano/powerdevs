@@ -82,6 +82,9 @@ public:
   void updatePoints(bool checkPoints=true);
   void clearModel();
   void sortChilds();
+#ifdef USE_CONNECTIONS
+  QList<Connection*> lsEIC,lsEOC,lsIC;
+#endif
 private:
 	vector<Model*> _childs;
   vector<Port*> _inPortsLst;

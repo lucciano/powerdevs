@@ -42,6 +42,7 @@ QString getLine()
   if (line.contains("//")) {
     return line.left(line.indexOf("//")).trimmed();
   }
+  //qDebug() << "Reading " << line;
 	// Chequae fin de archivo!!!
 	return line;
 }
@@ -742,47 +743,44 @@ Coupled *parseCoupled()
 
 	return ret;
 }
-/*
 
-modelAtomic *parseSimulator()
+Atomic *parseSimulator()
 {
 
-	modelAtomic *ret = new modelAtomic();
+	Atomic *ret = new Atomic();
 
 	QString strLine = getLine();
 	if (!checkEqual(strLine, TOKOBRACE))
 		return NULL;
 
 	strLine = getLine();
-	ret->path = getValue(strLine, TOKPATH);
 
 	strLine = getLine();
-	//ret->paramsString=getValue(strLine, TOKPARAMETERS);
 
 	strLine = getLine();
 	if (!checkEqual(strLine, TOKCBRACE))
 		return NULL;
 
-	return ret;
+	return NULL;
 }
 
-QList < modelConnection * >parseConnections()
+QList < Connection * >parseConnections()
 {
-	QList < modelConnection * >ret;
+	QList < Connection * >ret;
 
 	QString strLine = getLine();
-	if (checkEqual(strLine, TOKOBRACE))
-		return QList < modelConnection * >();
+	if (!checkEqual(strLine, TOKOBRACE))
+		return QList < Connection * >();
 
 	strLine = getLine();
 	while (strLine != TOKCBRACE) {
 		QStringList lsLine = strLine.remove("(").remove(")").split(";");
 		QStringList lsSource = lsLine.first().split(",");
 		QStringList lsSink = lsLine.at(1).split(",");
-		modelConnection *c = new modelConnection();
-		c->childSource = lsSource.first().toInt();
+		Connection *c = new Connection();
+		c->sourceChild = lsSource.first().toInt();
 		c->sourcePort = lsSource.at(1).toInt();
-		c->childSink = lsSink.first().toInt();
+		c->sinkChild = lsSink.first().toInt();
 		c->sinkPort = lsSink.at(1).toInt();
 		ret.append(c);
 
@@ -790,11 +788,10 @@ QList < modelConnection * >parseConnections()
 	}
 
 	if (!checkEqual(strLine, TOKCBRACE))
-		return QList < modelConnection * >();
+		return QList < Connection * >();
 	return ret;
 }
 
-*/
 Coupled *parseCoordinator()
 {
 	Coupled *ret = new Coupled();
@@ -806,18 +803,19 @@ Coupled *parseCoordinator()
 	do {
 		strLine = getLine();
 		if (strLine.trimmed() == TOKSIMULATOR) {
-			//ret->childs.append(parseSimulator());
+			ret->addChild(parseSimulator());
 		} else if (strLine.trimmed() == TOKCOORDINATOR) {
 			ret->addChild(parseCoordinator());
 		} else if (strLine.trimmed() == TOKEIC) {
-			//QList < modelConnection * >l = parseConnections();
-			//ret->lsEIC = l;
+			QList < Connection * >l = parseConnections();
+			ret->lsEIC = l;
 		} else if (strLine.trimmed() == TOKEOC) {
-			//QList < modelConnection * >l = parseConnections();
-			//ret->lsEOC = l;
+			QList < Connection * >l = parseConnections();
+			ret->lsEOC = l;
 		} else if (strLine.trimmed() == TOKIC) {
-			//QList < modelConnection * >l = parseConnections();
-			//ret->lsIC = l;
+			QList < Connection * >l = parseConnections();
+			ret->lsIC = l;
+      qDebug() << "I found " << l.size() << " connections";
 		} else if (strLine != TOKCBRACE) {
 			printf("Expecting {%s, %s, %s, %s, %s}: found %s\n",
 			       TOKSIMULATOR, TOKCOORDINATOR, TOKEIC, TOKEOC,
