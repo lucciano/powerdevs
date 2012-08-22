@@ -23,6 +23,23 @@ int shift;
 vector vec;
 Event y;
 #define INF 1e20
+int N;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

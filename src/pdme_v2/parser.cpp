@@ -808,14 +808,20 @@ Coupled *parseCoordinator()
 			ret->addChild(parseCoordinator());
 		} else if (strLine.trimmed() == TOKEIC) {
 			QList < Connection * >l = parseConnections();
+#ifdef USE_CONNECTIONS
 			ret->lsEIC = l;
+#endif
 		} else if (strLine.trimmed() == TOKEOC) {
 			QList < Connection * >l = parseConnections();
+#ifdef USE_CONNECTIONS
 			ret->lsEOC = l;
+#endif
 		} else if (strLine.trimmed() == TOKIC) {
 			QList < Connection * >l = parseConnections();
+#ifdef USE_CONNECTIONS
 			ret->lsIC = l;
       qDebug() << "I found " << l.size() << " connections";
+#endif
 		} else if (strLine != TOKCBRACE) {
 			printf("Expecting {%s, %s, %s, %s, %s}: found %s\n",
 			       TOKSIMULATOR, TOKCOORDINATOR, TOKEIC, TOKEOC,

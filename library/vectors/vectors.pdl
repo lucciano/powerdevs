@@ -150,9 +150,9 @@ Coupled
         Atomic
             {
             Name = Index Shift
-            Ports = 1 ; 1
-            Path = vector\index_shift.h
-            Description = Vector Index Shift. Computes y(index)=u(index+shift)
+            Ports = 1 ; 2
+            Path = vector/index_shift.h
+            Description = Vector Index Shift. Computes y(index)=u(index+shift). Discards through second port the out of range events
             Graphic
                 {
                 Position = -2205 ; 570
@@ -164,6 +164,7 @@ Coupled
             Parameters
                 {
                 shift = Str; 1 ; Signal Index Shift
+                Size = Str; 10 ; 
                 }
             }
         Atomic
@@ -268,8 +269,7 @@ Coupled
             Parameters
                 {
                 T = Str; 1 ; Sampling Period (Scilab)
-                phi = Str; 0 ; Delay
-                Size = Str; 10 ; Delay
+                Size = Str; 10 ; Vector Size (Scilab)
                 }
             }
         Atomic
@@ -401,7 +401,7 @@ Coupled
             Description = Atomic DEVS model
             Graphic
                 {
-                Position = 3120 ; 420
+                Position = 4095 ; 1020
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15

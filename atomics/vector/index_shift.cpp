@@ -10,6 +10,9 @@ va_start(parameters,t);
 
 char *fvar= va_arg(parameters,char*);
 shift=getScilabVar(fvar );
+fvar=va_arg(parameters,char*);
+N=getScilabVar(fvar );
+
 sigma=INF;
 
 }
@@ -27,11 +30,8 @@ void index_shift::dext(Event x, double t) {
 //     'x.port' is the port number
 //     'e' is the time elapsed since last transition
 vec=*(vector*)x.value;
-if (vec.index+shift<0){
-		sigma=INF;
-} else {
-		sigma=0;
-};
+sigma=0;
+
 }
 Event index_shift::lambda(double t) {
 //This function returns an Event:
@@ -40,7 +40,15 @@ Event index_shift::lambda(double t) {
 //     %&Value% points to the variable which contains the value.
 //     %NroPort% is the port number (from 0 to n-1)
 vec.index=vec.index+shift;
-return Event(&vec,0);
+if (vec.index>=0 && vec.index<N)
+	return Event(&vec,0);
+//printLog("Emiting events with index %d. Size=%d\n",vec.index,N);
+if (vec.index>=N) {
+	vec.index %=  N;
+} else if (vec.index<0) {
+	vec.index += N;
+} 
+return Event(&vec,1);
 }
 void index_shift::exit() {
 //Code executed at the end of the simulation.

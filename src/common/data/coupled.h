@@ -67,6 +67,7 @@ public:
   int lineIndex(Line *) const ;
   vector<Model*> getChildList() const { return _childs; }
   void setChildList(vector<Model*> childs);
+  void setChildAt(Model* child,int i) { _childs[i] = child;}
   friend ostream &operator<<(ostream &out, const Coupled &c);
 	void addPoint(Point *p); 
 	void addLine(Line *l);

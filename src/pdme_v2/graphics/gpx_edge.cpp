@@ -42,6 +42,11 @@ GpxEdge::GpxEdge(GpxConnectionPoint * sourcePort, GpxConnectionPoint * destPort,
 	_movingEdge = false;
 	for(unsigned int i=0;i<l->pointCount();i++)
 		_myPolygon << QPointF(l->pointX(i),l->pointY(i));
+  if (_myPolygon.size() == 0) {
+    _myPolygon << _sourcePoint;
+    _myPolygon << _sourcePoint;
+    _myPolygon << _destPoint;
+  }
   if (destPort->isCross())
   {
     GpxConnectionCross *c = qgraphicsitem_cast<GpxConnectionCross*>(destPort);
