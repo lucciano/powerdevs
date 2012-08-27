@@ -309,11 +309,15 @@ QString bodyOf(QString f, QByteArray b)
 	braces = 1;
 	for (i = start; i < b.count(); i++) {
 		if ((b.at(i) == '/') && (i + 1 < b.count()) && (b.at(i + 1) == '/')) {	// Start of a line comment
+      QString tmp;
 			i += 2;
 			while (b.at(i) != '\n') {
+        tmp.append(b.at(i));
 				i++;	// Skip line comment       
+
 			}
-			i++;
+      qDebug() << "Skiping block " << tmp ;
+			//i++;
 		}
 		if ((b.at(i) == '/') && (i + 1 < b.count()) && (b.at(i + 1) == '*')) {	// Start of a block comment
 			i += 2;
@@ -321,7 +325,7 @@ QString bodyOf(QString f, QByteArray b)
 				&& (b.at(i + 1) != '/')) {
 				i++;	// Skip block comment      
 			}
-			i++;
+			//i++;
 		}
 		if (b.at(i) == '{')
 			braces++;
