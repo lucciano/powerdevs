@@ -683,6 +683,7 @@ void DlgEditModel::on_buttonBox_clicked ( QAbstractButton * button )
         _b->itemChange(QGraphicsItem::ItemPositionHasChanged,QVariant());
 	      }
 	      m->setDescription(qPrintable(description->toPlainText().replace("\n","\\n")));
+        _b->setToolTip(description->toPlainText());
 	      m->setParameters(_parameters);
 		  } else {
 	      _c->setParameters(_parameters);
