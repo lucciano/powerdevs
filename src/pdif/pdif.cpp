@@ -22,6 +22,7 @@ o*
 ****************************************************************************/
 
 #include <stdio.h>
+#include <errno.h>
 
 #include <QVBoxLayout>
 #include <QDialog>
@@ -167,7 +168,8 @@ void msg(QString m)
 void PDIF::binaryFinish(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus != QProcess::NormalExit) {
-		msg(QString("The process terminated abnormally with exit code  = %1").arg(exitCode));
+		msg(QString("The process terminated abnormally with exit code  = %1. Errno %2").arg(exitCode).arg(errno));
+    qApp->quit();
 	} else {
 		pg->setFormat("Simulation Completed");
 	}
