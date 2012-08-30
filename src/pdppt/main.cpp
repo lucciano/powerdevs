@@ -101,6 +101,8 @@ int main(int argc, char **argv)
 		make.start("../bin/gcc/bin/make.exe");
 #endif
 		make.waitForFinished(-1);
+
+    QByteArray log(make.readAllStandardError());
 		if (make.exitCode() == 0) {
 	    if (runSimulation) {
 			  QFSFileEngine::setCurrentPath(path + "/../output");
@@ -138,7 +140,8 @@ int main(int argc, char **argv)
 		} else {
 			QMessageBox msgBox;
 			msgBox.setWindowState(Qt::WindowNoState);
-			msgBox.  setDetailedText(QString:: fromUtf8(make.  readAllStandardError()));
+      
+			msgBox.setDetailedText(QString:: fromUtf8(log));
 			msgBox.setText ("Error: The compilation process has reported an error.");
 			msgBox.setIcon(QMessageBox::Critical);
 			msgBox.setWindowTitle("PowerDEVS");
@@ -146,8 +149,16 @@ int main(int argc, char **argv)
 			msgBox.showNormal();
 			msgBox.exec();
 
+      QFile logfile(path + "/../output/compile.log");
+      logfile.open(QIODevice::WriteOnly);
+      logfile.write(log);
+      logfile.close();
 			return -1;
 		}
 
+      QFile logfile(path + "/../output/compile.log");
+      logfile.open(QIODevice::WriteOnly);
+      logfile.write(log);
+      logfile.close();
 	return 0;
 }
