@@ -25,6 +25,13 @@
 #include "pdevslib.h"
 #include <string.h>
 #include <stdio.h>
+#include <signal.h>
+
+void sig_hdlr(int sig)
+{
+  printf("Aca\n");
+  exit(sig);
+}
 
 void printf_flush(const char *fmt,...) 
 {
@@ -70,6 +77,8 @@ int main(int argc,char **argv)
 	preinitLib();
 #endif 
 
+  signal(SIGFPE,sig_hdlr);
+  signal(SIGSEGV,sig_hdlr);
 	while (i<argc) {
 		if (strcmp("-tf",argv[i])==0) {
 			if (i > argc-2) {	
