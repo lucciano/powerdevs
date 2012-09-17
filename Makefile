@@ -1,6 +1,6 @@
 MODE = debug
 RTAI = 
-all: pdae pdif pdppt pdme
+all: pdae pdif pdppt pdme doc/PD_UserGuide.pdf
 pdae:
 	cd ./src/pdae && qmake CONFIG+=$(MODE) 
 	make -C ./src/pdae -j 4
@@ -16,6 +16,10 @@ else
 	cd ./src/pdif && qmake CONFIG+=$(MODE) 
 endif
 	make -C ./src/pdif -j 4
+
+doc/PD_UserGuide.pdf: src/doc/commands.tex src/doc/pd_userguide.kilepr src/doc/chap_intro.tex src/doc/images src/doc/images/pdevsmodel.jpg src/doc/images/pdmodeling.jpg src/doc/images/pdsimulation.jpg src/doc/chap_get_start.tex src/doc/PD_UserGuide.tex
+	cd ./src/doc && pdflatex PD_UserGuide.tex -output-directory ../../doc
+	cp ./src/doc/PD_UserGuide.pdf ./doc
 
 
 pdme:

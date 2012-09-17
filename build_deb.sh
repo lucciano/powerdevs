@@ -32,6 +32,7 @@ cp ./bin/original.ini ./tmp_deb/opt/powerdevs/bin/powerdevs.ini
 cp COPYING ./tmp_deb/opt/powerdevs
 cp version ./tmp_deb/opt/powerdevs
 cp bin/run.sh ./tmp_deb/opt/powerdevs/bin
+cp -a doc/ ./tmp_deb/opt/powerdevs/
 svn export build ./tmp_deb/opt/powerdevs/build
 svn export engine ./tmp_deb/opt/powerdevs/engine
 if [ $# -eq 1 ]; then

@@ -19,6 +19,7 @@ svn export examples tmp_win_installer\powerdevs\examples
 svn export library tmp_win_installer\powerdevs\library
 svn export output tmp_win_installer\powerdevs\output
 copy version tmp_win_installer\powerdevs
+copy doc\PD_UserGuide.pdf tmp_win_installer\powerdevs\doc
 copy COPYING tmp_win_installer\powerdevs
 echo "Building Binaries";
 
