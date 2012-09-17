@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEdit">
@@ -58,6 +58,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionUserGuide"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
@@ -376,6 +377,11 @@
   <action name="actionSet_path_and_tools">
    <property name="text">
     <string>&amp;Set path and tools</string>
+   </property>
+  </action>
+  <action name="actionUserGuide">
+   <property name="text">
+    <string>User Guide</string>
    </property>
   </action>
  </widget>

@@ -73,6 +73,7 @@ private slots:
   void on_actionMenu_setup_triggered();
 
   void on_actionAbout_triggered();
+  void on_actionUserGuide_triggered();
 
   void on_actionClose_triggered();
   void dirtyModelClose(GpxEditionWindow *model,QCloseEvent *event);

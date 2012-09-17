@@ -36,6 +36,8 @@
 #include <QFileInfo>
 #include <QClipboard>
 #include <QImage>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QSplashScreen>
 
 
@@ -783,6 +785,11 @@ void PowerGui::parameterDialogCoupled(Coupled *c)
 		}
 	}
   connect(&pd,SIGNAL(finished(int)), this, SLOT(updateMenus()));
+}
+
+void PowerGui::on_actionUserGuide_triggered()
+{
+  QDesktopServices::openUrl(QUrl(QString("file://%1/../doc/PD_UserGuide.pdf").arg(QCoreApplication::applicationDirPath())));
 }
 
 void PowerGui::on_actionAbout_triggered()
