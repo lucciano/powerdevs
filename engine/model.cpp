@@ -29,7 +29,6 @@
 
 void sig_hdlr(int sig)
 {
-  printf("Aca\n");
   exit(sig);
 }
 

@@ -221,6 +221,7 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
   if (res<=0)
     printLog("Incomplete read in getScilabMatrix\n");
   fclose(FOpen); 
+  unlink("temp.dat");
 }
 
 void getScilabVector(char* varname, int *length, double *data) {
@@ -261,6 +262,7 @@ void getScilabVector(char* varname, int *length, double *data) {
   if (res<=0)
     printLog("Incomplete read in getScilabMatrix\n");
   fclose(FOpen);  
+  unlink("temp.dat");
 }
 
 extern double tf;
