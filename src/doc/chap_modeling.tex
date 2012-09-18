@@ -1,0 +1,45 @@
+\chapter{Basic Modeling with PowerDEVS}
+In this chapter, we explain how to build models using existing blocks from the libraries.
+
+\section{Building a Model}
+Let us suppose you want to build a model of a DC drive represented by the following equations:
+\begin{equation}\label{eq:motor}
+  \begin{split}
+   \dt{i_a(t)}&=\frac{U_a(t)-R_a\pr i_a(t)-K\pr \omega(t)}{L_a}\\
+   \dt{\omega(t)}&=\frac{K\pr i_a(t)-b\pr \omega(t)-\tau(t)}{J}\\
+  \end{split}
+\end{equation}
+where the state variables $i_a(t)$ and $\omega(t)$ are the armature current and speed, respectively. The parameters are $R_a$ (armature resistance), $L_a$ (inductance), $b$ (friction), $J$ (inertia), and $K$ (electro-mechanical constant). The model has also two input variables: $U_a(t)$ (armature voltage) and $\tau(t)$ (load torque).
+
+We shall use the following values for the parameters:
+\begin{equation}
+\begin{split}
+ R_a&=1.73,\;L_a=2.54\times 10^{-3},\;J=1.62\times 10^{-5},\\
+b&=1.12\times 10^{-5},\;Km=0.0551 
+\end{split}
+\end{equation}
+
+Initially, we shall suppose that the input signals are steps:
+\begin{equation}
+ U_a(t)=24\pr \mu(t),\;\;\tau(t)=0.25\pr \mu(t-0.1)
+\end{equation}
+where $\mu(t)$ is the unit step (i.e., it takes the value $1$ for all $t>0$ and it is $0$ otherwise).
+
+The first step then consists in creating a new model (\verb"Ctrl+N") and building the block diagram using blocks from the libraries at the left of the modeling window.
+
+We need blocks of type \verb"QSS integrator" and \verb"WSum" from the \verb"Continuous" library. For the input signals, we take \verb"Step" blocks from the \verb"Source" library. In order to plot the results, we take a \verb"GnuPlot" block from the \verb"Sink" library.
+
+Then, we can connect the blocks as shown in Fig.\ref{fig:db_motor}.
+
+\begin{figure}[h]
+ \jpgfile{db_motor}{14}
+ \caption{PowerDEVS Model of a DC Motor}
+ \label{fig:db_motor}
+
+\end{figure}
+
+
+
+
+
+
