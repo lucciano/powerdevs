@@ -182,6 +182,15 @@ void getAns(double *ans, int rows, int cols) {
 
 
 void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
+  char *s;
+  double d=strtod(varname,&s);
+  if (varname+strlen(varname)==s)
+  {
+    for (int i=0;i<*rows;i++)
+      for (int j=0;j<*cols;j++)
+        data[i][j]=d;
+    return;
+  }
   char buf[1024];
   sprintf(buf,"tempvar=%s",varname);
   executeVoidScilabJob(buf,true);
@@ -189,6 +198,10 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
   executeVoidScilabJob(buf,true);
   FILE *FOpen;
   FOpen=fopen("temp.dat","rb");
+  if (FOpen==NULL) {
+    printLog("No connection to Scilab to get %s\n",varname);
+    exit(-1);
+  }
   char name[24];
   int res=fread(&name,24,1,FOpen);
   int varint;
@@ -211,6 +224,15 @@ void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
 }
 
 void getScilabVector(char* varname, int *length, double *data) {
+  char *s;
+  double d=strtod(varname,&s);
+  if (varname+strlen(varname)==s)
+  {
+    *length=1;
+    data[0]=d;
+    return;
+  }
+ 
   int rows,cols;
   char buf[1024];
   sprintf(buf,"tempvar=%s",varname);
@@ -219,6 +241,10 @@ void getScilabVector(char* varname, int *length, double *data) {
   executeVoidScilabJob(buf,true);
   FILE *FOpen;
   FOpen=fopen("temp.dat","rb");
+  if (FOpen==NULL) {
+    printLog("No connection to Scilab to get %s\n",varname);
+    exit(-1);
+  }
   char name[24];
   int res=fread(&name,24,1,FOpen);
   int varint;
