@@ -169,6 +169,11 @@ void msg(QString m)
 void PDIF::binaryFinish(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus != QProcess::NormalExit || exitCode!=0) {
+    if (exitCode == 255) {
+		  msg(QString("The process terminated abnormally. Opening Log"));
+      viewLog();
+      qApp->quit();
+    }
 		msg(QString("The process terminated abnormally.\n%1").arg(strsignal(exitCode)));
     qApp->quit();
 	} else {
