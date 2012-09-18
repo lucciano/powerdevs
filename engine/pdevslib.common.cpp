@@ -182,15 +182,6 @@ void getAns(double *ans, int rows, int cols) {
 
 
 void getScilabMatrix(char* varname, int *rows, int *cols, double **data) {
-  char *s;
-  double d=strtod(varname,&s);
-  if (varname+strlen(varname)==s)
-  {
-    for (int i=0;i<*rows;i++)
-      for (int j=0;j<*cols;j++)
-        data[i][j]=d;
-    return;
-  }
   char buf[1024];
   sprintf(buf,"tempvar=%s",varname);
   executeVoidScilabJob(buf,true);
