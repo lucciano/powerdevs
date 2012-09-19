@@ -65,6 +65,7 @@ public:
   void removeLines(QList<GpxEdge*>);
   void changeBlockName(GpxBlock*);
   void changeRubberBand(); 
+  void addAnnotation(QString,QPoint); 
 #ifdef UNDO
   QUndoStack *undoStack() { return _undoStack; };
 #endif

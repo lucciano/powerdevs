@@ -21,42 +21,23 @@
 **
 ****************************************************************************/
 
-/*! \brief Class GpxTextBox.
- *
- * A text box for the Power Devs. It's used by the graphics elements
- * an also as stand alone graphic element.
-*/
-#ifndef GPXTEXTBOX_H
-#define GPXTEXTBOX_H
+#include <dialogs/dlg_change_annotation.h>
+#include <QDebug>
 
-#include <QGraphicsTextItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QPen>
-#include <QLineEdit>
-#include <QLabel>
-#include <QGraphicsProxyWidget>
-#include <coupled.h>
-class QFocusEvent;
-class QGraphicsItem;
-class QGraphicsScene;
-class QLineEdit;
+DlgChangeAnnotation::DlgChangeAnnotation(GpxTextBox *b)
+{
+  setupUi(this);
+  if (b!=NULL) {
+    txtAnnotation->setPlainText(b->toPlainText());
+    QTextCursor cursor(txtAnnotation->textCursor());
+    cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+    txtAnnotation->setTextCursor(cursor);
+  }
+}
 
-class GpxTextBox:public QGraphicsTextItem {
- Q_OBJECT 
-public:
-	enum { Type = UserType + 3 };	/*!< Enum value. */
-
-	/*! Constructor of the class. */
-	GpxTextBox(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
-	GpxTextBox(Coupled *);
-
-	/*! Method that returns the type of the class. */
-	int type() const { return Type; } 
-  QVariant itemChange(GraphicsItemChange change, const QVariant & value);
-protected:
-	void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event );
-private:
-  Coupled *_coupledData;
-};
-
-#endif
+QString DlgChangeAnnotation::getAnnotation()
+{
+  if (exec()==QDialog::Accepted)
+    return txtAnnotation->toPlainText();
+  return QString();
+}

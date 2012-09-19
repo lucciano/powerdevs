@@ -1,7 +1,7 @@
 TEMPLATES = app
 QT += svg 
 
-CONFIG += qt
+CONFIG += qt debug
 
 GRAPHICS_DIR=graphics
 DATA_DIR=../common/data
@@ -50,6 +50,7 @@ SOURCES +=  $$DIALOGS_DIR/dlg_change_priority.cpp \
             $$DIALOGS_DIR/dlg_change_parameters.cpp \
             $$DIALOGS_DIR/dlg_set_path_tools.cpp \
             $$DIALOGS_DIR/dlg_menu_setup.cpp \
+            $$DIALOGS_DIR/dlg_change_annotation.cpp \
             $$DIALOGS_DIR/dlg_menu_edit.cpp
 
 HEADERS += 	powergui.h \	
@@ -93,6 +94,7 @@ HEADERS +=  $$DIALOGS_DIR/dlg_change_priority.h \
             $$DIALOGS_DIR/dlg_change_parameters.h \
             $$DIALOGS_DIR/dlg_set_path_tools.h \
             $$DIALOGS_DIR/dlg_menu_setup.h \
+            $$DIALOGS_DIR/dlg_change_annotation.h \
             $$DIALOGS_DIR/dlg_menu_edit.h
 
 FORMS += 	$$UI_DIR/main_window.ui \
@@ -102,6 +104,7 @@ FORMS += 	$$UI_DIR/main_window.ui \
          	$$UI_DIR/dlg_edit_list_parameter.ui \
 		 	$$UI_DIR/dlg_set_path_tools.ui \
 		 	$$UI_DIR/dlg_menu_setup.ui \
+		 	$$UI_DIR/dlg_change_annotation.ui \
 		 	$$UI_DIR/dlg_menu_edit.ui
 
 RESOURCES += pdme.qrc

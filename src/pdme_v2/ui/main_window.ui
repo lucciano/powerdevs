@@ -53,6 +53,7 @@
     <addaction name="actionPriority"/>
     <addaction name="separator"/>
     <addaction name="actionModel"/>
+    <addaction name="actionAddanotation"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -382,6 +383,11 @@
   <action name="actionUserGuide">
    <property name="text">
     <string>User Guide</string>
+   </property>
+  </action>
+  <action name="actionAddanotation">
+   <property name="text">
+    <string>Add annotation</string>
    </property>
   </action>
  </widget>

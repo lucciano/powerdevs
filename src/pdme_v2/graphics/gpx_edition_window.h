@@ -48,6 +48,8 @@ public:
 	~GpxEditionWindow();
 	bool isDirty() { return isWindowModified(); }
   	void setDirty() { setWindowModified(true); }
+    void addAnnotation();
+    void addAnnotation(QPoint);
   	void clearDirty() { setWindowModified(false); }
 	QString fileName() { return _fileName;}
   	void setFileName(QString fileName);

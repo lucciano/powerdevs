@@ -92,6 +92,7 @@
 #define TOKRIGHT		"Right"
 #define TOKUP			"Up"
 #define TOKDOWN			"Down"
+#define TOKEXTRA		"Extra"
 
 #define QSTR(a)			((a).toAscii().constData())
 

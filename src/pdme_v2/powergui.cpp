@@ -61,8 +61,10 @@
 #include <dialogs/dlg_change_library.h>
 #include <dialogs/dlg_set_path_tools.h>
 #include <dialogs/dlg_menu_setup.h>
+#include <dialogs/dlg_menu_setup.h>
 
 extern QSplashScreen *splash;
+QPoint mouseContext;
 PowerGui::PowerGui(): PowerGui_class()
 {
 	setupUi(this);
@@ -213,6 +215,7 @@ void PowerGui::updateMenus()
   actionEdit->setEnabled(model_selected);
   actionOpen_2->setEnabled(has_coupled);
   actionModel->setEnabled(active);
+  actionAddanotation->setEnabled(active);
   #ifdef UNDO
   	actionUndo->setEnabled(active);
   	actionRedo->setEnabled(active);
@@ -670,6 +673,7 @@ void PowerGui::contextMenu(GpxBlock *block,QPoint p)
   qMenu.addAction(actionDelete);
   qMenu.addSeparator();
 
+  qMenu.addAction(actionAddanotation);
   qMenu.addAction(actionParameters);
   qMenu.addAction(actionEdit);
                     
@@ -689,6 +693,7 @@ void PowerGui::contextMenu(GpxBlock *block,QPoint p)
       qMenu.addAction(actionOpen_2);
     }
   }
+  mouseContext = p;
   QAction *selected = qMenu.exec(p);
   // If the action cut is selected, the block is deleted.
   if(selected == qActEditCode){
@@ -787,13 +792,21 @@ void PowerGui::parameterDialogCoupled(Coupled *c)
   connect(&pd,SIGNAL(finished(int)), this, SLOT(updateMenus()));
 }
 
-void PowerGui::on_actionUserGuide_triggered()
-{
+void PowerGui::on_actionUserGuide_triggered() {
   QDesktopServices::openUrl(QUrl(QString("file://%1/../doc/PD_UserGuide.pdf").arg(QCoreApplication::applicationDirPath())));
 }
 
-void PowerGui::on_actionAbout_triggered()
-{
+void PowerGui::on_actionAddanotation_triggered() {
+  GpxEditionWindow * gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
+  if (gep==NULL)
+    return;
+  if (actionAddanotation->menu()!=menuEdit)
+	  gep->addAnnotation(mouseContext);
+  else
+	  gep->addAnnotation();
+}
+
+void PowerGui::on_actionAbout_triggered() {
   QFile qf(QCoreApplication::applicationDirPath() + "/../version");
   QString version("2.2");
   if (qf.exists()) {
@@ -807,7 +820,6 @@ void PowerGui::on_actionAbout_triggered()
 			      "of Discrete Event Systems.</p>"
 			      "<p>Developed by:</p> "
 			      "<p> Federico Bergero (bergero@cifasis-conicet.gov.ar) </p>"
-			      "<p> Enrique Hansen  (enrique.hansen@gmail.com) </p>"
 			      "<p> Joaquin Fernandez (joaquin.f.fernandez@gmail.com) </p>"
 			      "<p>Directed by:</p> "
 			      "<p> Ernesto Kofman (kofman@fceia.unr.edu.ar) </p>").arg(version));

@@ -62,6 +62,23 @@ int checkEqual(QString s, QString t)
 	return 1;
 }
 
+vector<string> parseExtra() {
+  vector<string> ret;
+  int i=0;
+	QString strLine = getLine();
+	if (!checkEqual(strLine, TOKOBRACE))
+		return ret;
+	do {
+		//printf("SKIP: %s\n",strLine.toAscii().constData());
+		strLine = getLine();
+	  if (strLine == TOKCBRACE) 
+      break;
+    ret.resize(i+1);
+    ret[i++] = string(qPrintable(strLine.trimmed()));
+	} while (strLine != TOKCBRACE);
+  return ret;
+}
+
 void skipSection()
 {
 	QString strLine = getLine();
@@ -341,10 +358,14 @@ Atomic *parseAtomic()
   
 
 	strLine = getLine();
-	if (!checkEqual(strLine, TOKCBRACE))
+  Atomic *ret = new Atomic(NULL,qPrintable(name),qPrintable(desc),qPrintable(path));
+  if (strLine == TOKEXTRA) {
+			ret->setExtra(parseExtra());
+	    strLine = getLine();
+  }
+  if (!checkEqual(strLine, TOKCBRACE))
 		return NULL;
 
-  Atomic *ret = new Atomic(NULL,qPrintable(name),qPrintable(desc),qPrintable(path));
   ret->setGraphics(*graphics);
   ret->setInports(inPorts);
   ret->setOutports(outPorts);
@@ -726,6 +747,8 @@ Coupled *parseCoupled()
 			ret->addPoint(parsePoint());
 		} else if (strLine == TOKLINE) {
 			ret->addLine(parseLine());
+		} else if (strLine == TOKEXTRA) {
+			ret->setExtra(parseExtra());
 		} else if (strLine != TOKCBRACE) {	// Error
       qDebug() << strLine << "ERRRORRRRRRRR";
 			return NULL;

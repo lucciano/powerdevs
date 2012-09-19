@@ -24,14 +24,17 @@
 #include <QDebug>
 #include <QLabel>
 #include <QTabWidget>
+#include <QInputDialog>
 #include <QFileInfo>
 #include <QCloseEvent>
 #include <QMdiSubWindow>
 
+#include <QMessageBox>
 #include <data/coupled.h>
 #include <graphics/gpx_edition_window.h>
 #include <graphics/gpx_edition_scene.h>
 #include <graphics/gpx_coupled.h>
+#include <dialogs/dlg_change_annotation.h>
 
 GpxEditionWindow::GpxEditionWindow(QWidget *parent, Coupled *c):QTabWidget(parent), _coupledData(c)
 {
@@ -546,9 +549,24 @@ GpxBlock *GpxEditionWindow::getCurrentItem()
     return NULL;
 }
 
-void GpxEditionWindow::paste(QString s) 
-{
+void GpxEditionWindow::paste(QString s) {
     if (currentScene()!=NULL) {
         currentScene()->paste(s);
     }
+}
+
+void GpxEditionWindow::addAnnotation(QPoint p)
+{
+    if (currentScene()!=NULL) {
+        DlgChangeAnnotation dlg(NULL);
+        QString annotation = dlg.getAnnotation();
+        if (!annotation.isNull()) {
+          currentScene()->addAnnotation(annotation,p);
+          setDirty();
+        }
+    }
+}
+void GpxEditionWindow::addAnnotation()
+{
+  addAnnotation(QPoint());
 }

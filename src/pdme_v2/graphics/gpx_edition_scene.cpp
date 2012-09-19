@@ -42,11 +42,13 @@
 #include <graphics/gpx_connection_node.h>
 #include <globals.h>
 #include <commands.h>
+#include "parser.h"
 
 unsigned int OFFSET_Y=0;
 unsigned int OFFSET_X=0;
 
 using namespace std;
+QPointF lastClick;
 
 GpxEditionScene::GpxEditionScene(QObject * parent, Coupled *c) : QGraphicsScene(parent), _coupledData(c)
 {
@@ -265,6 +267,8 @@ void GpxEditionScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
   QList<QGraphicsItem *> it = items(mouseEvent->scenePos());
   QPointF pos = mouseEvent->scenePos();
+  lastClick = pos;
+  qDebug() << "Clicked on " << pos;
   _mousePos = pos;
   switch (_mode) {
     case None:
@@ -485,6 +489,40 @@ void GpxEditionScene::deleteSelection()
   QList<QGraphicsItem *> it = selectedItems();
   QList<GpxEdge*> del;
   QList<GpxBlock *> blocks;
+  foreach(QGraphicsItem *i,it)
+  {
+    if (i->type()==GpxTextBox::Type) {
+      GpxTextBox *tb = dynamic_cast<GpxTextBox*>(i); 
+      if (tb->parentItem()==NULL && tb->isSelected()) {
+        vector<string> extra = _coupledData->getExtra();
+        bool found=false;
+        int j;
+        for (j=0;j<extra.size();j++) {
+          QString strExtra(extra[j].c_str());
+          if (!strExtra.startsWith("Annotation")) continue;
+          strExtra = strExtra.mid(11);
+          strExtra.chop(1);
+          qDebug() << strExtra;
+          QStringList ls = strExtra.split(",");
+          QString an = ls.first();
+          an.chop(1);
+          an = an.mid(1);
+          if (tb->toPlainText()==an) {
+            found=true;
+            break;
+          } 
+  
+        }
+        if (found) {
+          extra.erase(extra.begin()+j);
+          _coupledData->setExtra(extra);
+        }
+        removeItem(i);
+      }
+    } else 
+      qDebug() << "Ignoring item " << i << " type " << i->type();
+  }
+	
   foreach(QGraphicsItem *gi,it) 
   {
     if (gi->type()==GpxEdge::Type) {
@@ -531,11 +569,7 @@ void GpxEditionScene::deleteSelection()
 	}
   clearSelection();
   it=items();
-  foreach(QGraphicsItem *i,it)
-  {
-    qDebug() << i << " type " << i->type();
-  }
-	views().first()->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  views().first()->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   _coupledData->updatePoints();
 }
 
@@ -653,8 +687,29 @@ void GpxEditionScene::putStructure(Coupled *coupled, bool paste, bool draggin)
 */
 		putConnection(l,paste,draggin,childs,ports,points);
 	}
+  /* Annotations */
+  vector<string> extra = coupled->getExtra();
+  for (int i=0;i<extra.size();i++) {
+    QString strExtra(extra[i].c_str());
+    qDebug() << "Found an extra " << strExtra;
+    if (strExtra.startsWith("Annotation")) {
+      GpxTextBox *tb = new GpxTextBox(_coupledData);
+      strExtra = strExtra.mid(11);
+      strExtra.chop(1);
+      qDebug() << strExtra;
+      QStringList ls = strExtra.split(",");
+      QString an = ls.first();
+      an.chop(1);
+      an = an.mid(1);
+      qDebug() << ls;
+      tb->setPlainText(an);
+      addItem(tb);
+      tb->setPos(ls.at(1).toInt()/TWIPS_TO_PIXEL,ls.at(2).toInt()/TWIPS_TO_PIXEL);
+    }
+  }
+  
 
-	cout << _coupledData;
+	//cout << _coupledData;
 }
 
 void GpxEditionScene::putCoupled(Coupled *c, bool paste, bool draggin)
@@ -1837,6 +1892,23 @@ QList <GpxEdit *> GpxEditionScene::editItems()
 		}
 	}
 	return editItems;
+}
+
+void GpxEditionScene::addAnnotation(QString s, QPoint p) {
+  GpxTextBox *tb = new  GpxTextBox(_coupledData);
+	tb->setPlainText(s);
+  addItem(tb);
+  if(!p.isNull() && !lastClick.isNull()) {
+    tb->setPos(lastClick);
+    lastClick = QPointF();
+  }
+  vector<string> extra = _coupledData->getExtra();
+  int i=extra.size();
+  extra.resize(i+1);
+  QString e("Annotation(\"%1\",%2,%3)");
+  e=e.arg(s).arg(tb->pos().x()*TWIPS_TO_PIXEL).arg(tb->pos().y()*TWIPS_TO_PIXEL);
+  extra[i] = qPrintable(e);
+  _coupledData->setExtra(extra);
 }
 
 void GpxEditionScene::focusOutEvent ( QFocusEvent * focusEvent ) 

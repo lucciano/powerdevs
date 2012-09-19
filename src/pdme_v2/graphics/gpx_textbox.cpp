@@ -27,19 +27,68 @@
 
 #include "gpx_textbox.h"
 #include "gpx_edition_scene.h"
+#include "gpx_edition_window.h"
 #include "gpx_block.h"
 #include "gpx_outport.h"
 #include "gpx_inport.h"
+#include <dialogs/dlg_change_annotation.h>
+#include "parser.h"
 
 GpxTextBox::GpxTextBox(QGraphicsItem * parent, QGraphicsScene * scene) : QGraphicsTextItem(parent)
 {
 	setAcceptedMouseButtons(Qt::LeftButton);
+  if (parent==NULL) {
+    setFlags(QGraphicsItem::ItemIsMovable |  QGraphicsItem::ItemIsSelectable);
+  }
 }
+
+GpxTextBox::GpxTextBox(Coupled *c) : QGraphicsTextItem(NULL), _coupledData(c)
+{
+	setAcceptedMouseButtons(Qt::LeftButton);
+  setFlags(QGraphicsItem::ItemIsMovable |  QGraphicsItem::ItemIsSelectable| QGraphicsItem::QGraphicsItem::ItemSendsGeometryChanges);
+}
+
 
 void GpxTextBox::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
 {
   bool ok=false;
-  QString newName = QInputDialog::getText(NULL,"PowerDEVS","Change name",QLineEdit::Normal,toPlainText(),&ok).trimmed();
+  
+  QString newName;
+  if (parentItem()==NULL) {
+    DlgChangeAnnotation dlg(this);
+    QString annotation = dlg.getAnnotation();
+    if (annotation.isNull())
+      return;
+    vector<string> extra = _coupledData->getExtra();
+    bool found=false;
+    int j;
+    for (j=0;j<extra.size();j++) {
+      QString strExtra(extra[j].c_str());
+      if (!strExtra.startsWith("Annotation")) continue;
+      strExtra = strExtra.mid(11);
+      strExtra.chop(1);
+      QStringList ls = strExtra.split(",");
+      QString an = ls.first();
+      an.chop(1);
+      an = an.mid(1);
+      if (toPlainText()==an) {
+        found=true;
+        break;
+      } 
+    }
+    if (found) {
+      QString e("Annotation(\"%1\",%2,%3)");
+      e=e.arg(annotation).arg(pos().x()*TWIPS_TO_PIXEL).arg(pos().y()*TWIPS_TO_PIXEL);
+      extra[j] = qPrintable(e);
+      _coupledData->setExtra(extra);
+      GpxEditionScene *ges = dynamic_cast<GpxEditionScene*>(scene());
+      GpxEditionWindow *gew = dynamic_cast<GpxEditionWindow*>(ges->parent());
+      gew->setDirty();
+    }
+    setPlainText(annotation);
+    return;
+  }
+  newName = QInputDialog::getText(NULL,"PowerDEVS","Change name",QLineEdit::Normal,toPlainText(),&ok).trimmed();
   if (!ok || newName.isEmpty()) return;
   GpxEditionScene *ges = dynamic_cast<GpxEditionScene*>(scene());
   GpxBlock *b = qgraphicsitem_cast<GpxBlock*>(parentItem());
@@ -64,4 +113,41 @@ void GpxTextBox::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
       QMessageBox::warning(NULL,"PowerDEVS","Name already in use");
     }
   }
+}
+
+QVariant GpxTextBox::itemChange(GraphicsItemChange change, const QVariant & value)
+{
+  qDebug() << change;
+	if (change == QGraphicsItem::ItemPositionHasChanged) {
+    if (parentItem()==NULL) {
+    vector<string> extra = _coupledData->getExtra();
+    bool found=false;
+    int j;
+    for (j=0;j<extra.size();j++) {
+      QString strExtra(extra[j].c_str());
+      if (!strExtra.startsWith("Annotation")) continue;
+      strExtra = strExtra.mid(11);
+      strExtra.chop(1);
+      QStringList ls = strExtra.split(",");
+      QString an = ls.first();
+      an.chop(1);
+      an = an.mid(1);
+      if (toPlainText()==an) {
+        found=true;
+        break;
+      } 
+    }
+    if (found) {
+      QString e("Annotation(\"%1\",%2,%3)");
+      e=e.arg(toPlainText()).arg(pos().x()*TWIPS_TO_PIXEL).arg(pos().y()*TWIPS_TO_PIXEL);
+      extra[j] = qPrintable(e);
+      _coupledData->setExtra(extra);
+      GpxEditionScene *ges = dynamic_cast<GpxEditionScene*>(scene());
+      GpxEditionWindow *gew = dynamic_cast<GpxEditionWindow*>(ges->parent());
+      gew->setDirty();
+    }
+ 
+    }
+  }
+  return value;
 }
