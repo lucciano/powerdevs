@@ -108,6 +108,16 @@ std::ostream &operator<<(std::ostream &out, const Atomic &a)
   }
   depth-=2;
   out << tab(ldepth+2) << "}" << endl;
+  vector<string> extra = a.getExtra();
+  if (extra.size()) {
+    out << tab(ldepth+2) << "Extra" << endl;
+    out << tab(ldepth+3) << "{" << endl;
+    for (int i=0;i<extra.size();i++)
+      out << tab(ldepth+4) << extra[i] << endl;
+    out << tab(ldepth+3)<< "}" << endl;
+  
+  }
+ 
   out << tab(ldepth+1) << "}" << endl;
   return out;
 }
@@ -246,6 +256,15 @@ ostream &operator<<(ostream &out, const Coupled &c)
   for(unsigned int line=0;line<c.lineCount();line++)
   {
     out << *c.lineAt(line);
+  }
+  vector<string> extra = c.getExtra();
+  if (extra.size()) {
+    out << tab(ldepth+2) << "Extra" << endl;
+    out << tab(ldepth+3) << "{" << endl;
+    for (int i=0;i<extra.size();i++)
+      out << tab(ldepth+4) << extra[i] << endl;
+    out << tab(ldepth+3)<< "}" << endl;
+  
   }
   out << tab(ldepth+2) << "}" << endl;
   out << tab(ldepth+1) << "}" << endl;

@@ -57,6 +57,8 @@ public:
 	void setDescription(string description) { _description = description; };
 	int priority() const { return _priority; };
 	void setPriority(int priority) { _priority = priority;};
+  void setExtra(vector<string> e) { _extra = e; };
+  vector<string> getExtra() const { return _extra; };
 protected:
 	Coupled *_father;
 	int _inPorts;
@@ -65,6 +67,7 @@ protected:
 	string _name;
 	string _description;
 	vector< Parameter* > _parameters;
+  vector<string> _extra;
 	modelType _type;
 };
 #endif
