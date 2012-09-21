@@ -27,7 +27,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGroupBox>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QVBoxLayout>
 #include <QFormLayout>
 
@@ -51,7 +51,7 @@ private:
   	bool fromBlock;
   	GpxBlock *_b;
   	Coupled *_c;
-  	QTextEdit *_desc;
+  	QPlainTextEdit *_desc;
   	QVBoxLayout *_desc_layout;
   	QVBoxLayout *_layout;
   	QVBoxLayout *_params_layout;

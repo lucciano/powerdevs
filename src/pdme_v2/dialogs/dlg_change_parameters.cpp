@@ -22,6 +22,7 @@
 ****************************************************************************/
 
 #include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QDoubleValidator>
 #include <QLabel>
 #include <QDebug>
@@ -38,11 +39,21 @@ DlgChangeParameters::DlgChangeParameters(Coupled *c): _c(c), _b(NULL)
   setWindowTitle(QString("Parameters: %1").arg(c->name().c_str()));
   _desc_layout = new QVBoxLayout();
   _params_layout = new QVBoxLayout();
-  _desc = new QTextEdit(QString(c->description().c_str()).replace("\\n","<br>"));
-  _desc->setTextInteractionFlags(Qt::NoTextInteraction);
-  _desc_group = new QGroupBox();
+  _desc = new QPlainTextEdit(QString(c->description().c_str()).replace("\\n","\n"));
   _params_group = new QGroupBox();
   _params_group->setTitle("Parameters");
+  if (c->father()!=NULL) 
+    _desc->setTextInteractionFlags(Qt::NoTextInteraction);
+  else {
+    QTextCursor cursor(_desc->textCursor());
+    cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+    _desc->setTextCursor(cursor);
+    setWindowTitle(QString("Documentation %1").arg(c->name().c_str()));
+    resize(800,600);
+    _params_group->setTitle("");
+ 
+  }
+  _desc_group = new QGroupBox();
   _layout = new QVBoxLayout();
   _buttons = new QDialogButtonBox();
   _desc_layout->addWidget(_desc);
@@ -134,7 +145,7 @@ DlgChangeParameters::DlgChangeParameters(GpxBlock *b): _b(b), _c(NULL)
   setWindowTitle(QString("Parameters: %1").arg(m->name().c_str()));
   _desc_layout = new QVBoxLayout();
   _params_layout = new QVBoxLayout();
-  _desc = new QTextEdit(QString(m->description().c_str()).replace("\\n","<br>"));
+  _desc = new QPlainTextEdit(QString(m->description().c_str()).replace("\\n","\n"));
   _desc->setTextInteractionFlags(Qt::NoTextInteraction);
   _desc_group = new QGroupBox();
   _params_group = new QGroupBox();
@@ -276,4 +287,8 @@ void DlgChangeParameters::apply()
       lp->setSelected(field->currentIndex()+1);
     } 
   }
+  if (_b==NULL && _c!=NULL) 
+    if (_c->father()==NULL) {
+      _c->setDescription(qPrintable(_desc->toPlainText().replace("\n","\\n")));
+    }
 }

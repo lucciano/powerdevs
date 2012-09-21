@@ -783,9 +783,12 @@ void PowerGui::on_actionOpen_2_triggered()
 void PowerGui::parameterDialogCoupled(Coupled *c)
 {
 	DlgChangeParameters pd(c);
+	GpxEditionWindow * gep = NULL;
+  if (hasActiveModel())
+    gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
   if (pd.exec()) {
-  	if (hasActiveModel()) {
-  		GpxEditionWindow * gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
+  	if (hasActiveModel() || c->father()==NULL) {
+      qDebug() << mdiArea->activeSubWindow();
 			gep->setDirty();
 		}
 	}
