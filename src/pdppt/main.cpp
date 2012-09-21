@@ -28,11 +28,13 @@
 #include <QFSFileEngine>
 #include <QMessageBox>
 #include <QDebug>
+#include <QPushButton>
 
 #include "parser.h"
 #include "modelcoupled.h"
 #include "codegenerator.h"
 
+void showLog();
 int main(int argc, char **argv)
 {
 
@@ -141,24 +143,38 @@ int main(int argc, char **argv)
 			QMessageBox msgBox;
 			msgBox.setWindowState(Qt::WindowNoState);
       
-			msgBox.setDetailedText(QString:: fromUtf8(log));
+			//msgBox.setDetailedText(QString:: fromUtf8(log));
+      QPushButton viewLog("View Compilation Log");
+  
+      msgBox.addButton(&viewLog,QMessageBox::HelpRole);
+      msgBox.addButton(QMessageBox::Ok);
 			msgBox.setText ("Error: The compilation process has reported an error.");
 			msgBox.setIcon(QMessageBox::Critical);
 			msgBox.setWindowTitle("PowerDEVS");
 			msgBox.show();
 			msgBox.showNormal();
-			msgBox.exec();
 
       QFile logfile(path + "/../output/compile.log");
       logfile.open(QIODevice::WriteOnly);
       logfile.write(log);
       logfile.close();
+      msgBox.exec();
+			if (msgBox.clickedButton()==&viewLog) {
+#ifndef Q_OS_WIN32
+        QProcess::startDetached("/usr/bin/xdg-open", QStringList() << "../output/compile.log");
+#else
+        QProcess::startDetached("notepad", QStringList() << "../output/compile.log");
+#endif
+      }
 			return -1;
 		}
+    QFile logfile(path + "/../output/compile.log");
+    logfile.open(QIODevice::WriteOnly);
+    logfile.write(log);
+    logfile.close();
+  	return 0;
+}
 
-      QFile logfile(path + "/../output/compile.log");
-      logfile.open(QIODevice::WriteOnly);
-      logfile.write(log);
-      logfile.close();
-	return 0;
+void showLog() {
+
 }
