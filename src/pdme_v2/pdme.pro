@@ -1,7 +1,7 @@
 TEMPLATES = app
 QT += svg 
 
-CONFIG += qt debug
+CONFIG += qt 
 
 GRAPHICS_DIR=graphics
 DATA_DIR=../common/data
