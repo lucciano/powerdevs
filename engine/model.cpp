@@ -55,6 +55,7 @@ const char *msgHelp =
   -i     Run intearctive shell\n\
   -tf t  Set final time to t (double format)\n\
   -ti t  Set initial time to t (double format)\n\
+  -rt    Synchronize events with real time\n\
   -d     Debug simulation\n\
   -b n   Stop simulation after n steps in the same time (to detecet illegitimal models)\n";
 
@@ -93,6 +94,9 @@ int main(int argc,char **argv)
 				ti=atof(argv[++i]);
 			}
 		}
+		if (strcmp("-rt",argv[i])==0) {
+      timed=true;
+    }
 		if (strcmp(argv[i],"-d")==0) {
 			debug=true;
 		}
@@ -227,8 +231,10 @@ int main(int argc,char **argv)
 		}
 	} else {
 				mod=new Model(ti);
+				if (timed) 
+          mod->setRealTime();
 				mod->setInitialTime(ti);
-         mod->setBreakCount(breakCount);
+        mod->setBreakCount(breakCount);
 				mod->init();
 				mod->setFinalTime(tf);
 				mod->run();
