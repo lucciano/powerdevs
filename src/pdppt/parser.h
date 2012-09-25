@@ -67,6 +67,7 @@
 #define TOKCMP			"Cmp"
 #define TOKPRT			"Prt"
 #define TOKNOC			"Noc"
+#define TOKEXTRA			"Extra"
 
 #define TOKROOTCOORD	 "Root-Coordinator"
 #define TOKSIMULATOR "Simulator"

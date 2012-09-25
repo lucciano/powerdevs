@@ -37,7 +37,8 @@ class modelAtomic {
 	QString path;
 	QString desc;
 	QString paramsString;
-	 QList < modelParameter * >params;
+  QList < modelParameter * >params;
+  QList < QString > extra;
 	class modelCoupled *father;
 };
 #endif

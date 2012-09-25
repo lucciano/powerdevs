@@ -76,5 +76,6 @@ class modelCoupled {
 	 QList < modelConnection * >lsIC;
 	 QList < modelConnection * >lsEIC;
 	 QList < modelConnection * >lsEOC;
+	 QList < QString > extra;
 };
 #endif

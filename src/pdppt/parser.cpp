@@ -48,6 +48,23 @@ QString getLine()
   
 }
 
+QList<QString> parseExtra() {
+  QList<QString> ret;
+  int i=0;
+	QString strLine = getLine();
+	if (strLine.trimmed()!=TOKOBRACE)
+		return ret;
+	do {
+		//printf("SKIP: %s\n",strLine.toAscii().constData());
+		strLine = getLine();
+	  if (strLine == TOKCBRACE) 
+      break;
+    ret << strLine.trimmed();
+	} while (strLine != TOKCBRACE);
+  return ret;
+}
+
+
 int checkEqual(QString s, QString t)
 {
 	if (s != t) {
@@ -261,9 +278,13 @@ modelAtomic *parseAtomic()
 	QList < modelParameter * >params = parseParameters();
 
 	strLine = getLine();
+	modelAtomic *ret = new modelAtomic();
+  if (strLine == TOKEXTRA) {
+			ret->extra = parseExtra();
+	    strLine = getLine();
+  }
 	checkEqual(strLine, TOKCBRACE);
 
-	modelAtomic *ret = new modelAtomic();
 	ret->inPorts = inPorts;
 	ret->outPorts = outPorts;
 	ret->name = name;
@@ -422,6 +443,9 @@ modelCoupled *parseCoupled()
 		if (strLine == TOKLINE) {
 			lines.append(parseLine());
 		}
+		if (strLine == TOKEXTRA) {
+			ret->extra = parseExtra();
+    }
 	} while (strLine != TOKCBRACE);
 	strLine = getLine();
 	checkEqual(strLine, TOKCBRACE);
