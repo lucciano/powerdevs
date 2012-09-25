@@ -5,14 +5,15 @@ CONFIG += qt
 
 GRAPHICS_DIR=graphics
 DATA_DIR=../common/data
+PARSER_DIR=../common/parser
 DIALOGS_DIR=./dialogs
 UI_DIR=./ui
 COMMON_DIR=../common
-INCLUDEPATH += ./
+INCLUDEPATH += ./ $$PARSER_DIR
 
 SOURCES += 	globals.cpp \
 			powergui.cpp \
-			parser.cpp \
+			$$PARSER_DIR/parser.cpp \
 			commands.cpp \
             main.cpp 
 
@@ -54,7 +55,7 @@ SOURCES +=  $$DIALOGS_DIR/dlg_change_priority.cpp \
             $$DIALOGS_DIR/dlg_menu_edit.cpp
 
 HEADERS += 	powergui.h \	
-  			parser.h \
+  			$$PARSER_DIR/parser.h \
   			user_menu_action.h \
 			globals.h \
 			commands.h

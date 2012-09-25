@@ -424,9 +424,9 @@ QString getExtraDep(QString at)
 	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
     while (fd.readLine(buff,1024)>0) {
       QString line(buff);
-      qDebug() << buff;
       if (line.startsWith("//cpp:",Qt::CaseInsensitive)) {
-        if (!line.contains(getClassName(at)))
+        //qDebug() << "Line " << line << " " << getClassName(at);
+        if (!line.contains(getClassName(at) + ".cpp"))
           ret +=  " $(ATOMICS)/" + getBaseFilename(line.mid(6)) + ".cpp";
       }
       if (line.startsWith("#include",Qt::CaseInsensitive)) {
@@ -456,10 +456,10 @@ QSet < QString > getExtraObjs(QString at)
 	QFile fd(file);
 	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QString line = QString(fd.readLine());
-    qDebug() << line;
+    //qDebug() << line;
 		while (!line.startsWith("#")) {
 			line = getRelativePath(line);
-			if (line.startsWith("//cpp:",Qt::CaseInsensitive) && !line.contains(getClassName(at))) {
+			if (line.startsWith("//cpp:",Qt::CaseInsensitive) && !line.contains(getClassName(at) + ".cpp")) {
 				objects.insert(getBaseFilename(line.mid(6)) + ".o");
         qDebug() << "Adding extra obj " << getBaseFilename(line.mid(6)) + ".o";
 			}
@@ -790,9 +790,7 @@ void generateModel(modelCoupled * c)
 	QString reqModel;
 	QString reqModelPath;
 	for (j = objects.begin(); j != objects.end(); j++) {
-		QString w =
-		    QString
-		    ("$(BUILDOBJ)/%1.o: $(ATOMICS)/%2.cpp $(ATOMICS)/%3.h %4\n\t$(CXX) -c $(CXXFLAGS) $(INCLUDES) $(ATOMICS)/%5.cpp -o $(BUILDOBJ)/%6.o %7\n");
+		QString w = QString ("$(BUILDOBJ)/%1.o: $(ATOMICS)/%2.cpp $(ATOMICS)/%3.h %4\n\t$(CXX) -c $(CXXFLAGS) $(INCLUDES) $(ATOMICS)/%5.cpp -o $(BUILDOBJ)/%6.o %7\n");
 		QString basefile = getClassName((*j));
 		reqModel = reqModel + QString(" %1.o ").arg(basefile);
 		w = w.arg(basefile);
