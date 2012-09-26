@@ -10,7 +10,7 @@ Slider::Slider(QWidget *parent) :
     ui->setupUi(this);
     QStringList args=QCoreApplication::arguments ();
     if (args.size()==1) {
-      printf("Usage:\n\tslider -text Voltage -min 0.3 -max 0.9 -value .5 -file out.dat\n");
+      printf("Usage:\n\tslider -text Voltage -min -33 -max 90 -value 5 -file out.dat\n");
       exit(0);
     }
     for( int i=0;i<args.size();i++) {
