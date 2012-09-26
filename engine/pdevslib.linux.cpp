@@ -54,19 +54,37 @@ void cleanLib()
 
 }
 
+void parseCommandLine(char *program, char* cmdLineTxt, char*** argv, int* argc){
+    int count = 1;
+
+    char *cmdLineCopy = strdupa(cmdLineTxt);
+    char* match = strtok(cmdLineCopy, " ");
+ // First, count the number of arguments
+    while(match != NULL){
+        count++;
+        match = strtok(NULL, " ");
+    }
+
+    *argv = (char**) malloc(sizeof(char*) * (count+1));
+    (*argv)[count] = 0;
+    **argv = strdup(program); // The program name would normally go in here
+
+    if (count > 1){
+        int i=1;
+        cmdLineCopy = strdupa(cmdLineTxt);
+        match = strtok(cmdLineCopy, " ");
+        do{
+            (*argv)[i++] = strdup(match);
+            match = strtok(NULL, " ");
+        } while(match != NULL);
+     }
+
+    *argc = count;
+}
 void spawnProcess(const char *path, char *arg) {
-	char *argv[10],buff[1024];
+	char **argv;int argc;
 	if (fork()==0) { // Child process
-			int i=0;
-			argv[i]=(char*)malloc(strlen(path));
-			strcpy(argv[i++],path);
-			while (sscanf(arg,"%s",buff)>0) {
-				if (strlen(buff)==0) break;
-				argv[i]=(char*)malloc(strlen(buff));
-				strcpy(argv[i],buff);
-				arg+=strlen(argv[i++]);
-			}
-			argv[i]=NULL;
+      parseCommandLine((char*)path,arg,&argv,&argc);
 			execv(path,argv);
       exitStatus = -1;
 			printLog("ERROR: %s not found\n",path);
