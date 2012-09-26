@@ -39,40 +39,37 @@ int main(int argc, char **argv)
 {
 
 	QApplication app(argc, argv);
-	if (argc < 2) {
+  QStringList args=QCoreApplication::arguments();
+	if (args.size()==1) {
 		printf("Usage: pdppt [options] file\n");
 		printf("	Options =  \n");
 		printf("	           -r Only generate structure file\n");
 		printf ("	           -m Generate structure and generate code\n");
 		printf ("	           -x Generate structure, code and run\n");
 		printf ("	           -s Generate structure, code and run silent\n");
+		printf ("	           -f Use the supplied Makefile\n");
 		printf ("	file can be a model (pdm) or a model structure(pds)\n");
 		return 0;
 	}
 	// Parse command line args
 	QString filename;
+	QString makefilename("");
 	bool generateCCode = true;
 	bool silent = false;
 	bool runSimulation = false;
-	if (argc == 2) {
-		filename = QString(argv[1]);
-	}
-	if (argc == 3) {
-		QString opt = QString(argv[1]);
-		if (opt.trimmed() == "-r") {
-			generateCCode = false;
-		} else if (opt.trimmed() == "-x") {
+  for (int i=1;i<args.size();i++) {
+    if (args.at(i) == "-x") 
 			runSimulation = true;
-		} else if (opt.trimmed() == "-m") {
+    else if (args.at(i) == "-m") 
 			runSimulation = false;
-		} else if (opt.trimmed() == "-s") {
+    else if (args.at(i) == "-s") {
 			silent = true;
 			runSimulation = true;
-		} else {
-			printf("Unrecongnized option %s\n", opt.toAscii().constData());
-			return -1;
-		}
-		filename = QString(argv[2]);
+    } else if (args.at(i)=="-f") {
+      if (i+1<args.size())
+        makefilename=args.at(++i);
+    } else
+	  filename = args.at(i);
 	}
 	// Hack to run under wine
 
@@ -91,18 +88,24 @@ int main(int argc, char **argv)
 		printf("File must be either a .pdm or .pds\n");
 		return -1;
 	}
-		QString path = QCoreApplication::applicationDirPath();
-		QFSFileEngine::setCurrentPath(path + "/../build");
-		QProcess make;
+  QString path = QCoreApplication::applicationDirPath();
+  QFSFileEngine::setCurrentPath(path + "/../build");
+  QProcess make;
+  QStringList argsmake;
+  if (makefilename != "") {
+    argsmake << "-f";
+    argsmake << makefilename;
+  }
+  qDebug()<< "Calling make with " << argsmake;
 #ifdef Q_OS_LINUX
-		make.start("/usr/bin/make");
+  make.start("/usr/bin/make",argsmake);
 #else
-                QStringList env = QProcess::systemEnvironment();
-                env << "PATH=" + path + "/gcc/bin" ;
-                make.setEnvironment(env);
-		make.start("../bin/gcc/bin/make.exe");
+  QStringList env = QProcess::systemEnvironment();
+  env << "PATH=" + path + "/gcc/bin" ;
+  make.setEnvironment(env);
+  make.start("../bin/gcc/bin/make.exe",argsmake);
 #endif
-		make.waitForFinished(-1);
+  make.waitForFinished(-1);
 
     QByteArray log(make.readAllStandardError());
 		if (make.exitCode() == 0) {
