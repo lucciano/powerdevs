@@ -47,13 +47,15 @@ int main(int argc, char **argv)
 		printf ("	           -m Generate structure and generate code\n");
 		printf ("	           -x Generate structure, code and run\n");
 		printf ("	           -s Generate structure, code and run silent\n");
-		printf ("	           -f Use the supplied Makefile\n");
+		printf ("	           -f file Use the supplied Makefile\n");
+		printf ("	           -pdif binary Use the supplied interface for running\n");
 		printf ("	file can be a model (pdm) or a model structure(pds)\n");
 		return 0;
 	}
 	// Parse command line args
 	QString filename;
 	QString makefilename("");
+	QString pdif_command("../bin/pdif");
 	bool generateCCode = true;
 	bool silent = false;
 	bool runSimulation = false;
@@ -68,8 +70,10 @@ int main(int argc, char **argv)
     } else if (args.at(i)=="-f") {
       if (i+1<args.size())
         makefilename=args.at(++i);
-    } else
-	  filename = args.at(i);
+    } else if (args.at(i)=="-pdif") {
+      if (i+1<args.size())
+        pdif_command=args.at(++i);
+    } else filename = args.at(i);
 	}
 	// Hack to run under wine
 
@@ -113,7 +117,7 @@ int main(int argc, char **argv)
 			  QFSFileEngine::setCurrentPath(path + "/../output");
 			  QProcess pdif;
 #ifdef RTAIOS
-			  pdif.startDetached("/usr/bin/kdesudo", QStringList() << "../bin/pdif" << filename.left(filename.  lastIndexOf(".")) + ".stm");
+			  pdif.startDetached("/usr/bin/kdesudo", QStringList() << pdif_command << filename.left(filename.  lastIndexOf(".")) + ".stm");
 #else
 			  if (!silent) {
 #ifdef Q_OS_LINUX
@@ -123,7 +127,7 @@ int main(int argc, char **argv)
             system("killall pdif");
           }
 #endif
-				  pdif.startDetached("../bin/pdif", QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
+				  pdif.startDetached(pdif_command, QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
 			  } else {
 				  QFile stm(filename.left(filename.lastIndexOf(".")) + ".stm");
 				  //qDebug() << (filename.left(filename.lastIndexOf(".")) + ".stm");
@@ -138,7 +142,7 @@ int main(int argc, char **argv)
 				  if (ok)
 				  	pdif.startDetached("./model", QStringList() << "-tf" << QString("%1").arg(tf));
 				  else
-					  pdif.startDetached("../bin/pdif", QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
+					  pdif.startDetached(pdif_command, QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
 	      }
 			}
 #endif
