@@ -1,6 +1,12 @@
 MODE = debug
 RTAI = 
-all: pdae pdif pdppt pdme doc/PD_UserGuide.pdf
+all: pdae pdif pdppt pdme doc/PD_UserGuide.pdf atomics
+atomics: atomics/sinks/lcd/* atomics/sources/knob
+	cd ./atomics/sinks/lcd && qmake CONFIG+=$(MODE) 
+	make -C ./atomics/sinks/lcd -j 4
+	cd ./atomics/sources/knob && qmake CONFIG+=$(MODE) 
+	make -C ./atomics/sources/knob -j 4
+
 pdae:
 	cd ./src/pdae && qmake CONFIG+=$(MODE) 
 	make -C ./src/pdae -j 4
