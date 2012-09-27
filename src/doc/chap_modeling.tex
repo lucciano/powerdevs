@@ -12,7 +12,7 @@ Let us suppose you want to build a model of a DC drive represented by the follow
 where the state variables $i_a(t)$ and $\omega(t)$ are the armature current and speed, respectively. The parameters are $R_a$ (armature resistance), $L_a$ (inductance), $b$ (friction), $J$ (inertia), and $K$ (electro-mechanical constant). The model has also two input variables: $U_a(t)$ (armature voltage) and $\tau(t)$ (load torque).
 
 We shall use the following values for the parameters:
-\begin{equation}
+\begin{equation}\label{eq:motor_pars}
 \begin{split}
  R_a&=1.73,\;L_a=2.54\times 10^{-3},\;J=1.62\times 10^{-5},\\
 b&=1.12\times 10^{-5},\;Km=0.0551 
@@ -29,17 +29,35 @@ The first step then consists in creating a new model (\verb"Ctrl+N") and buildin
 
 We need blocks of type \verb"QSS integrator" and \verb"WSum" from the \verb"Continuous" library. For the input signals, we take \verb"Step" blocks from the \verb"Source" library. In order to plot the results, we take a \verb"GnuPlot" block from the \verb"Sink" library.
 
-Then, we can connect the blocks as shown in Fig.\ref{fig:db_motor}.
+Then, we can connect the blocks as shown in Fig.\ref{fig:db_motor}. 
 
 \begin{figure}[h]
  \jpgfile{db_motor}{14}
  \caption{PowerDEVS Model of a DC Motor}
  \label{fig:db_motor}
-
 \end{figure}
 
+Notice that the \verb"WSum" block in the \verb"Continuous" library has only two input ports, while the same block in the model has three input ports. In this block (and also in the \verb"GnuPlot" block) the number of input ports is a parameter which can be changed by double clicking on the block.
 
+Besides the number of input ports, the \verb"WSum" and \verb"Step" blocks have other parameters that must be changed in order to correctly represent the model of Eq.\eqref{eq:motor}. Figure \ref{fig:motor_pars} shows the parametrization of these blocks.
 
+\begin{figure}[h]
+ \jpgfile{motor_pars}{14}
+ \caption{Block Parameters of the DC Motor Model}
+ \label{fig:motor_pars}
+\end{figure}
+ 
+As it can be noticed, most parameters in Figure~\ref{fig:motor_pars} were defined by expressions like \verb"K/J". Most blocks of PowerDEVS libraries accept Scilab expressions as parameters. 
 
+If some variable involved in a parameter expression were not defined in Scilab, PowerDEVS will provoke a warning message during the simulation and the corresponding parameter will take the value \verb"0".
 
+Scilab parameters can be also defined in PowerDEVS using the block \verb"Scilab Command" from the \verb"Sink" library. This block executes Scilab commands at the different stages of a simulation run. Thus, it can executes a command like \verb"Ra=1.73" in order to set a value for variable \verb"Ra". Figure~\ref{fig:motor_prior} shows the model with the parameters of this block. 
+
+\begin{figure}[h]
+ \jpgfile{motor_prior}{14}
+ \caption{Scilab command block parameters and model priorities}
+ \label{fig:motor_prior}
+\end{figure}
+
+In order to work properly, the block must be initialized before the other blocks, so when they ask Scilab for their parameters, the corresponding variables were already set. To that goal, PowerDEVS allows to establish priorities among the blocks, so that they are initialized in a desired order. Going to \verb"Edit->Priority" (or clicking on the blue up arrow icon) a new window is open to select the model priorities. Figure~\ref{fig:motor_prior} also shows the priority select window.    
 
