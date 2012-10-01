@@ -12,7 +12,7 @@ sprintf(buff,"%d.out %s",(int)this,name);
 sprintf(filename,"%d.out",(int)this);
 
 if (getOs()!=WINDOWS) {
-	spawnProcess("../atomics/sinks/lcd/lcd",buff);
+	spawnProcess("../atomics/sinks/lcd",buff);
 }
 }
 double lcd::ta(double t) {
