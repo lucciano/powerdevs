@@ -45,8 +45,8 @@ svn export library ./tmp_deb/opt/powerdevs/library
 svn export examples ./tmp_deb/opt/powerdevs/examples
 svn export atomics ./tmp_deb/opt/powerdevs/atomics
 #Extra binaries
-cp src/atomics/lcd/lcd ./tmp_deb/opt/powerdevs/atomics/sinks/lcd
-cp src/atomics/knob/slider ./tmp_deb/opt/powerdevs/atomics/sources/slider
+cp ./atomics/sinks/lcd ./tmp_deb/opt/powerdevs/atomics/sinks/lcd
+cp ./atomics/sources/slider ./tmp_deb/opt/powerdevs/atomics/sources/slider
 svn export output ./tmp_deb/opt/powerdevs/output
 dpkg -b tmp_deb powerdevs.deb
 rm rev

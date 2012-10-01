@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = lcd
+TARGET = ../../../atomics/sinks/lcd
 TEMPLATE = app
 
 

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = slider
+TARGET = ../../../atomics/sources/slider
 TEMPLATE = app
 
 
