@@ -54,6 +54,8 @@
     <addaction name="separator"/>
     <addaction name="actionModel"/>
     <addaction name="actionAddanotation"/>
+    <addaction name="separator"/>
+    <addaction name="actionConverttoCoupled"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -388,6 +390,11 @@
   <action name="actionAddanotation">
    <property name="text">
     <string>Add annotation</string>
+   </property>
+  </action>
+  <action name="actionConverttoCoupled">
+   <property name="text">
+    <string>Convert to Coupled</string>
    </property>
   </action>
  </widget>

@@ -49,9 +49,10 @@ public:
 	bool isDirty() { return isWindowModified(); }
   	void setDirty() { setWindowModified(true); }
     void addAnnotation();
+    void convertToCoupled();
     void addAnnotation(QPoint);
   	void clearDirty() { setWindowModified(false); }
-	QString fileName() { return _fileName;}
+	  QString fileName() { return _fileName;}
   	void setFileName(QString fileName);
   	Coupled *getCoupled() { _coupledData->updatePoints(); return _coupledData; }
   	GpxEditionScene *currentScene();

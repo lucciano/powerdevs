@@ -1,7 +1,7 @@
 TEMPLATES = app
 QT += svg 
 
-CONFIG += qt 
+CONFIG += qt debug
 
 GRAPHICS_DIR=graphics
 DATA_DIR=../common/data
@@ -58,6 +58,7 @@ HEADERS += 	powergui.h \
   			$$PARSER_DIR/parser.h \
   			user_menu_action.h \
 			globals.h \
+			authors.h \
 			commands.h
 
 HEADERS += 	$$DATA_DIR/model.h \	

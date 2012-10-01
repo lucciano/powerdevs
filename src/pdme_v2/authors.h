@@ -21,27 +21,7 @@
 **
 ****************************************************************************/
 
-#include <graphic.h> 
-
-Graphic:: Graphic()
-{
-  	_x=0;
-	_y=0;
-	_width=40;
-	_height=40;
-	_color=15;
-	_direction = RIGHT;
-}		
-
-string Graphic::directionWord() const { 
-    switch(direction()){
-      case DOWN:
-        return "Down";
-      case UP:
-        return "Up";
-      case LEFT:
-        return "Left";
-      case RIGHT:
-        return "Right";
-    }
-}
+QString authors( "<p> Federico Bergero (bergero@cifasis-conicet.gov.ar) </p>"
+			           "<p> Joaquin Fernandez (joaquin.f.fernandez@gmail.com) </p>"
+			           "<p> Enrique Hansen (enrique.hansen@gmail.com) </p>"
+			           "<p> Marcelo Lapadula and Esteban Pagliero </p>");

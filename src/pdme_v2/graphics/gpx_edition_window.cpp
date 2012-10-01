@@ -566,7 +566,13 @@ void GpxEditionWindow::addAnnotation(QPoint p)
         }
     }
 }
-void GpxEditionWindow::addAnnotation()
-{
+void GpxEditionWindow::addAnnotation() {
   addAnnotation(QPoint());
+}
+
+void GpxEditionWindow::convertToCoupled() {
+  if (currentScene()!=NULL) {
+    currentScene()->convertToCoupled();
+    setDirty();
+  }
 }

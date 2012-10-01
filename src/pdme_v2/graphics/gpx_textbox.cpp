@@ -117,7 +117,6 @@ void GpxTextBox::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
 
 QVariant GpxTextBox::itemChange(GraphicsItemChange change, const QVariant & value)
 {
-  qDebug() << change;
 	if (change == QGraphicsItem::ItemPositionHasChanged) {
     if (parentItem()==NULL) {
     vector<string> extra = _coupledData->getExtra();

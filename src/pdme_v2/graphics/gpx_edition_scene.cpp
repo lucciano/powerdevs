@@ -178,7 +178,6 @@ void GpxEditionScene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 			    GpxBlock *block = qgraphicsitem_cast<GpxBlock*>(it.first());
 					block->setSelected(true);
 				}
-        qDebug() << "Drag created";
         _mayBeDragging=false;
         QDrag *drag = new QDrag(mouseEvent->widget());  
         QMimeData *mimeData = new QMimeData;
@@ -268,7 +267,6 @@ void GpxEditionScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
   QList<QGraphicsItem *> it = items(mouseEvent->scenePos());
   QPointF pos = mouseEvent->scenePos();
   lastClick = pos;
-  qDebug() << "Clicked on " << pos;
   _mousePos = pos;
   switch (_mode) {
     case None:
@@ -312,7 +310,6 @@ void GpxEditionScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
         return; 
       } else if (mouseEvent->button() == Qt::RightButton && it.size()) {
         _mayBeDragging = true;
-        qDebug() << "Starting drag";
 		if(!it.first()->isSelected()){
 			clearSelection();
 			it.first()->setSelected(true);
@@ -390,7 +387,6 @@ void GpxEditionScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
             }
           }
         }
-        qDebug() << "Release";
 	  	#ifdef UNDO
 			_undoStack->push(new MoveCmd(this));
       	#endif
@@ -502,7 +498,6 @@ void GpxEditionScene::deleteSelection()
           if (!strExtra.startsWith("Annotation")) continue;
           strExtra = strExtra.mid(11);
           strExtra.chop(1);
-          qDebug() << strExtra;
           QStringList ls = strExtra.split(",");
           QString an = ls.first();
           an.chop(1);
@@ -701,7 +696,6 @@ void GpxEditionScene::putStructure(Coupled *coupled, bool paste, bool draggin)
       QString an = ls.first();
       an.chop(1);
       an = an.mid(1);
-      qDebug() << ls;
       tb->setPlainText(an);
       addItem(tb);
       tb->setPos(ls.at(1).toInt()/TWIPS_TO_PIXEL,ls.at(2).toInt()/TWIPS_TO_PIXEL);
@@ -712,14 +706,13 @@ void GpxEditionScene::putStructure(Coupled *coupled, bool paste, bool draggin)
 	//cout << _coupledData;
 }
 
-void GpxEditionScene::putCoupled(Coupled *c, bool paste, bool draggin)
+GpxCoupled *GpxEditionScene::putCoupled(Coupled *c, bool paste, bool draggin)
 {
       if (paste || draggin) 
       {
         c->setName(findName(c->name().c_str()).toAscii().constData());
         _coupledData->addChild(c);
         c->setFather(_coupledData);
-        qDebug()<< "Adding child " << c->name().c_str();
         c->graphic().setX(c->graphic().x()+OFFSET_X);
         c->graphic().setY(c->graphic().y()+OFFSET_Y);
       }
@@ -732,6 +725,7 @@ void GpxEditionScene::putCoupled(Coupled *c, bool paste, bool draggin)
       connect(item,SIGNAL(parametersDialog(GpxBlock*)),this,SLOT(parameterDialog(GpxBlock*)));
       connect(item,SIGNAL(modified()),this,SLOT(on_modified()));
       _childs.insert(c,item);
+    return item;
 }
 
 void GpxEditionScene::putOutport(Port *p, bool paste, bool draggin)
@@ -749,7 +743,6 @@ void GpxEditionScene::putOutport(Port *p, bool paste, bool draggin)
       addItem(item);
       item->updateTextPosition();
       item->setPos(p->graphic().x()+p->graphic().width()/2,p->graphic().y());
-      qDebug() << "Outport at " << p->graphic().x() << " " << p->graphic().y();
       connect(item,SIGNAL(modified()),this,SLOT(on_modified()));
       _ports.insert(p,item);
 }
@@ -767,7 +760,6 @@ void GpxEditionScene::putInport(Port *p, bool paste, bool draggin)
       GpxInport *item = new GpxInport(this, p);
       if (paste || draggin)
         item->setSelected(true);
-      qDebug() << "Point at " << p->graphic().x() << " " << p->graphic().y();
       item->setPos(p->graphic().x()+p->graphic().width()/2,p->graphic().y());
       addItem(item);
       item->updateTextPosition();
@@ -838,9 +830,7 @@ void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Mod
           {
             cout << *l;
             const int port = l->sourceAt(0)-1;
-            qDebug() << "Port " << port;
             const bool inport = l->sourceAt(2)==0;
-            qDebug() << "Inport " << inport;
             GpxBlock *b=_ports[_coupledData->port(port)];
 						if (inport) 
 							src=b->outport(0);
@@ -883,7 +873,6 @@ void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Mod
         case Line::PORT:
           {
             const int port = l->sinkAt(0)-1;
-            qDebug() << " lookign for port " << port << " of "<< _coupledData->portCount() << " map has " << _ports.size();
             GpxBlock *b=_ports[_coupledData->port(port)];
 						if (b->isInport())
 							dst=b->outport(0);
@@ -951,7 +940,6 @@ void GpxEditionScene::putPoint(Point *p, bool paste, bool draggin)
       addItem(item);
       if (paste || draggin)
         item->setSelected(true);
-      qDebug() << "New point at " << p->graphic().x() << " " << p->graphic().y();
       item->setPos(p->graphic().x(),p->graphic().y());
       _points.insert(p,item);
 }
@@ -963,7 +951,6 @@ void GpxEditionScene::putAtomic(Atomic *a, bool paste, bool draggin)
         a->setName(qPrintable(findName(a->name().c_str())));
         _coupledData->addChild(a);
         a->setFather(_coupledData);
-        qDebug() << a->graphic().width();
         a->graphic().setX(a->graphic().x()+OFFSET_X);
         a->graphic().setY(a->graphic().y()+OFFSET_Y);
       }
@@ -986,21 +973,18 @@ bool GpxEditionScene::nameExists(QString propossedName)
   {
     Model *m = _coupledData->child(chld);
     if (propossedName == QString(m->name().c_str())) {
-      qDebug() << "name exists 1";
       return true;
     }
   }
   for (port=0;port<_coupledData->inportCount();port++)
   {
     if (QString(_coupledData->inport(port)->name().c_str())==propossedName) {
-      qDebug() << "name exists 2";
       return true;
     }
   }
   for (port=0;port<_coupledData->outportCount();port++)
   {
     if (QString(_coupledData->outport(port)->name().c_str())==propossedName) {
-      qDebug() << "name exists 3";
       return true;
     }
   }
@@ -1088,7 +1072,6 @@ void GpxEditionScene::addPort(Coupled *c, Port *p)
         if (ic->coupledData() == c)
         {
           ic->addPort(p);
-          qDebug() << "Found!!!";
           break;
         }
       }
@@ -1143,7 +1126,6 @@ QString GpxEditionScene::getSelection()
       if (gp->isNode()) {
         GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(i);
         Point *point = new Point(*node->dataPoint());
-        qDebug() << "Copying a point " << node->dataPoint() << " to " << point << endl;
         newNodes.insert(node->dataPoint(),point);
         point->clearLines();
         c.addPoint(point);
@@ -1214,12 +1196,10 @@ QString GpxEditionScene::getSelection()
       {
 				GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(src);
 				if (!node->isSelected()) {
-          qDebug() << "Skiping connection";
 					continue;
         }
 				vector<int> li = l->sources();
         li[0] = c.pointIndex(newNodes[node->dataPoint()])+1;
-        qDebug() << "Looking for " << node->dataPoint() << " and result is " << newNodes[node->dataPoint()] << " index " << c.pointIndex(newNodes[node->dataPoint()])+1 <<  endl;
         assert(li[0]>0 && li[0]<newNodes.size()+1);
 				l->setSources(li);
       }
@@ -1227,12 +1207,10 @@ QString GpxEditionScene::getSelection()
       {
 				GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(dst);
 				if (!node->isSelected()) {
-          qDebug() << "Skiping connection";
 					continue;
         }
 				vector<int> li = l->sinks();
         li[0] = c.pointIndex(newNodes[node->dataPoint()])+1;
-        qDebug() << "Looking for " << node->dataPoint() << " and result is " << newNodes[node->dataPoint()] << " index " << c.pointIndex(newNodes[node->dataPoint()])+1 <<  endl;
         assert(li[0]>0 && li[0]<newNodes.size()+1);
 				l->setSink(li);
       }
@@ -1246,6 +1224,9 @@ QString GpxEditionScene::getSelection()
     c.graphic().setX(x);
     c.graphic().setY(y);
   }
+  c.graphic().setIcon("%basicelements%coupled.svg");
+  c.graphic().setWidth(675/TWIPS_TO_PIXEL);
+  c.graphic().setHeight(720/TWIPS_TO_PIXEL);
   c.updatePoints(false);
   cout << c;
   c.simplifyLines();
@@ -1281,8 +1262,6 @@ void GpxEditionScene::paste(QString clip)
     } 
     cout << c[0];
     putStructure(c,true);
-    qDebug() << "Last click " << _lastClick;
-    qDebug() << "Coupled pos " << c->graphic().x() << " " << c->graphic().y();
     lclick = _lastClick;
   }
 }
@@ -1416,7 +1395,6 @@ void GpxEditionScene::setSinkTo(Line *l, GpxConnectionPoint *p)
    		l->setSinkType(Line::NODE);
 			GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(p);
 			int point=_coupledData->pointIndex(node->dataPoint())+1;
-			qDebug() << "Setting sink to point number " << point;
      	li.push_back(point);
      	li.push_back(-1);
      	li.push_back(0);
@@ -1427,7 +1405,6 @@ void GpxEditionScene::setSinkTo(Line *l, GpxConnectionPoint *p)
 void	GpxEditionScene::keyPressEvent ( QKeyEvent * keyEvent )
 {
 	if (_mode==InsertLine &&  keyEvent->modifiers() & Qt::ControlModifier)	{
-		qDebug() << " Tweek direction ";
 		changeDirection=true;
 	}
 }
@@ -1436,7 +1413,6 @@ void	GpxEditionScene::keyReleaseEvent ( QKeyEvent * keyEvent )
 {
 	if (_mode==InsertLine && changeDirection) {
 		changeDirection=false;
-		qDebug() << " Dont Tweek direction ";
 	}
 
 }
@@ -1446,13 +1422,11 @@ void GpxEditionScene::mergeEdge(GpxEdge *e, QList<GpxEdge*> &del)
   GpxConnectionNode *node=NULL,*node2=NULL;
 	GpxEdge *edgedel;
   if (e->destPort()->isNode()) {
-      qDebug() << "Case 1";
       node = qgraphicsitem_cast<GpxConnectionNode*>(e->destPort());
 			e->destPort()->removeEdge(e);
       removeItem(node);
 			GpxEdge *e1 = node->edgeAt(0);
 			GpxEdge *e2 = node->edgeAt(1);
-			qDebug() << "Merge " << e1->polygon() << " with " << e2->polygon();
       QPolygonF p = e1->polygon();
       bool endsInNode=true;
       if (e1->sourcePort()==node) {
@@ -1498,7 +1472,6 @@ void GpxEditionScene::mergeEdge(GpxEdge *e, QList<GpxEdge*> &del)
           temp.append(p.at(p.size()-1-i));
         p=temp;
       }
-      qDebug() << "Result : " << p;
 			del.removeAll(e2);
 			del.removeAll(e);
  
@@ -1514,12 +1487,10 @@ void GpxEditionScene::mergeEdge(GpxEdge *e, QList<GpxEdge*> &del)
      	e1->setPolygon(p);
   }
   if (e->sourcePort()->isNode()) {
-      qDebug() << "Case 2";
       node2 = qgraphicsitem_cast<GpxConnectionNode*>(e->sourcePort());
 			e->sourcePort()->removeEdge(e);
 			GpxEdge *e1 = e->sourcePort()->edgeAt(0);
 			GpxEdge *e2 = e->sourcePort()->edgeAt(1);
-			qDebug() << "Merge " << e1 << " with " << e2;
       QPolygonF p = e1->polygon();
       bool endsInNode=true;
       if (e1->sourcePort()==node2) {
@@ -1587,7 +1558,6 @@ void GpxEditionScene::mergeEdge(GpxEdge *e, QList<GpxEdge*> &del)
 	if (e->sourcePort()->isCross())
 	{
 		removeItem(e->sourcePort());
-    qDebug() << "Delete " << e->sourcePort();
 		delete e->sourcePort();
 	}
 	if (e->destPort()->isCross())
@@ -1602,7 +1572,6 @@ void GpxEditionScene::mergeEdge(GpxEdge *e, QList<GpxEdge*> &del)
     delete node2;
 	//delete edgedel;
 	_coupledData->updatePoints();
-	qDebug() << "End merging ";
   qDebug() << e->polygon();
 }
 
@@ -1617,7 +1586,6 @@ void GpxEditionScene::removeLines(QList<GpxEdge*> del)
 		if ( e->destPort()->isNode() || e->sourcePort()->isNode()) {
       		mergeEdge(e,del);
 		} else {
- 		     qDebug() << "Delete " << e;
 			del.removeAll(e);
 		      removeItem(e);
 			invalidate(e->boundingRect());
@@ -1625,8 +1593,6 @@ void GpxEditionScene::removeLines(QList<GpxEdge*> del)
       delete l;
 			update();
       delete e;
-      foreach(QGraphicsItem *i,items())
-        qDebug() << i->type();
     }
 	}
 }
@@ -1715,10 +1681,8 @@ void GpxEditionScene::fromPortToCross( GpxTempConnection *tempConnection, QPoint
 	GpxConnectionPoint *cp = tempConnection->getInitPort();
 	GpxEdge *e = endPoint->edgeAt(0);
  	QPolygonF p = e->polygon();
-  qDebug() << "Original " << p;
 	p << tempConnection->getMiddlePoint();
   p << tempConnection->getInitPort()->getSceneConnectionPoint();
-  qDebug() << "Original " << p;
   e->setDestPort(cp);
   e->setPolygon(p);
   cp->addEdge(e);
@@ -1766,11 +1730,9 @@ void GpxEditionScene::breakEdge(GpxTempConnection *tempConnection, QPointF pos, 
 	int x= pnode.x();
 	int y= pnode.y();
 	n->setPos(x,y);
-	qDebug() << "new middle point " << pnode;
 	_coupledData->addPoint(mp);
 	addItem(n);
 	QPolygonF poly = e->polygon(),p1,p2;
-	qDebug() << "Original Polygon: ";
   	qDebug() << poly;
 	bool found=false;
 	for (int i=0;i<poly.size()-1;i++) {
@@ -1795,7 +1757,6 @@ void GpxEditionScene::breakEdge(GpxTempConnection *tempConnection, QPointF pos, 
 		p2 << poly.last();
     if(p1.size() == 2)
 		p1 << p1.last();
-		qDebug() << "New Polygons: ";
   	qDebug() << p1 << endl << p2;
 	GpxConnectionPoint *end = e->destPort();
 	e->destPort()->removeEdge(e);
@@ -1825,7 +1786,6 @@ void GpxEditionScene::breakEdge(GpxTempConnection *tempConnection, QPointF pos, 
 		setSinkTo(line1,n);
 		edge = new GpxEdge(tempConnection->getInitPort(),n,line1);
     	edge->addPort(tempConnection->getInitPort());
-		qDebug() << edge->polygon();
 		_coupledData->addLine(line1);
 		addItem(edge);
 	} else {
@@ -2031,4 +1991,332 @@ void GpxEditionScene::setSelectedItems()
       		}
 		}
 	}
+}
+
+void GpxEditionScene::convertToCoupled() {
+  Coupled *c = new Coupled();
+  double x=0,y=0;
+  int count=0;
+	QList<QGraphicsItem *> items = selectedItems();
+  QMap<Point*,Point*> newNodes;
+  QMap<Port*,Port*> newPorts;
+	foreach (QGraphicsItem *i, items)
+	{
+		if (i->type()==GpxBlock::Type){
+			GpxBlock *b=qgraphicsitem_cast<GpxBlock*>(i);
+			if (b->isAtomic()) {
+				GpxAtomic *ga = qgraphicsitem_cast<GpxAtomic*>(b);
+        ga->atomicData()->setPriority(_coupledData->childIndex(ga->atomicData())); 
+        x+=ga->atomicData()->graphic().x();
+        y+=ga->atomicData()->graphic().y();
+        count++;
+				c->addChild(ga->atomicData());
+			} else if (b->isCoupled()) {
+				GpxCoupled *gc = qgraphicsitem_cast<GpxCoupled*>(b);
+        gc->coupledData()->setPriority(_coupledData->childIndex(gc->coupledData())); 
+				c->addChild(gc->coupledData());
+        x+=gc->coupledData()->graphic().x();
+        y+=gc->coupledData()->graphic().y();
+        count++;
+			} else if (b->isInport()) {
+				GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
+				// TODO: Temporal, it works, but I don't konw 
+				// if this is the best way to fix this. Same fix applied 
+				// with the outports.
+        Port *port = new Port(*p->portData());
+        newPorts.insert(p->portData(),port);
+				c->addInport(port);
+			} else {
+				GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
+        Port *port = new Port(*p->portData());
+        newPorts.insert(p->portData(),port);
+				c->addOutport(port);
+			}
+		}
+    c->sortChilds();
+    
+		if (i->type()==GpxConnectionPoint::Type){
+      GpxConnectionPoint *gp = qgraphicsitem_cast<GpxConnectionPoint*>(i);
+      if (gp->isNode()) {
+        GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(i);
+        Point *point = new Point(*node->dataPoint());
+        newNodes.insert(node->dataPoint(),point);
+        point->clearLines();
+        c->addPoint(point);
+      }
+    }
+	}
+  foreach (QGraphicsItem *i, items)
+	{
+		if (i->type()==GpxEdge::Type){
+			GpxEdge *e=qgraphicsitem_cast<GpxEdge*>(i);
+			GpxConnectionPoint *src=e->sourcePort();
+			GpxConnectionPoint *dst=e->destPort();
+      GpxInport *in=NULL; GpxOutport *out=NULL;
+      bool externConnectio=false;
+			Line *l=new Line(*e->dataLine()); // Copy the line
+			if (l->sourceType()==Line::COMPONENT) 
+			{
+				GpxBlock *b = qgraphicsitem_cast<GpxBlock*>(src->parentItem());
+				if (!b->isSelected()) {
+					continue;
+        }
+				vector<int> li = l->sources();
+				li[0]=c->childIndex(b->model())+1;
+				l->setSources(li);
+			}
+			if (l->sinkType()==Line::COMPONENT) 
+			{
+				GpxBlock *b = qgraphicsitem_cast<GpxBlock*>(dst->parentItem());
+				if (!b->isSelected()) 
+					continue;
+				vector<int> li = l->sinks();
+				li[0]=c->childIndex(b->model())+1;
+				l->setSink(li);
+			}
+      if (l->sourceType()==Line::PORT)
+      {
+				GpxBlock *b = qgraphicsitem_cast<GpxBlock*>(src->parentItem());
+				if (!b->isSelected()) 
+					continue;
+        int port;
+        if (b->isInport()) {
+          GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
+          port = c->portIndex(newPorts[p->portData()])+1;
+        } else {
+          GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
+          port = c->portIndex(newPorts[p->portData()])+1;
+        }
+				vector<int> li = l->sources();
+        li[0] = port;
+				l->setSources(li);
+      }
+      if (l->sinkType()==Line::PORT)
+      {
+				GpxBlock *b = qgraphicsitem_cast<GpxBlock*>(dst->parentItem());
+				if (!b->isSelected()) 
+					continue;
+        int port;
+        if (b->isInport()) {
+          GpxInport *p = qgraphicsitem_cast<GpxInport*>(b);
+          port = c->portIndex(newPorts[p->portData()])+1;
+        } else {
+          GpxOutport *p = qgraphicsitem_cast<GpxOutport*>(b);
+          port = c->portIndex(newPorts[p->portData()])+1;
+        }
+				vector<int> li = l->sinks();
+        li[0] = port;
+				l->setSink(li);
+      }
+      if (l->sourceType()==Line::NODE)
+      {
+				GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(src);
+				if (!node->isSelected()) {
+					continue;
+        }
+				vector<int> li = l->sources();
+        li[0] = c->pointIndex(newNodes[node->dataPoint()])+1;
+        //qDebug() << "Looking for " << node->dataPoint() << " and result is " << newNodes[node->dataPoint()] << " index " << c->pointIndex(newNodes[node->dataPoint()])+1 <<  endl;
+        assert(li[0]>0 && li[0]<newNodes.size()+1);
+				l->setSources(li);
+      }
+	    if (l->sinkType()==Line::NODE)
+      {
+				GpxConnectionNode *node = qgraphicsitem_cast<GpxConnectionNode*>(dst);
+				if (!node->isSelected()) {
+					continue;
+        }
+				vector<int> li = l->sinks();
+        li[0] = c->pointIndex(newNodes[node->dataPoint()])+1;
+        assert(li[0]>0 && li[0]<newNodes.size()+1);
+				l->setSink(li);
+      }
+      c->removeLine(e->dataLine());
+			c->addLine(l);
+      removeItem(e);
+      delete e;
+		}
+	}
+ 
+  QList<QGraphicsItem *> it = selectedItems();
+  QList<GpxEdge*> del;
+  QList<GpxBlock *> blocks;
+  foreach(QGraphicsItem *i,it)
+  {
+    if (i->type()==GpxTextBox::Type) {
+      GpxTextBox *tb = dynamic_cast<GpxTextBox*>(i); 
+      if (tb->parentItem()==NULL && tb->isSelected()) {
+        // Removing an annotation
+        vector<string> extra = _coupledData->getExtra();
+        bool found=false;
+        int j;
+        for (j=0;j<extra.size();j++) {
+          QString strExtra(extra[j].c_str());
+          if (!strExtra.startsWith("Annotation")) continue;
+          strExtra = strExtra.mid(11);
+          strExtra.chop(1);
+          QStringList ls = strExtra.split(",");
+          QString an = ls.first();
+          an.chop(1);
+          an = an.mid(1);
+          if (tb->toPlainText()==an) {
+            vector<string> e = c->getExtra();
+            e.resize(e.size()+1);
+            e[e.size()-1] = extra[j].c_str(); 
+            c->setExtra(e);
+            found=true;
+            break;
+          } 
+  
+        }
+        if (found) {
+          extra.erase(extra.begin()+j);
+          _coupledData->setExtra(extra);
+        }
+        removeItem(i);
+      }
+    } 
+  }
+	
+  foreach(QGraphicsItem *gi,it) 
+  {
+    if (gi->type()==GpxEdge::Type) {
+    	del << qgraphicsitem_cast<GpxEdge*>(gi);
+    }
+    if (gi->type()==GpxBlock::Type) {
+			blocks << qgraphicsitem_cast<GpxBlock*>(gi);
+		}
+  }
+  //removeLines(del);// First remove edges
+  QList<GpxEdge *> edges;
+  QList<QPair<GpxEdge *,int> > inputs;
+  QList<QPair<GpxEdge *,int> > outputs;
+  foreach(GpxBlock *b,blocks)
+  {
+  	edges.clear();
+    if (b->isInport()) {
+      GpxInport *ip = qgraphicsitem_cast<GpxInport*>(b);
+			edges = b->connectedLines();
+			removeLines(edges);
+      emit remove_Port(_coupledData,ip->portData());
+			// Delete connection of father and if open update graphics
+    } else if (b->isOutport()) {
+      GpxOutport *ip = qgraphicsitem_cast<GpxOutport*>(b);
+			edges = b->connectedLines();
+			removeLines(edges);
+      emit remove_Port(_coupledData,ip->portData());
+		  // Delete connection of father and if open update graphics
+    } else {
+      if (b->isCoupled())
+      {
+        GpxCoupled *c=qgraphicsitem_cast<GpxCoupled*>(b);
+        emit closeAllChildsOf(c->coupledData());
+      }
+      Model *m = b->model();
+      _coupledData->removeChild(m);
+      for (int i=0;i<m->inPorts();i++) 
+        if (b->inport(i)->edgeCount()) {
+          bool portCreated=false;
+          for (int j=0;j<b->inport(i)->edgeCount();j++) {
+            GpxEdge *e=b->inport(i)->edgeAt(j);
+            /*************************************************************/
+            if (shouldCreatePort(e) && !portCreated) {
+              Graphic g;
+              
+              //qDebug() <<  "***************************" << e->polygon() << "****************************\n";
+              g.setWidth(450/TWIPS_TO_PIXEL);
+              if (b->direction() == Graphic::RIGHT) {
+                g.setY(b->inport(i)->getConnectionPoint().y());
+                g.setX(b->inport(i)->getConnectionPoint().x()-30);
+              }
+              Port *p=new Port(Port::Inport,"Port1","",g);
+              c->addInport(p);
+              portCreated=true;
+            }
+            if (e->destPort()->parentItem()!=NULL) 
+              if (e->destPort()->parentItem()->isSelected()) 
+                e->setDestPort(NULL);
+            if (e->destPort()->parentItem()==NULL) 
+              if (e->destPort()->isSelected()) 
+                e->setDestPort(NULL);
+            if (e->sourcePort()->parentItem()!=NULL) 
+              if (e->sourcePort()->parentItem()->isSelected()) 
+                e->setSourcePort(NULL);
+            if (e->sourcePort()->parentItem()==NULL) 
+              if (e->sourcePort()->isSelected()) 
+                e->setSourcePort(NULL);
+            inputs << QPair<GpxEdge*,int>(e,c->inportCount()-1);
+          }
+        }
+   for (int i=0;i<m->outPorts();i++) 
+        if (b->outport(i)->edgeCount()) {
+          bool portCreated=false;
+          for (int j=0;j<b->outport(i)->edgeCount();j++) {
+            GpxEdge *e=b->outport(i)->edgeAt(j);
+            /*************************************************************/
+            if (shouldCreatePort(e) && !portCreated) {
+              Graphic g;
+              g.setWidth(450/TWIPS_TO_PIXEL);
+              if (b->direction() == Graphic::RIGHT) {
+                g.setY(b->outport(i)->getConnectionPoint().y());
+                g.setX(b->outport(i)->getConnectionPoint().x()+30);
+              }
+              Port *p=new Port(Port::Outport,"Port1","",g);
+              c->addOutport(p);
+              portCreated=true;
+            }
+            outputs << QPair<GpxEdge*,int>(e,c->outportCount()-1);
+          }
+        }
+    }
+  }
+  _coupledData->updatePoints();
+
+  c->graphic().setIcon("%basicelements%coupled.svg");
+  c->graphic().setWidth(675/TWIPS_TO_PIXEL);
+  c->graphic().setHeight(720/TWIPS_TO_PIXEL);
+  if (count) {
+    c->graphic().setX(x/count);
+    c->graphic().setY(y/count);
+  }
+  c->updatePoints(false);
+  c->simplifyLines();
+  c->updatePoints();
+  GpxCoupled *gpx_c=putCoupled(c);
+  for(int i=0;i<inputs.length();i++)
+  {
+    GpxEdge *e = inputs.at(i).first;
+    int inport = inputs.at(i).second;
+    qDebug() << e->destPort() << " " << e->sourcePort();
+    if (e->destPort()!=NULL) {
+      qDebug()<< "ACA";
+      //e->setSourcePort(gpx_c->inport(inport));
+      //gpx_c->inport(inport)->addEdge(e);
+    }
+    if (e->sourcePort()!=NULL) {
+      e->setDestPort(gpx_c->inport(inport));
+      gpx_c->inport(inport)->addEdge(e);
+    }
+  }
+	foreach(GpxBlock *b,blocks)  {
+		removeItem(b);
+	}
+  clearSelection();
+}
+
+bool GpxEditionScene::shouldCreatePort(GpxEdge *e) {
+  GpxConnectionPoint *src=e->sourcePort();
+  GpxConnectionPoint *dst=e->destPort();
+  if (src->parentItem() != NULL) 
+    if (dst->parentItem() !=NULL) 
+      return src->parentItem()->isSelected() ^ dst->parentItem()->isSelected();
+  if (src->parentItem() == NULL) 
+    if (dst->parentItem() !=NULL) 
+      return src->isSelected() ^ dst->parentItem()->isSelected();
+  if (src->parentItem() != NULL) 
+    if (dst->parentItem() ==NULL) 
+      return src->parentItem()->isSelected() ^ dst->isSelected();
+  if (src->parentItem() == NULL) 
+    if (dst->parentItem() ==NULL) 
+      return src->isSelected() ^ dst->isSelected();
 }

@@ -66,6 +66,7 @@ public:
   void changeBlockName(GpxBlock*);
   void changeRubberBand(); 
   void addAnnotation(QString,QPoint); 
+  void convertToCoupled(); 
 #ifdef UNDO
   QUndoStack *undoStack() { return _undoStack; };
 #endif
@@ -92,7 +93,7 @@ protected:
 
   void putStructure(Coupled *c, bool paste=false, bool draggin=false);
   void putAtomic(Atomic *a, bool paste=false, bool draggin=false);
-  void putCoupled(Coupled *c, bool paste=false, bool draggin=false);
+  GpxCoupled *putCoupled(Coupled *c, bool paste=false, bool draggin=false);
   void putOutport(Port *p, bool paste=false, bool draggin=false);
   void putInport(Port *p, bool paste=false, bool draggin=false);
   void putPoint(Point *p, bool paste=false, bool draggin=false);
@@ -116,6 +117,7 @@ public slots:
   void on_modified();
 
 private:
+  bool shouldCreatePort(GpxEdge *e);
 	void createLineEndingInCross(GpxTempConnection *, QPointF);
 	void createNormalConnection(GpxTempConnection *, QPointF, GpxConnectionPoint *);
 	void finishALineFromCross(GpxTempConnection *, QPointF, GpxConnectionPoint *);

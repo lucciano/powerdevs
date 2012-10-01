@@ -220,6 +220,7 @@ void PowerGui::updateMenus()
   	actionUndo->setEnabled(active);
   	actionRedo->setEnabled(active);
   #endif
+  actionConverttoCoupled->setEnabled(selection);
 
   // View menu
   actionParameters->setEnabled(model_selected);
@@ -676,6 +677,8 @@ void PowerGui::contextMenu(GpxBlock *block,QPoint p)
   qMenu.addAction(actionAddanotation);
   qMenu.addAction(actionParameters);
   qMenu.addAction(actionEdit);
+  qMenu.addSeparator();
+  qMenu.addAction(actionConverttoCoupled);
                     
 
   QAction *qActEditCode = NULL;
@@ -799,6 +802,13 @@ void PowerGui::on_actionUserGuide_triggered() {
   QDesktopServices::openUrl(QUrl(QString("file://%1/../doc/PD_UserGuide.pdf").arg(QCoreApplication::applicationDirPath())));
 }
 
+void PowerGui::on_actionConverttoCoupled_triggered() {
+  GpxEditionWindow * gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
+  if (gep==NULL)
+    return;
+	gep->convertToCoupled();
+}
+
 void PowerGui::on_actionAddanotation_triggered() {
   GpxEditionWindow * gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());
   if (gep==NULL)
@@ -810,6 +820,7 @@ void PowerGui::on_actionAddanotation_triggered() {
 }
 
 void PowerGui::on_actionAbout_triggered() {
+#include "authors.h"
   QFile qf(QCoreApplication::applicationDirPath() + "/../version");
   QString version("2.2");
   if (qf.exists()) {
@@ -822,10 +833,9 @@ void PowerGui::on_actionAbout_triggered() {
 			      "<p>Integrated Tool for Edition and Simulation "
 			      "of Discrete Event Systems.</p>"
 			      "<p>Developed by:</p> "
-			      "<p> Federico Bergero (bergero@cifasis-conicet.gov.ar) </p>"
-			      "<p> Joaquin Fernandez (joaquin.f.fernandez@gmail.com) </p>"
+			      "%2"
 			      "<p>Directed by:</p> "
-			      "<p> Ernesto Kofman (kofman@fceia.unr.edu.ar) </p>").arg(version));
+			      "<p> Ernesto Kofman (kofman@fceia.unr.edu.ar) </p>").arg(version).arg(authors));
 }
 
 void PowerGui::updateWindowMenu()

@@ -57,6 +57,7 @@ public:
   	virtual void removeEdge(GpxEdge *edge);
   	GpxEdge *edgeAt(int i) { return _edges.at(i) ; }
   	unsigned edgeCount() { return _edges.size(); }
+    bool isConnected() { return edgeCount()>0; }
   	void clearEdges() { _edges.clear(); }
 	QString typeName();
 	QVariant itemChange( GraphicsItemChange change, const QVariant & value );
