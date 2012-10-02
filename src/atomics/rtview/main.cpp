@@ -16,6 +16,6 @@ int main(int argc, char *argv[])
 
     QObject::connect(&instance, SIGNAL(messageReceived(const QString&)),
 		     &w, SLOT(newInstance(const QString&)));
-    w.newInstance(QCoreApplication::arguments().join(" "));
+    w.newInstance(args);
     return instance.exec();
 }
