@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'rtview.ui'
 **
-** Created: Mon Oct 1 12:24:19 2012
+** Created: Tue Oct 2 11:38:46 2012
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

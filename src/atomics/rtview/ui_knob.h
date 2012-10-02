@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'knob.ui'
 **
-** Created: Tue Oct 2 10:31:05 2012
+** Created: Tue Oct 2 11:38:46 2012
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
