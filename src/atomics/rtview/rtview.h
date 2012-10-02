@@ -15,8 +15,6 @@ public:
 
 public slots:
   void newInstance(const QString &args);
-protected:
-    void changeEvent(QEvent *e);
 
 private:
     bool running;

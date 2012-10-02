@@ -11,10 +11,13 @@ CONFIG += debug
 include(./qtsingleapplication/src/qtsingleapplication.pri)
 
 SOURCES += main.cpp\
-        rtview.cpp
+        rtview.cpp \
+        lcd.cpp \
+        knob.cpp
 
 HEADERS  += rtview.h \
-            lcd.h
+            lcd.h \
+            knob.h
 
 FORMS    += rtview.ui \
             lcd.ui \

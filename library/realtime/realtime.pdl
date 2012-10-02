@@ -11,7 +11,7 @@ Coupled
         Direction = Right
         Color = 15
         Icon = %realtime%clock.svg
-        Window = 2685; 1920; 6615; 5145
+        Window = 5000; 5000; 5000; 5000
         }
     Parameters
         {
@@ -26,8 +26,8 @@ Coupled
             Description = Shyncronizes the events with the PC clock.
             Graphic
                 {
-                Position = 570 ; 435
-                Dimension = 680 ; 680
+                Position = 570 ; 420
+                Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
                 Icon = %realtime%event_sync.gif
@@ -45,8 +45,8 @@ Coupled
             Description = Sends an event when an Interrupt has ocurred on the parallel port.
             Graphic
                 {
-                Position = 1530 ; 420
-                Dimension = 680 ; 680
+                Position = 1470 ; 420
+                Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
                 Icon = %realtime%parallel_irq.gif
@@ -63,14 +63,54 @@ Coupled
             Description = Outputs the real time clock when recieves an input event
             Graphic
                 {
-                Position = 3015 ; 435
-                Dimension = 680 ; 680
+                Position = 2970 ; 420
+                Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
                 Icon = %realtime%digital_clock.gif
                 }
             Parameters
                 {
+                }
+            }
+        Atomic
+            {
+            Name = RTView Knob 
+            Ports = 0 ; 1
+            Path = realtime/rtview_knob.h
+            Description = Atomic DEVS model
+            Graphic
+                {
+                Position = 645 ; 2070
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %realtime%knob.svg
+                }
+            Parameters
+                {
+                Min = Str; -5 ; 
+                Max = Str; 300 ; 
+                Value = Str; 53 ; 
+                }
+            }
+        Atomic
+            {
+            Name = RTView LCD
+            Ports = 1 ; 0
+            Path = realtime/rtview_lcd.h
+            Description = Atomic DEVS model
+            Graphic
+                {
+                Position = 1920 ; 2070
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %realtime%lcd.svg
+                }
+            Parameters
+                {
+                Initial Value = Str; 34 ; 
                 }
             }
         }

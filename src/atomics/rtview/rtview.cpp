@@ -19,18 +19,6 @@ RtView::~RtView()
     delete ui;
 }
 
-void RtView::changeEvent(QEvent *e)
-{
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
-
 void RtView::newInstance(const QString &s)
 {
   QStringList args = s.split(" ");
@@ -38,14 +26,17 @@ void RtView::newInstance(const QString &s)
   if (args.size()==1) return;
   if (args.at(1)=="clean") {
     running = false;
+    foreach(QWidget *w, active) {
+      w->setEnabled(false);
+    }
     qDebug() << "Next clean";
     return;
   }
   if (running==false) {
     foreach(QWidget *w, active) {
-      //ui->topLayout->removeWidget(w);
-      //ui->bottomLayout->removeWidget(w);
-      //delete w;
+      ui->topLayout->removeWidget(w);
+      ui->bottomLayout->removeWidget(w);
+      delete w;
     } 
     running=true;
   } 
@@ -53,6 +44,19 @@ void RtView::newInstance(const QString &s)
     Knob *k = new Knob();
     ui->topLayout->addWidget(k);
     active << k;
+    for (int i=2;i<args.size();i++) {
+      if (args.at(i)=="-min" && i+1<args.size()) 
+        k->setMin(args.at(++i).toInt());
+      if (args.at(i)=="-max" && i+1<args.size()) 
+        k->setMax(args.at(++i).toInt());
+      if (args.at(i)=="-name" && i+1<args.size()) 
+        k->setName(args.at(++i));
+      if (args.at(i)=="-value" && i+1<args.size()) 
+        k->setValue(args.at(++i).toInt());
+      if (args.at(i)=="-file" && i+1<args.size()) 
+        k->setFile(args.at(++i));
+    }
+    ui->topLayout->addWidget(k);
   } else {  
     LCD *l = new LCD();
     active << l;
