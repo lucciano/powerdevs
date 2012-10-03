@@ -952,6 +952,7 @@ void PowerGui::on_actionPrint_triggered()
 	if (fileName.isEmpty())
 		return;
   GpxEditionScene * ges = gep->currentScene();
+  ges->clearSelection();
 	QImage im(ges->sceneRect().width(),ges->sceneRect().height(),QImage::Format_RGB32);
 	im.fill(0xffffff);
   QPainter painter(&im);
