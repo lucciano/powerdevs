@@ -816,7 +816,7 @@ void generateModel(modelCoupled * c)
 	//reqModelPath += " $(BUILDOBJ)/pdevslib.o ";
 	QString w =
 	    QString
-	    ("$(MODEL): $(SRCENGINE)/model.cpp $(BUILD)/model.h $(BUILDOBJ)/libsimpd.a %1 %2 \n\t$(CXX) $(CXXFLAGS) $(INCLUDES) %3 %4 $(SRCENGINE)/model.cpp $(LIBS) -o $(MODEL)\n");
+	    ("$(MODEL): $(SRCENGINE)/model.cpp $(BUILD)/model.h $(BUILDLIB)/libsimpd.a %1 %2 \n\t$(CXX) $(CXXFLAGS) $(INCLUDES) %3 %4 $(SRCENGINE)/model.cpp $(LIBS) -o $(MODEL)\n");
 	w = w.arg(reqModelPath);
 	w = w.arg("");		// Extra objs y libs
 	w = w.arg(reqModelPath);
