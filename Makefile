@@ -1,11 +1,13 @@
 MODE = debug
 RTAI = 
 all: pdae pdif pdppt pdme doc/PD_UserGuide.pdf atomics
-atomics: atomics/sinks/lcd/* atomics/sources/knob
-	cd ./src/lcd && qmake CONFIG+=$(MODE) 
+atomics: src/atomics/lcd/* src/atomics/knob/* src/atomics/rtview/*
+	cd ./src/atomics/lcd && qmake CONFIG+=$(MODE) 
 	make -C ./src/atomics/lcd -j 4
 	cd ./src/atomics/knob && qmake CONFIG+=$(MODE) 
 	make -C ./src/atomics/knob -j 4
+	cd ./src/atomics/rtview && qmake CONFIG+=$(MODE) 
+	make -C ./src/atomics/rtview -j 4
 
 pdae:
 	cd ./src/pdae && qmake CONFIG+=$(MODE) 
@@ -37,4 +39,9 @@ clean:
 	make -C ./src/pdif clean
 	make -C ./src/pdppt clean
 	make -C ./src/pdme_v2 clean
+	make -C ./src/pdme_v2 clean
+	make -C ./src/atomics/lcd clean
+	make -C ./src/atomics/knob clean
+	make -C ./src/atomics/rtview clean
+
 	rm bin/pdae bin/pdppt bin/pdif bin/pdme

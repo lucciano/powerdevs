@@ -28,6 +28,7 @@ double sigma;
 
 
 
+
 public:
 	rtview_knob(const char *n): Simulator(n) {};
 	void init(double, ...);

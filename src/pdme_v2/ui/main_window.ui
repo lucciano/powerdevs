@@ -376,6 +376,9 @@
    <property name="text">
     <string>Print...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionSet_path_and_tools">
    <property name="text">

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
   QDir d;
   d.setCurrent(QCoreApplication::applicationDirPath ());
 	PowerGui pg;
-  pg.show();
+  //pg.show();
 	pg.setWindowState( Qt::WindowMaximized);
   if (argc>1)
   {
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     if (file.endsWith(".pdm"))
       pg.openFile(file);
   }
-	QTimer::singleShot(1000, splash, SLOT(close()));
+  QTimer::singleShot(1000, splash, SLOT(close()));
+  QTimer::singleShot(1100, &pg, SLOT(show()));
 	return app.exec();
 }

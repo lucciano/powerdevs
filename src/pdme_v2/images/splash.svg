@@ -206,14 +206,14 @@
      inkscape:cx="305.76557"
      inkscape:cy="207.52657"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="969"
-     inkscape:window-x="-4"
-     inkscape:window-y="-3"
+     inkscape:window-width="1360"
+     inkscape:window-height="717"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -223,7 +223,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -308,8 +308,8 @@
        inkscape:export-ydpi="90"><flowRegion
          id="flowRegion4998"><rect
            id="rect5000"
-           width="177.96228"
-           height="46.333206"
+           width="207.2567"
+           height="62.495647"
            x="198.57143"
            y="500.93362"
            style="font-size:13px" /></flowRegion><flowPara
@@ -328,7 +328,7 @@
        xml:space="preserve"
        id="flowRoot4996-3"
        style="font-size:13px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Ouhod;-inkscape-font-specification:Ouhod Bold"
-       transform="translate(82.114386,-189.89574)"
+       transform="translate(85.144844,-192.9262)"
        inkscape:export-filename="/home/fmb/powerdevs/src/pdme_v2/images/splash.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"><flowRegion
@@ -341,11 +341,10 @@
            style="font-size:13px" /></flowRegion><flowPara
          id="flowPara5006-7">Developed by:</flowPara><flowPara
          id="flowPara5100">Control and Simulation of </flowPara><flowPara
-         id="flowPara5102">Dynamics System Group at</flowPara><flowPara
          id="flowPara5090"
-         style="text-align:start;text-anchor:start">CIFASIS</flowPara><flowPara
+         style="text-align:start;text-anchor:start">Dynamics System Group at CIFASIS</flowPara><flowPara
          style="text-align:end;text-anchor:end"
-         id="flowPara5115">2010</flowPara></flowRoot>    <path
+         id="flowPara5115">2012</flowPara></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 478.87279,303.62613 -202.9201,0.73167"
        id="path4483-9-1"
@@ -393,6 +392,6 @@
          id="tspan2818"
          x="20.939037"
          y="70.702164"
-         style="font-size:64px;text-align:start;text-anchor:start">PowerDEVS 2.2</tspan></text>
+         style="font-size:64px;text-align:start;text-anchor:start">PowerDEVS 2.3</tspan></text>
   </g>
 </svg>

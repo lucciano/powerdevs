@@ -16,7 +16,7 @@ sprintf(filename,"plots/%ld.dat",(long int)this);
 
 initval=getScilabVar(init);
 unlink(filename);
-sprintf(buff,"knob -min %d -max %d -value %d -name %s -file plots/%ld.dat",(int)getScilabVar(min),(int)getScilabVar(max),initval,name,(long int)this);
+sprintf(buff,"knob -min %d -max %d  -name %s -file plots/%ld.dat -value %d",(int)getScilabVar(min),(int)getScilabVar(max),name,(long int)this,initval);
 spawnProcess("../atomics/realtime/rtview", buff);
 for (int i=0;i<10;i++) y[i]=0;
 sigma=0;

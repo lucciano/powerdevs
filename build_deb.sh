@@ -3,7 +3,8 @@ ARCH=`uname -m`
 echo "Retrieving latest from SVN";
 svn up
 svnversion >rev
-cat version.major rev > version
+head version.major -c 6 >vm
+cat vm rev > version
 VER=`cat version`
 echo "Building PowerDEVS DEB package for $ARCH";
 echo "Building Binaries";
@@ -47,14 +48,14 @@ svn export atomics ./tmp_deb/opt/powerdevs/atomics
 #Extra binaries
 cp ./atomics/sinks/lcd ./tmp_deb/opt/powerdevs/atomics/sinks/lcd
 cp ./atomics/sources/slider ./tmp_deb/opt/powerdevs/atomics/sources/slider
+cp ./atomics/realtime/rtview ./tmp_deb/opt/powerdevs/atomics/realtime/rtview
 svn export output ./tmp_deb/opt/powerdevs/output
 dpkg -b tmp_deb powerdevs.deb
-rm rev
-rm version
 if [ "$ARCH" == "i686" ]; then
   mv powerdevs.deb powerdevs_i386.deb
 fi
 if [ "$ARCH" == "x86_64" ]; then
   mv powerdevs.deb powerdevs_amd64.deb
 fi
+rm rev version vm
 rm -rf tmp_deb
