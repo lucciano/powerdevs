@@ -31,7 +31,7 @@ OBJS = $(BUILDOBJ)/*.o
 MODEL = $(OUTPUT)/model
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
 endif
-all : $(BUILDOBJ)/libsimpd.a $(MODEL)
+all : $(BUILDLIB)/libsimpd.a $(MODEL)
 clean:
 	$(RM) $(OBJS) $(MODEL)
 $(BUILDOBJ)/connection.o: $(SRCENGINE)/connection.cpp $(SRCENGINE)/connection.h
