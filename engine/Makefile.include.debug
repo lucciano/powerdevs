@@ -1,7 +1,8 @@
 UNAME = $(shell uname)
 ifeq ($(UNAME), Windows)
-OPTFLAGS = -O3
-CXXFLAGS = -Wall $(OPTFLAGS) -D__WINDOWS__
+OPTFLAGS = 
+DEBUGFLAGS = -g
+CXXFLAGS =  -Wall $(OPTFLAGS) $(DEBUGFLAGS)
 ATOMICS = ..\atomics
 SRCENGINE = ..\engine
 BUILD = ..\build
@@ -33,6 +34,7 @@ MODEL = $(OUTPUT)/model
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
 endif
 debug: clean all
+	touch ../output/debug
 	cd ../output && x-terminal-emulator -e "gdb ./model"
 all : $(BUILDLIB)/libsimpd.a $(MODEL)
 clean:

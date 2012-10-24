@@ -32,8 +32,10 @@ MODEL = $(OUTPUT)/model
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
 endif
 all : $(BUILDLIB)/libsimpd.a $(MODEL)
+	if test -f $(OUTPUT)/debug; then make clean;make;fi
+
 clean:
-	$(RM) $(OBJS) $(MODEL)
+	$(RM) -rf $(OBJS) $(MODEL) $(OUTPUT)/debug
 $(BUILDOBJ)/connection.o: $(SRCENGINE)/connection.cpp $(SRCENGINE)/connection.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $(SRCENGINE)/connection.cpp -o $(BUILDOBJ)/connection.o
 $(BUILDOBJ)/coupling.o: $(SRCENGINE)/coupling.cpp $(SRCENGINE)/coupling.h
