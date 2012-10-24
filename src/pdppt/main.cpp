@@ -127,7 +127,8 @@ int main(int argc, char **argv)
             system("killall pdif");
           }
 #endif
-				  pdif.startDetached(pdif_command, QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
+          if (pdif_command != "null") 
+				    pdif.startDetached(pdif_command, QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");
 			  } else {
 				  QFile stm(filename.left(filename.lastIndexOf(".")) + ".stm");
 				  //qDebug() << (filename.left(filename.lastIndexOf(".")) + ".stm");
