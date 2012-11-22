@@ -11,8 +11,8 @@ format[1] = (char*) va_arg(parameters, char*);
 format[2] = (char*) va_arg(parameters, char*);
 format[3] = (char*) va_arg(parameters, char*);
 format[4] = (char*) va_arg(parameters, char*);
-sprintf(FName,"plots/%d.csv",(int)this);
-sprintf(Script,"plots/%d.plt",(int)this);
+sprintf(FName,"plots/%;d.csv",(long int)this);
+sprintf(Script,"plots/%ld.plt",(long int)this);
 long int fd=PDFileOpen(FName,'w');
 PDFileWrite(fd,"0",1);
 for (int i=0;i<n;i++)
@@ -119,7 +119,7 @@ void gnuplot::exit() {
 	PDFileClose(foutput);
 	char Script[128];
 	char buff[128];
-	sprintf(Script,"plots/%d.plt",(int)this);
+	sprintf(Script,"plots/%ld.plt",(long int)this);
 	long int fd=PDFileOpen(Script,'w');
 	PDFileWrite(fd,printString,strlen(printString));
 if (getOs()!=WINDOWS) 

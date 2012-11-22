@@ -1,4 +1,4 @@
-//CPP:Source/constant_sci.cpp
+//CPP:sources/constant_sci.cpp
 #if !defined constant_sci_h
 #define constant_sci_h
 
@@ -11,6 +11,7 @@
 class constant_sci: public Simulator { 
 double S[10];
 double Sigma;
+
 
 
 
