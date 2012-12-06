@@ -35,7 +35,7 @@ INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
 endif
 debug: clean all
 	touch ../output/debug
-	cd ../output && x-terminal-emulator -e "gdb ./model"
+	x-terminal-emulator -e ../bin/debug.sh
 all : $(BUILDLIB)/libsimpd.a $(MODEL)
 clean:
 	$(RM) -rf $(OBJS) $(MODEL)
