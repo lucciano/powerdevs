@@ -85,10 +85,12 @@ void spawnProcess(const char *path, char *arg) {
 	char **argv;int argc;
   parseCommandLine((char*)path,arg,&argv,&argc);
 	if (fork()==0) { // Child process
+      /*
       printLog("Running program %s with args:", path);
       for (int i=0;i<argc;i++) 
         printLog("%d=%s, ",i,argv[i]); 
       printLog("\n");
+      */
 			execv(path,argv);
       exitStatus = -1;
 			printLog("ERROR: %s not found\n",path);

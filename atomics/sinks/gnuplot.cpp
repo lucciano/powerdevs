@@ -11,7 +11,7 @@ format[1] = (char*) va_arg(parameters, char*);
 format[2] = (char*) va_arg(parameters, char*);
 format[3] = (char*) va_arg(parameters, char*);
 format[4] = (char*) va_arg(parameters, char*);
-sprintf(FName,"plots/%;d.csv",(long int)this);
+sprintf(FName,"plots/%ld.csv",(long int)this);
 sprintf(Script,"plots/%ld.plt",(long int)this);
 long int fd=PDFileOpen(FName,'w');
 PDFileWrite(fd,"0",1);
