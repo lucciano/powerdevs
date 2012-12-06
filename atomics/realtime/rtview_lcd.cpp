@@ -12,7 +12,7 @@ char *initial =va_arg(parameters,char*);
 char buff[1024];
 sprintf(filename,"plots/%ld.dat",(long int)this);
 sprintf(buff,"lcd -name %s -value %d -file plots/%ld.dat",name,(int)getScilabVar(initial),(long int)this);
-spawnProcess("../atomics/realtime/rtview",buff);
+spawnProcess("../bin/rtview",buff);
 
 }
 double rtview_lcd::ta(double t) {
@@ -47,6 +47,6 @@ return Event();
 }
 void rtview_lcd::exit() {
 //Code executed at the end of the simulation.
-spawnProcess("../atomics/realtime/rtview", "clean");
+spawnProcess("../bin/rtview", "clean");
 
 }

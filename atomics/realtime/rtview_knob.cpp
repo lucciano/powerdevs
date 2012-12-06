@@ -17,7 +17,7 @@ sprintf(filename,"plots/%ld.dat",(long int)this);
 initval=getScilabVar(init);
 unlink(filename);
 sprintf(buff,"knob -min %d -max %d  -name %s -file plots/%ld.dat -value %d",(int)getScilabVar(min),(int)getScilabVar(max),name,(long int)this,initval);
-spawnProcess("../atomics/realtime/rtview", buff);
+spawnProcess("../bin/rtview", buff);
 for (int i=0;i<10;i++) y[i]=0;
 sigma=0;
 y[0]=initval;
@@ -55,5 +55,5 @@ return Event(y,0);
 }
 void rtview_knob::exit() {
 //Code executed at the end of the simulation.
-spawnProcess("../atomics/realtime/rtview", "clean");
+spawnProcess("../bin/rtview", "clean");
 }
