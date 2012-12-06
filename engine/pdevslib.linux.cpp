@@ -94,6 +94,7 @@ void spawnProcess(const char *path, char *arg) {
 			execv(path,argv);
       exitStatus = -1;
 			printLog("ERROR: %s not found\n",path);
+      abort();
 	}
 }
 

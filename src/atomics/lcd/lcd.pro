@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = ../../../atomics/sinks/lcd
+TARGET = ../../../bin/lcd
 TEMPLATE = app
 
 

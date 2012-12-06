@@ -46,9 +46,9 @@ svn export library ./tmp_deb/opt/powerdevs/library
 svn export examples ./tmp_deb/opt/powerdevs/examples
 svn export atomics ./tmp_deb/opt/powerdevs/atomics
 #Extra binaries
-cp ./atomics/sinks/lcd ./tmp_deb/opt/powerdevs/atomics/sinks/lcd
-cp ./atomics/sources/slider ./tmp_deb/opt/powerdevs/atomics/sources/slider
-cp ./atomics/realtime/rtview ./tmp_deb/opt/powerdevs/atomics/realtime/rtview
+cp ./bin/lcd ./tmp_deb/opt/powerdevs/bin/lcd
+cp ./bin/slider ./tmp_deb/opt/powerdevs/bin/slider
+cp ./bin/rtview ./tmp_deb/opt/powerdevs/bin/rtview
 svn export output ./tmp_deb/opt/powerdevs/output
 dpkg -b tmp_deb powerdevs.deb
 if [ "$ARCH" == "i686" ]; then

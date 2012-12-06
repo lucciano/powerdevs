@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = ../../../atomics/realtime/rtview
+TARGET = ../../../bin/rtview
 TEMPLATE = app
 CONFIG += debug
 
