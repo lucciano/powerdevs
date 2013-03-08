@@ -12,7 +12,7 @@
 #include "types.h"
 #include <sys/time.h>
 #include <math.h>
-
+#include <sys/io.h>
 #include <root_simulator.h>
 
 OS getOs() 
@@ -99,10 +99,16 @@ void spawnProcess(const char *path, char *arg) {
 }
 
 void writeToPort(short v,int port) {
+  if (ioperm(port,1,1)) {
+    printLog("Couldnt get the permissions for port %x\n", port);
+    exit(-1);
+  }
+	outb_p(v,port);
 }
 
 short readFromPort(int port) {
-  return 0;
+  ioperm(port,1,1);
+	return inb_p(port);
 }
 
 long int PDFileOpen(char* name,char mode) {
