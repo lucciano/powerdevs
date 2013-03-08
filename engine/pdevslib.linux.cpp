@@ -107,7 +107,10 @@ void writeToPort(short v,int port) {
 }
 
 short readFromPort(int port) {
-  ioperm(port,1,1);
+  if (ioperm(port,1,1)) {
+    printLog("Couldnt get the permissions for port %x\n", port);
+    exit(-1);
+  }
 	return inb_p(port);
 }
 
