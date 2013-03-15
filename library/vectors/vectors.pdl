@@ -269,7 +269,8 @@ Coupled
             Parameters
                 {
                 T = Str; 1 ; Sampling Period (Scilab)
-                Size = Str; 10 ; Vector Size (Scilab)
+                phi = Str; 0 ; Delay
+                Size = Str; 10 ; Vector Size
                 }
             }
         Atomic
