@@ -151,7 +151,7 @@ Coupled
             {
             Name = Index Shift
             Ports = 1 ; 2
-            Path = vector/index_shift.h
+            Path = vector/index_shift_d.h
             Description = Vector Index Shift. Computes y(index)=u(index+shift). Discards through second port the out of range events
             Graphic
                 {
