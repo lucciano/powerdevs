@@ -121,17 +121,18 @@ void *waitTCPRequests()
 	ssize_t received=0;
 
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(TCP_PORT);
+  int actual_port = TCP_PORT + getuid() % 10000;
+	addr.sin_port = htons(actual_port);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind (listenTCP, (struct sockaddr *) &addr, sizeof (addr))<0) {
-		sprintf(cmd,"mprintf(\"\tBackDoor: TCP port %d is in use\");",TCP_PORT);
+		sprintf(cmd,"mprintf(\"\tBackDoor: TCP port %d is in use\");",actual_port);
 		SendScilabJobBD(cmd);
 		pthread_exit(NULL);
 		return;
 	}
 	
 	if (listen(listenTCP,5)==0) {
-		sprintf(cmd,"mprintf(\"\tBackDoor: listening to connections on TCP port %d\");",TCP_PORT);
+		sprintf(cmd,"mprintf(\"\tBackDoor: listening to connections on TCP port %d\");",actual_port);
 		SendScilabJobBD(cmd);
     do {
 		  int socket=accept(listenTCP,(struct sockaddr *)&client, &socksize);

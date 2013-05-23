@@ -68,7 +68,9 @@ void initScilab() {
   	SendSocket=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
     service.sin_family = AF_INET;
     service.sin_addr.s_addr = inet_addr("127.0.0.1");
-    service.sin_port = htons(27020);
+    int actual_port = 27020+(getuid() % 10000);
+    printLog("Openening connection with scilab to TPC port %d\n",actual_port);
+    service.sin_port = htons(actual_port);
     if (connect(SendSocket,(struct sockaddr*)&service,sizeof(service)) == SOCKET_ERROR)
     {
 	    activeScilab=false;
