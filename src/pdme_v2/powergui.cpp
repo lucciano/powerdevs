@@ -63,6 +63,13 @@
 #include <dialogs/dlg_menu_setup.h>
 #include <dialogs/dlg_menu_setup.h>
 
+
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/types.h>          
+#include <sys/socket.h>
+
+        
 extern QSplashScreen *splash;
 QPoint mouseContext;
 PowerGui::PowerGui(): PowerGui_class()
@@ -96,7 +103,23 @@ PowerGui::PowerGui(): PowerGui_class()
     QString outputPath = getSetting("Path/outputPath").toString(); 
     qDebug() << "Starting Scilab from " << scilabPath << " in directory " << outputPath << " with arg " << getSetting("scilabArg").toString();
 #ifndef Q_OS_WIN32
+
     bool scilabRunning = system("ps -e | grep scilab") == 0;
+    if (scilabRunning) {
+      struct sockaddr_in service;
+      int sock=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+      service.sin_family = AF_INET;
+      service.sin_addr.s_addr = inet_addr("127.0.0.1");
+      int actual_port = 27020+(getuid() % 10000);
+      service.sin_port = htons(actual_port);
+      if (::connect(sock,(struct sockaddr*)&service,sizeof(service)) == -1) {
+	      scilabRunning=false;
+      }
+      ::close(sock);
+    }
+ 
+
+    
 #else
     bool scilabRunning = false;
 #endif
