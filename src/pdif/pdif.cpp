@@ -174,7 +174,11 @@ void PDIF::binaryFinish(int exitCode, QProcess::ExitStatus exitStatus)
       viewLog();
       qApp->quit();
     }
+#ifdef Q_OS_WIN32
+		msg(QString("The process terminated abnormally.\n"));
+#else
 		msg(QString("The process terminated abnormally.\n%1").arg(strsignal(exitCode)));
+#endif
     qApp->quit();
 	} else {
 		pg->setFormat("Simulation Completed");

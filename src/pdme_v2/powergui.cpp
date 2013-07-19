@@ -64,10 +64,12 @@
 #include <dialogs/dlg_menu_setup.h>
 
 
+#ifndef Q_OS_WIN32
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <sys/types.h>          
 #include <sys/socket.h>
+#endif
 
         
 extern QSplashScreen *splash;
