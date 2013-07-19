@@ -25,10 +25,10 @@
 #include <QSplashScreen>
 #include <QTimer>
 #include <QDir>
-#ifdef Q_WS_WIN
 #include <QSysInfo>
 #include <QProcess>
-#endif
+#include <QMessageBox>
+
 
 #include <powergui.h>
 
@@ -42,24 +42,24 @@ int main(int argc, char *argv[])
   splash->show();
   QDir d;
   d.setCurrent(QCoreApplication::applicationDirPath ());
-	PowerGui pg;
-  //pg.show();
-	pg.setWindowState( Qt::WindowMaximized);
+  PowerGui pg;
+  pg.setWindowState( Qt::WindowMaximized);
 #ifdef Q_WS_WIN
   /* Check for application experience */
-  if (SysInfo::windowsVersion()==QSysInfo::WV_WINDOWS7) {
+  if (QSysInfo::windowsVersion()==QSysInfo::WV_WINDOWS7) {
     QProcess ae;
     ae.start("sc query AeLookupSvc");
     if (ae.waitForFinished()==true) {
       QString out(ae.readAllStandardOutput());
       QStringList values=out.split("\n");
       foreach (QString s, values) {
-        if (s.contains("
+        if (s.contains("STOPPED"))
+          QMessageBox::information(NULL,"PowerDEVS" ,"The service Application Experience (AeLookUpSvc) is not running. This can block PowerDEVS from re-compiling the simulation. Please start the service and/or set it to Automatic start" );
+
       }
     }
 
-  }
-  
+}
 #endif
   if (argc>1)
   {
@@ -69,5 +69,5 @@ int main(int argc, char *argv[])
   }
   QTimer::singleShot(1000, splash, SLOT(close()));
   QTimer::singleShot(1100, &pg, SLOT(show()));
-	return app.exec();
+  return app.exec();
 }
