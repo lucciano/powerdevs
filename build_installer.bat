@@ -1,11 +1,7 @@
 @echo off
-set QTDIR=C:\Qt\2010.05\qt
-set PATH=C:\Qt\2010.05\qt\bin
-set PATH=%PATH%;C:\Qt\2010.05\bin;C:\Qt\2010.05\mingw\bin
 set PATH=%PATH%;%SystemRoot%\System32
-set PATH=%PATH%;C:\Program Files (x86)\Subversion\bin
-set PATH=%PATH%;C:\Program Files (x86)\Ethalone\Ghost Installer\Bin\
-set QMAKESPEC=win32-g++
+set PATH=%PATH%;C:\Program Files\Subversion\bin
+set PATH=%PATH%;C:\Program Files\Ethalone\Ghost Installer\Bin\
 echo "Retrieving latest from SVN"
 svn up
 svnversion >rev
@@ -22,8 +18,11 @@ copy version tmp_win_installer\powerdevs
 copy doc\PD_UserGuide.pdf tmp_win_installer\powerdevs\doc
 copy COPYING tmp_win_installer\powerdevs
 echo "Building Binaries";
-
-cd src/pdae
+cd src/uname
+qmake -r -spec win32-g++ "CONFIG+=release"
+mingw32-make clean
+mingw32-make 
+cd ../pdae
 qmake -r -spec win32-g++ "CONFIG+=release"
 mingw32-make clean
 mingw32-make 
@@ -38,7 +37,13 @@ mingw32-make
 cd ../pdppt
 qmake -r -spec win32-g++ "CONFIG+=release"
 mingw32-make clean
-mingw32-make 
+mingw32-make
+copy %QTDIR%\bin\QtCore4.dll ..\..\tmp_win_installer\powerdevs\bin
+copy %QTDIR%\bin\QtGui4.dll ..\..\tmp_win_installer\powerdevs\bin
+copy %QTDIR%\bin\QtSvg4.dll  ..\..\tmp_win_installer\powerdevs\bin
+copy %QTDIR%\bin\mingwm10.dll ..\..\tmp_win_installer\powerdevs\bin
+copy %QTDIR%\bin\libgcc_s_dw2-1.dll  ..\..\tmp_win_installer\powerdevs\bin
+copy "C:\mingw\bin\libstdc++-6.dll" ..\..\tmp_win_installer\powerdevs\bin
 cd ../../tmp_win_installer
 gibuild PowerDEVS.gpr
 cd ../
