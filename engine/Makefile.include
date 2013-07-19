@@ -14,6 +14,9 @@ MV = copy
 OBJS = $(BUILDOBJ)\*.o
 LIBS = -lsimpd -lws2_32
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
+all : $(BUILDLIB)/libsimpd.a $(MODEL)
+clean:
+	$(RM) /q /s  $(OBJS) $(MODEL)
 endif
 ifeq ($(UNAME), Linux)
 OPTFLAGS = -march=native -O3
@@ -30,12 +33,12 @@ MV = mv
 OBJS = $(BUILDOBJ)/*.o
 MODEL = $(OUTPUT)/model
 INCLUDES = -I$(SRCENGINE) -I$(ATOMICS) -I$(BUILD) -L$(BUILDLIB)
-endif
 all : $(BUILDLIB)/libsimpd.a $(MODEL)
 	if test -f $(OUTPUT)/debug; then make clean;make;fi
-
 clean:
 	$(RM) -rf $(OBJS) $(MODEL) $(OUTPUT)/debug
+endif
+
 $(BUILDOBJ)/connection.o: $(SRCENGINE)/connection.cpp $(SRCENGINE)/connection.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $(SRCENGINE)/connection.cpp -o $(BUILDOBJ)/connection.o
 $(BUILDOBJ)/coupling.o: $(SRCENGINE)/coupling.cpp $(SRCENGINE)/coupling.h
