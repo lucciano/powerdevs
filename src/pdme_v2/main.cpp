@@ -25,6 +25,10 @@
 #include <QSplashScreen>
 #include <QTimer>
 #include <QDir>
+#ifdef Q_WS_WIN
+#include <QSysInfo>
+#include <QProcess>
+#endif
 
 #include <powergui.h>
 
@@ -41,6 +45,22 @@ int main(int argc, char *argv[])
 	PowerGui pg;
   //pg.show();
 	pg.setWindowState( Qt::WindowMaximized);
+#ifdef Q_WS_WIN
+  /* Check for application experience */
+  if (SysInfo::windowsVersion()==QSysInfo::WV_WINDOWS7) {
+    QProcess ae;
+    ae.start("sc query AeLookupSvc");
+    if (ae.waitForFinished()==true) {
+      QString out(ae.readAllStandardOutput());
+      QStringList values=out.split("\n");
+      foreach (QString s, values) {
+        if (s.contains("
+      }
+    }
+
+  }
+  
+#endif
   if (argc>1)
   {
     QString file(argv[1]);
