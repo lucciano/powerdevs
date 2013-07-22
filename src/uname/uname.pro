@@ -6,7 +6,7 @@
 QT -=gui
 CONFIG += console
 win32 {
-  TARGET = ../../../tmp_win_installer/powerdevs/bin/uname
+  TARGET = ../../../tmp_win_installer/powerdevs/build/uname
 }
 
 DEPENDPATH += .
