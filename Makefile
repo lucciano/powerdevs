@@ -1,6 +1,6 @@
 MODE = debug
 RTAI = 
-all: pdae pdif pdppt pdme doc/PD_UserGuide.pdf bin/lcd bin/knob bin/rtview 
+all: pdae pdif pdppt pdme bin/lcd bin/knob bin/rtview 
 
 bin/lcd:src/atomics/lcd/* 
 	cd ./src/atomics/lcd && qmake CONFIG+=$(MODE) 
