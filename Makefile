@@ -49,4 +49,4 @@ clean:
 	make -C ./src/atomics/knob clean
 	make -C ./src/atomics/rtview clean
 
-	rm bin/pdae bin/pdppt bin/pdif bin/pdme
+	rm bin/pdae bin/pdppt bin/pdif bin/pdme bin/lcd bin/knob bin/rtview
