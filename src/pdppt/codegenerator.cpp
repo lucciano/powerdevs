@@ -30,6 +30,9 @@
 #define CHILDNAME(chld) ((chld)->childType==ATOMIC ? chld->atomic->name.trimmed() : chld->coupled->name.trimmed())
 
 QSet < QString > includes;
+QStringList includes_dirs;
+QStringList extra_libs;
+QStringList extra_flags;
 QSet < QString > objects;
 QStringList constructor;
 QStringList state;
@@ -428,6 +431,12 @@ QString getExtraDep(QString at)
         //qDebug() << "Line " << line << " " << getClassName(at);
         if (!line.contains(getClassName(at) + ".cpp"))
           ret +=  " $(ATOMICS)/" + getBaseFilename(line.mid(6)) + ".cpp";
+      } else if (line.startsWith("//lib:",Qt::CaseInsensitive)) {
+          extra_libs <<  line.mid(6).trimmed();
+      } else if (line.startsWith("//flags:",Qt::CaseInsensitive)) {
+          extra_flags<<  line.mid(8).trimmed();
+      } else if (line.startsWith("//headersdir:",Qt::CaseInsensitive)) {
+          includes_dirs << "-I" +  line.mid(13).trimmed();
       }
       if (line.startsWith("#include",Qt::CaseInsensitive)) {
         QString header = line.mid(8).trimmed().mid(1);
@@ -789,8 +798,9 @@ void generateModel(modelCoupled * c)
 	fd->open(QIODevice::WriteOnly | QIODevice::Text);
 	QString reqModel;
 	QString reqModelPath;
+ 
 	for (j = objects.begin(); j != objects.end(); j++) {
-		QString w = QString ("$(BUILDOBJ)/%1.o: $(ATOMICS)/%2.cpp $(ATOMICS)/%3.h %4\n\t$(CXX) -c $(CXXFLAGS) $(INCLUDES) $(ATOMICS)/%5.cpp -o $(BUILDOBJ)/%6.o %7\n");
+		QString w = QString ("$(BUILDOBJ)/%1.o: $(ATOMICS)/%2.cpp $(ATOMICS)/%3.h %4\n\t$(CXX) -c $(CXXFLAGS) $(USERCXXFLAGS) $(USERINCLUDES) $(INCLUDES) $(ATOMICS)/%5.cpp -o $(BUILDOBJ)/%6.o %7\n");
 		QString basefile = getClassName((*j));
 		reqModel = reqModel + QString(" %1.o ").arg(basefile);
 		w = w.arg(basefile);
@@ -807,6 +817,12 @@ void generateModel(modelCoupled * c)
 		    reqModelPath + QString(" $(BUILDOBJ)/%1.o ").arg(basefile);
 		fd->write(QSTR(w), w.size());
 	}
+  QString userExtras("USERCXXFLAGS=%1\nUSERINCLUDES=%2\nUSERLIBS=%3\n");
+  userExtras = userExtras.arg(extra_flags.join(" "));
+  userExtras = userExtras.arg(includes_dirs.join(" "));
+  userExtras = userExtras.arg(extra_libs.join(" "));
+  fd->write(QSTR(userExtras),userExtras.size());
+ 
 	//reqModelPath += " $(BUILDOBJ)/connection.o ";
 	//reqModelPath += " $(BUILDOBJ)/coupling.o ";
 	//reqModelPath += " $(BUILDOBJ)/event.o ";
@@ -816,7 +832,7 @@ void generateModel(modelCoupled * c)
 	//reqModelPath += " $(BUILDOBJ)/pdevslib.o ";
 	QString w =
 	    QString
-	    ("$(MODEL): $(SRCENGINE)/model.cpp $(BUILD)/model.h $(BUILDLIB)/libsimpd.a %1 %2 \n\t$(CXX) $(CXXFLAGS) $(INCLUDES) %3 %4 $(SRCENGINE)/model.cpp $(LIBS) -o $(MODEL)\n");
+	    ("$(MODEL): $(SRCENGINE)/model.cpp $(BUILD)/model.h $(BUILDLIB)/libsimpd.a %1 %2 \n\t$(CXX) $(USERCXXFLAGS) $(USERINCLUDES) $(CXXFLAGS) $(INCLUDES) %3 %4 $(SRCENGINE)/model.cpp $(LIBS) $(USERLIBS) -o $(MODEL)\n");
 	w = w.arg(reqModelPath);
 	w = w.arg("");		// Extra objs y libs
 	w = w.arg(reqModelPath);

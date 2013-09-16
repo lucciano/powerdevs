@@ -225,13 +225,48 @@ void PDAE::newFile()
 	setWindowTitle(tr("PowerDEVS Atomic Editor"));
 }
 
-void PDAE::saveFile() 
-{
+void PDAE::saveFile() {
 	saveFileToCpp(false);
-} void PDAE::saveAsFile() 
-{
+} 
+
+
+void PDAE::saveAsFile() {
 	saveFileToCpp(true);
-} void PDAE::checkFile() 
+} 
+
+QString getRelativePath(QString p)
+{
+	return p.trimmed().replace("\\", "/");
+}
+
+
+
+
+QStringList getExtraDep(QString file) {
+	QStringList ret;
+	QString path = QCoreApplication::applicationDirPath();
+  qDebug() << "Getting extra deps for "<< file;
+  char buff[1024];
+
+	QFile fd(file);
+	if (fd.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    while (fd.readLine(buff,1024)>0) {
+      QString line(buff);
+      if (line.startsWith("//flags:",Qt::CaseInsensitive)) {
+          ret << line.mid(8).trimmed();
+      } else if (line.startsWith("//headersdir:",Qt::CaseInsensitive)) {
+          ret << "-I" +  line.mid(13).trimmed();
+      }
+		}
+		fd.close();
+	}
+	return ret;
+}
+
+
+
+
+void PDAE::checkFile() 
 {
 	if (compilerOut != NULL) {
 		removeDockWidget(compilerOut);
@@ -244,12 +279,15 @@ void PDAE::saveFile()
 	if (name != "") {
 		QProcess q;
 		QString destFile = QString(name);
+    qDebug() << name;
 		QString path = QCoreApplication::applicationDirPath();
 		QStringList args;
 		destFile = destFile.mid(destFile.lastIndexOf("/") + 1);
+    QString header = path + "/" + name;
+    header.replace(".cpp",".h");
 		destFile.replace(".cpp", ".o");
 		destFile = path + "/../build/objs/" + destFile;
-                args << "-c" << "-g" << "-I" + path + "/../engine/" << "-I" + path + "/../atomics/" <<name << "-o" << destFile;
+                args << "-c" << "-g" << "-I" + path + "/../engine/" << "-I" + path + "/../atomics/" <<name << getExtraDep(header) << "-o" << destFile;
 		QStringList::iterator i;
 		
     qDebug() << args;
