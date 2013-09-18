@@ -2,9 +2,13 @@
 set PATH=%PATH%;%SystemRoot%\System32
 set PATH=%PATH%;C:\Program Files\Subversion\bin
 set PATH=%PATH%;C:\Program Files\Ethalone\Ghost Installer\Bin\
+set PATH=%PATH%;C:\Program Files\GnuWin32\bin
 echo "Retrieving latest from SVN"
 svn up
-svnversion >rev
+svnversion >rev1
+tr -d '\n' <rev1 >rev2
+tr -d '\r' <rev2 >rev
+set /p version= <rev
 copy version.major+rev version /Y
 rmdir /s /q tmp_win_installer 
 svn export win_installer tmp_win_installer
@@ -48,4 +52,5 @@ cd ../../tmp_win_installer
 gibuild PowerDEVS.gpr
 cd ../
 copy tmp_win_installer\Output\* .
+ren powerdevs_install.exe powerdevs_install_%version%.exe
 rem rmdir /s /q tmp_win_installer 
