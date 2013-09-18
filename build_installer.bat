@@ -9,7 +9,7 @@ svnversion >rev1
 tr -d '\n' <rev1 >rev2
 tr -d '\r' <rev2 >rev
 set /p version= <rev
-copy version.major+rev version /Y
+copy version.major+rev version /Y /b
 rmdir /s /q tmp_win_installer 
 svn export win_installer tmp_win_installer
 svn export atomics tmp_win_installer\powerdevs\atomics
