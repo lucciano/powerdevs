@@ -2,7 +2,7 @@
 ARCH=`uname -m`
 echo "Retrieving latest from SVN";
 svn up
-svnversion >rev
+svnversion | tr -d '\n' >rev
 head version.major -c 6 >vm
 cat vm rev > version
 VER=`cat version`
@@ -52,10 +52,10 @@ cp ./bin/rtview ./tmp_deb/opt/powerdevs/bin/rtview
 svn export output ./tmp_deb/opt/powerdevs/output
 dpkg -b tmp_deb powerdevs.deb
 if [ "$ARCH" == "i686" ]; then
-  mv powerdevs.deb powerdevs_i386.deb
+  mv powerdevs.deb powerdevs_i386_`cat rev`.deb
 fi
 if [ "$ARCH" == "x86_64" ]; then
-  mv powerdevs.deb powerdevs_amd64.deb
+  mv powerdevs.deb powerdevs_amd64_`cat rev`.deb
 fi
 rm rev version vm
 rm -rf tmp_deb
