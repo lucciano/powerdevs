@@ -6,6 +6,8 @@
 
 TARGET = ../../../bin/lcd
 TEMPLATE = app
+QMAKE_POST_LINK=$(STRIP) $(TARGET)
+QMAKE_STRIP = strip -R .comment
 
 
 SOURCES += main.cpp\

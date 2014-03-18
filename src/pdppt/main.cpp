@@ -121,11 +121,11 @@ int main(int argc, char **argv)
 #else
 			  if (!silent) {
 #ifdef Q_OS_LINUX
-          /*bool pdifRunning = system("ps -e | grep pdif") == 0;
+          bool pdifRunning = system("ps -e | grep pdif") == 0;
           qDebug() << "PDIF running = " << pdifRunning;
           if (pdifRunning) {
             system("killall pdif");
-          }*/
+          }
 #endif
           if (pdif_command != "null") 
 				    pdif.startDetached(pdif_command, QStringList() << filename.  left(filename.lastIndexOf(".")) + ".stm");

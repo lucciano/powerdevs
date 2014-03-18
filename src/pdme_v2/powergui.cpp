@@ -45,6 +45,7 @@
 #include <powergui.h>
 #include <commands.h>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <globals.h>
 #include <graphics/gpx_edition_window.h>
@@ -565,13 +566,15 @@ bool PowerGui::saveFile(Coupled *c, const QString fileName)
 {
   qDebug() << "Saving file " << fileName;
   c->updatePoints();
-  ostringstream stream;
+  ofstream stream(fileName.toAscii(),std::ofstream::out);
   ::depth=0;
   stream << c[0];
+  /*
   QFile f(fileName);
   f.open(QIODevice::WriteOnly);
   f.write(stream.str().c_str());
-  f.close();
+  f.close();*/
+  stream.close();
   QStringList files = getSetting("recentFileList").toStringList();
   if (files.indexOf(fileName)<0)
   {
@@ -913,7 +916,7 @@ void PowerGui::closeEvent(QCloseEvent * event)
 void PowerGui::on_actionPaste_triggered()
 {
   QClipboard *clipboard = QApplication::clipboard();
-  qDebug() << clipboard->text();
+  //qDebug() << clipboard->text();
   if (!hasActiveModel())
     return;
   GpxEditionWindow * gep = qobject_cast<GpxEditionWindow*>(mdiArea->activeSubWindow()->widget());

@@ -769,7 +769,7 @@ void GpxEditionScene::putInport(Port *p, bool paste, bool draggin)
 
 void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Model*> childs, QList<Port*> ports, QList<Point*> points)
 {
-      cout << l[0];
+      //cout << l[0];
       if (paste || draggin) 
       {
         _coupledData->addLine(l);
@@ -828,7 +828,7 @@ void GpxEditionScene::putConnection(Line *l, bool paste, bool draggin, QList<Mod
       {
         case Line::PORT:
           {
-            cout << *l;
+            //cout << *l;
             const int port = l->sourceAt(0)-1;
             const bool inport = l->sourceAt(2)==0;
             GpxBlock *b=_ports[_coupledData->port(port)];
@@ -1228,9 +1228,7 @@ QString GpxEditionScene::getSelection()
   c.graphic().setWidth(675/TWIPS_TO_PIXEL);
   c.graphic().setHeight(720/TWIPS_TO_PIXEL);
   c.updatePoints(false);
-  cout << c;
   c.simplifyLines();
-  cout << c;
   c.updatePoints();
 	ostringstream stream;
   stream << c;
@@ -1260,7 +1258,7 @@ void GpxEditionScene::paste(QString clip)
       OFFSET_X=_lastClick.x()-c->graphic().x();
       OFFSET_Y=_lastClick.y()-c->graphic().y();
     } 
-    cout << c[0];
+    //cout << c[0];
     putStructure(c,true);
     lclick = _lastClick;
   }

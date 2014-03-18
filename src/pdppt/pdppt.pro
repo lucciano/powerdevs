@@ -11,6 +11,8 @@ win32 {
 }
 DEPENDPATH += .
 INCLUDEPATH += .
+QMAKE_STRIP = strip -R .comment
+QMAKE_POST_LINK=$(STRIP) $(TARGET)
 
 # Input
 CONFIG += qt 

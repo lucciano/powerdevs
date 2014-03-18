@@ -9,6 +9,8 @@ TEMPLATE = app
 CONFIG += debug
 
 include(./qtsingleapplication/src/qtsingleapplication.pri)
+QMAKE_STRIP = strip -R .comment
+QMAKE_POST_LINK=$(STRIP) $(TARGET)
 
 SOURCES += main.cpp\
         rtview.cpp \

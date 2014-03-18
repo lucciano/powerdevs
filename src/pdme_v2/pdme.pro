@@ -114,7 +114,9 @@ RC_FILE += pdme.rc
 
 INCLUDEPATH += $$GRAPHICS_DIR $$DATA_DIR $$COMMON_DIR
 OBJECTS_DIR = obj
+QMAKE_STRIP = strip -R .comment
 MOC_DIR = moc
+QMAKE_POST_LINK=$(STRIP) $(TARGET)
 unix {
   TARGET = ../../bin/pdme
 }

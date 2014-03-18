@@ -80,6 +80,7 @@ void msg(QString m)
 	stopButton = new QPushButton("Stop");
 	viewLogButton = new QPushButton("View Log");
 	exitButton = new QPushButton("Exit");
+	closePlots = new QPushButton("Close GNUPlot windows");
 	hLayoutWidget = new QWidget();
 	hLayout = new QHBoxLayout(hLayoutWidget);
 	label = new QLabel("Final Time");
@@ -139,6 +140,7 @@ void msg(QString m)
 
 	layout->addWidget(stopButton);
 	layout->addWidget(viewLogButton);
+	layout->addWidget(closePlots);
 	layout->addWidget(exitButton);
 
 	hLayout->addWidget(label);

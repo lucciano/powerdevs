@@ -43,7 +43,6 @@ QString getLine()
   if (line.contains("//")) {
     return line.left(line.indexOf("//")).trimmed();
   }
-  qDebug() << "Reading: " << line;
   return line;
   
 }

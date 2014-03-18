@@ -89,6 +89,7 @@ class PDIF:public QDialog {
 	QPushButton *stopButton;
 	QPushButton *viewLogButton;
 	QPushButton *stepButton;
+	QPushButton *closePlots;
 	QLabel *label;
 	QLabel *logo;
 	QLabel *ilegitimal;

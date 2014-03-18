@@ -1,11 +1,10 @@
-Package: PowerDEVS
+Package: powerdevs
 Version: 2.2
 Architecture: i386
 Maintainer: Federico Bergero <fbergero@fceia.unr.edu.ar>
 Installed-Size: 15599
-Depends: gnuplot-x11 (>= 4.4), build-essential (>= 11.4), libqtcore4 (>= 4.7), libqtgui4 (>= 4.7), libqt4-svg (>= 4.7), scilab (>= 5.2), zenity
+Depends: gnuplot-x11 (>= 4.4), build-essential (>= 11.4), libc (>=5),libqtcore4 (>= 4.7), libqtgui4 (>= 4.7), libqt4-svg (>= 4.7), scilab (>= 5.2), zenit, gksu
 Section: science
 Priority: extra
 Homepage: https://sourceforge.net/projects/powerdevs/
-Description: PowerDEVS is an integrated tool for hybrid systems
-	     modeling and simulation based on the DEVS formalism.
+Description: Tool for hybrid systems modeling and simulation based on the DEVS formalism.

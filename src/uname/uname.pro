@@ -11,6 +11,7 @@ win32 {
 
 DEPENDPATH += .
 INCLUDEPATH += .
+QMAKE_POST_LINK=strip $(TARGET)
 
 # Input
 SOURCES += uname.cpp

@@ -480,7 +480,7 @@ string Coupled::getParameter(string par)
  }
  if (father())
   return father()->getParameter(par); 
- return "Error looking for paramter";
+ return "Error looking for parameter";
 }
 
 void Coupled::updatePoints(bool checkPoints)
