@@ -22,6 +22,10 @@ pdppt:
 	cd ./src/pdppt && qmake CONFIG+=$(MODE) 
 	make -C ./src/pdppt 
 
+libpdppt:
+	cd ./src/lib/pdppt && qmake CONFIG+=$(MODE) 
+	make -C ./src/lib/pdppt 
+
 pdif:
 ifeq ($(RTAI),yes)
 	cd ./src/pdif && qmake CONFIG+=$(MODE) QMAKE_CXXFLAGS+=-DRTAIOS 
@@ -43,6 +47,7 @@ clean:
 	make -C ./src/pdae clean
 	make -C ./src/pdif clean
 	make -C ./src/pdppt clean
+	make -C ./src/lib/pdppt clean
 	make -C ./src/pdme_v2 clean
 	make -C ./src/pdme_v2 clean
 	make -C ./src/atomics/lcd clean
